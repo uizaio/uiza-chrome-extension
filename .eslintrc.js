@@ -7,7 +7,7 @@ module.exports = {
     sourceType: 'module'
   },
   globals: {
-     "chrome": true
+    "chrome": true
     // chrome: true
   },
   env: {
@@ -25,6 +25,7 @@ module.exports = {
     'semi': 0,
     'quotes': 0,
     'camelcase': 0,
+    'no-trailing-spaces': 0,
     'space-before-function-paren': 0,
     // allow paren-less arrow functions
     'arrow-parens': 0,

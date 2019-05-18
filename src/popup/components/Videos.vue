@@ -1,7 +1,7 @@
 <template lang="pug">
 div(class="medias" v-loading="isLoading" element-loading-text="Loading... Please wait for a moment")
-    //- el-button(@click="load") Load
-    div(class='item' v-for="item in vods" @click="playing = item")
+    //- el-button(@click="load") Load  @click="playing = item"
+    div(class='item' v-for="item in vods"  @mousedown="drag" @mousemove="move" @mouseup="drop")
         div(class='item-thumbnail')
             img(:src='item.thumbnail || "https://dashboard.uiza.io/assets/img/image-not-available.jpg"')
         div(class='item-content')
@@ -47,6 +47,23 @@ export default {
                 this.vods = resp.data
                 this.isLoading = false
             })
+        },
+        drag() {
+            console.log('drag');
+            chrome.tabs.getSelected(null, function(tab) {
+                chrome.tabs.sendRequest(tab.id, {uiza: "mousemove"}, function(response) {
+                    // const x = JSON.parse(response.farewell)[0]
+                    // const y = JSON.parse(response.farewell)[1]
+                    // console.log(x)
+                    // console.log(y)
+                })
+            })
+        },
+        move() {
+            console.log('move');
+        },
+        drop() {
+            console.log('drop');
         }
     },
     data() {

@@ -1,11 +1,15 @@
 import constants from '../constants';
 import storage from '../../ext/storage';
 
+var settings = storage.get(constants.SETTINGS_KEY)
+
 export default {
 
+    isConfigured() {
+        return settings || false;
+    },
+
     get(url) {
-        const settings = storage.get(constants.SETTINGS_KEY)
-        console.log(settings)
         return fetch(url, {
             method: 'GET',
             headers: {
@@ -15,10 +19,16 @@ export default {
         }).then(resp => resp.json());
     },
 
+    getSingleVOD(id) {
+        const app_id = settings.app_id || ''
+        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/media/entity?appId=${app_id}&id=${id}`
+        return this.get(url)
+    },
+
     getVODs() {
-        const settings = storage.get(constants.SETTINGS_KEY)
         const app_id = settings.app_id || ''
         const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/media/entity?appId=${app_id}&limit=5&page=1`
         return this.get(url)
     }
+    // eslint-disable-next-line eol-last
 }

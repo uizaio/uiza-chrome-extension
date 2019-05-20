@@ -1,0 +1,27 @@
+import { getField, updateField } from 'vuex-map-fields';
+
+const state = {
+  settings: {
+    api_key: "",
+    app_id: ""
+  },
+  playerSettings: {
+    width: 360,
+    height: 200,
+    color: "#FF0000",
+    brand_logo:
+      "https://storage.googleapis.com/shopdunk-images/tintucshopdunknew/2018/05/tai-sao-logo-hang-Apple-la-trai-tao-do-2.png",
+    brand_url: "https://apple.com"
+  }
+};
+
+export default {
+  namespaced: true,
+  state,
+  getters: {
+    getField
+  },
+  mutations: {
+    updateField
+  }
+}

@@ -18,7 +18,7 @@ export default {
     Videos
   },
   data: () => ({
-    activeTab: "vods"
+    activeTab: "settings"
   }),
   computed: {},
   created() {},

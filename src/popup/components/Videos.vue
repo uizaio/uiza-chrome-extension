@@ -2,7 +2,7 @@
 div
   div(v-if='isConfigured' class="medias" v-loading="isLoading" element-loading-text="Loading... Please wait for a moment")
       //- el-button(@click="load") Load
-      div(draggable class='item' v-for="item in vods" @click="playItem(item)")
+      div(draggable @dragstart="onDragStart" class='item' v-for="item in vods" @click="playItem(item)")
           div(class='item-thumbnail')
               img(:src='item.thumbnail || "https://dashboard.uiza.io/assets/img/image-not-available.jpg"')
           div(class='item-content')
@@ -65,6 +65,14 @@ export default {
           id: item.id
         }
       });
+    },
+    onDragStart(event) {
+        let data = {
+            width: '500px',
+            height: '300px'
+        }
+        event.dataTransfer.setData('text/plain', JSON.stringify(data));
+        event.dataTransfer.dropEffect = "copy";
     }
   },
   data() {

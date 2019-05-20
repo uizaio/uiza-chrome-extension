@@ -2,7 +2,8 @@
 div
   div(v-if='isConfigured' class="medias" v-loading="isLoading" element-loading-text="Loading... Please wait for a moment")
       //- el-button(@click="load") Load
-      div(draggable @dragstart="onDragStart" class='item' v-for="item in vods" @click="playItem(item)")
+      p Hold your mouse on the video item and drag it to the webpage
+      div(draggable @dragstart="onDragStart($event, item)" class='item' v-for="item in vods" @click="playItem(item)")
           div(class='item-thumbnail')
               img(:src='item.thumbnail || "https://dashboard.uiza.io/assets/img/image-not-available.jpg"')
           div(class='item-content')
@@ -34,6 +35,8 @@ div
 }
 </style>
 <script>
+import storage from "../../ext/storage";
+import constants from "../constants";
 import uiza from "../services/uiza";
 import Player from "./Player";
 
@@ -66,13 +69,17 @@ export default {
         }
       });
     },
-    onDragStart(event) {
-        let data = {
-            width: '500px',
-            height: '300px'
-        }
-        event.dataTransfer.setData('text/plain', JSON.stringify(data));
-        event.dataTransfer.dropEffect = "copy";
+    onDragStart(event, item) {
+      const settings = storage.get(constants.SETTINGS_KEY);
+      let data = {
+        width: "500px",
+        height: "300px",
+        api_key: settings.api_key,
+        app_id: settings.app_id,
+        item_id: item.id
+      };
+      event.dataTransfer.setData("text/plain", JSON.stringify(data));
+      event.dataTransfer.dropEffect = "copy";
     }
   },
   data() {

@@ -12,12 +12,13 @@ script2.setAttribute("type", "text/javascript");
 script2.setAttribute("src", scriptUrl);
 document.body.appendChild(script2);
 
-script.onload = function() {
-    console.log('script loaded');
+script.onload = function () {
+  console.log('script loaded');
   var url = chrome.runtime.getURL("icons/playerholder.png");
 
   var evt = document.createEvent("CustomEvent");
   evt.initCustomEvent("uizaExtInitCss", true, true, url);
   document.dispatchEvent(evt);
   console.log('dispatched event')
+  // eslint-disable-next-line eol-last
 };

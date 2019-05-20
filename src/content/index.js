@@ -3,9 +3,11 @@ window.$ = window.jQuery = require("jquery");
 let jq162 = window.jQuery.noConflict(true);
 
 (function ($) {
+  var isDragging = false;
   var GetInsertionCSS = function (playerholderimage) {
     return (
-      ".reserved-drop-marker { height: 3px; background: red; position: relative; }.uiza-player-holder { background: url(" +
+      ".reserved-drop-target { border: red 1px solid; }" +
+      ".reserved-drop-marker { height: 0; background: red; position: relative; }.uiza-player-holder { background: url(" +
       playerholderimage +
       "); background-size: cover; }" +
       ".uiza-ext-player { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }" +
@@ -36,15 +38,21 @@ let jq162 = window.jQuery.noConflict(true);
     .on("dragover", function (event) {
       event.preventDefault();
       event.stopPropagation();
-      if (new Date().getTime() % 100 === 0) {
-        $(document)
-          .find(".reserved-drop-marker")
-          .remove();
+      if (isDragging) {
+        return;
+      } else {
+        isDragging = true;
+      }
+      if (new Date().getTime() % 1 === 0) {
+        $(".reserved-drop-marker").remove();
+        $(".reserved-drop-target").removeClass('reserved-drop-target');
+        $(event.target).addClass('reserved-drop-target');
         $(event.target).append(
           "<div class='reserved-drop-marker disabled-uiza-player-holder' style='--disabled-aspect-ratio:100/64;'><div id='uiza-ext-player'></div></div>"
         );
         // console.log("Drag Over", event.target);
       }
+      isDragging = false;
     });
 
   $(document)
@@ -52,9 +60,10 @@ let jq162 = window.jQuery.noConflict(true);
     .on("drop", function (event) {
       event.preventDefault();
       event.stopPropagation();
-      console.log(event.originalEvent.dataTransfer.getData('text/plain'));
+
       const eventData = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
       $('.reserved-drop-marker').removeClass('reserved-drop-marker');
+      $('.reserved-drop-target').removeClass('reserved-drop-target');
       window.UZ.Player.init(
         "#uiza-ext-player", {
           // api: btoa("uap-fb9065202ed64111b6f2e544a0c113a9-8cb63884"),

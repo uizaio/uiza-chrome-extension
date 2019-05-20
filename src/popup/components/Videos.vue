@@ -2,7 +2,7 @@
 div
   div(v-if='isConfigured' class="medias" v-loading="isLoading" element-loading-text="Loading... Please wait for a moment")
       //- el-button(@click="load") Load
-      p Hold your mouse on the video item and drag it to the webpage
+      p Hold your mouse on the video item and drag it onto the webpage
       div(draggable @dragstart="onDragStart($event, item)" class='item' v-for="item in vods" @click="playItem(item)")
           div(class='item-thumbnail')
               img(:src='item.thumbnail || "https://dashboard.uiza.io/assets/img/image-not-available.jpg"')
@@ -18,7 +18,7 @@ div
   display: flex;
   padding: 10px 0;
   border-bottom: #eee 1px solid;
-  cursor: pointer;
+  cursor: grab;
   &-thumbnail {
     flex: 0 0 120px;
     img {

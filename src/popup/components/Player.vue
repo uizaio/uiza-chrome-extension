@@ -5,7 +5,7 @@ div
     span(v-if="vod") {{ vod.name }}
   div.player
     div(id="player")
-  el-form(:disabled='true' size='small' label-position='left' label-width="110px" :model='playeSettings' :rules='playerRules' ref='playerForm')
+  el-form(:disabled='true' size='small' label-position='left' label-width="110px" :model='playerSettings' :rules='playerRules' ref='playerForm')
     el-form-item(label='Player size')
       el-col(:span='11')
         el-input(v-model='playerSettings.width')
@@ -38,7 +38,7 @@ div
   }
 }
 .player {
-  margin-top: 20px;
+  margin: 10px 0;
 }
 </style>
 <script>

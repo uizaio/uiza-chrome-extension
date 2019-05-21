@@ -3,11 +3,12 @@ window.$ = window.jQuery = require("jquery");
 let jq162 = window.jQuery.noConflict(true);
 
 (function ($) {
+  var increasedId = 0;
   var isDragging = false;
   var GetInsertionCSS = function (playerholderimage) {
     return (
-      ".reserved-drop-target { border: red 1px solid; }" +
-      ".reserved-drop-marker { height: 0; background: red; position: relative; }.uiza-player-holder { background: url(" +
+      ".reserved-drop-target { border: red 1px solid !important; }" +
+      ".reserved-drop-marker { position: relative; }.uiza-player-holder { background: url(" +
       playerholderimage +
       "); background-size: cover; }" +
       ".uiza-ext-player { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }" +
@@ -17,11 +18,10 @@ let jq162 = window.jQuery.noConflict(true);
 
   document.addEventListener("uizaExtInitCss", function (e) {
     var url = e.detail;
-    console.log("received " + url);
-    var style = $("<style uiza-data-reserved-styletag></style>").html(
+    var style = $("<style type='text/css' id='uiza-style' uiza-data-reserved-styletag>").html(
       GetInsertionCSS(url)
     );
-    $(document.head).append(style);
+    $('head').append(style);
   });
 
   $(document)
@@ -48,7 +48,7 @@ let jq162 = window.jQuery.noConflict(true);
         $(".reserved-drop-target").removeClass('reserved-drop-target');
         $(event.target).addClass('reserved-drop-target');
         $(event.target).append(
-          "<div class='reserved-drop-marker disabled-uiza-player-holder' style='--disabled-aspect-ratio:100/64;'><div id='uiza-ext-player'></div></div>"
+          "<div class='reserved-drop-marker disabled-uiza-player-holder' style='--disabled-aspect-ratio:100/64;'><div id='uiza-ext-player" + increasedId + "'></div></div>"
         );
         // console.log("Drag Over", event.target);
       }
@@ -60,16 +60,12 @@ let jq162 = window.jQuery.noConflict(true);
     .on("drop", function (event) {
       event.preventDefault();
       event.stopPropagation();
-
+      
       const eventData = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
       $('.reserved-drop-marker').removeClass('reserved-drop-marker');
       $('.reserved-drop-target').removeClass('reserved-drop-target');
       window.UZ.Player.init(
-        "#uiza-ext-player", {
-          // api: btoa("uap-fb9065202ed64111b6f2e544a0c113a9-8cb63884"),
-          // appId: "fb9065202ed64111b6f2e544a0c113a9",
-          // playerVersion: 4,
-          // entityId: "7631a97a-47f6-4786-a22f-ddf6d9fe22c3",
+        "#uiza-ext-player" + increasedId, {
           api: btoa(eventData.api_key),
           appId: eventData.app_id,
           playerVersion: 4,
@@ -88,6 +84,8 @@ let jq162 = window.jQuery.noConflict(true);
           });
         }
       );
+      // update new id for the next drop
+      increasedId += 1;
     });
   // eslint-disable-next-line eol-last
 })(jq162);

@@ -65,6 +65,7 @@ export default {
       this.$router.push({
         name: "play",
         params: {
+          type: 'vod',
           id: item.id
         }
       });

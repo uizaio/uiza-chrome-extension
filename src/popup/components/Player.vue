@@ -49,10 +49,17 @@ import uiza from "../services/uiza";
 
 export default {
   mounted() {
-    uiza.getSingleVOD(this.$route.params.id).then(resp => {
-      this.vod = resp.data;
-      this.initPlayer();
-    });
+    if (this.$route.params.type === 'vod') {
+      uiza.getSingleVOD(this.$route.params.id).then(resp => {
+        this.vod = resp.data;
+        this.initPlayer();
+      });
+    } else {
+      uiza.getLive(this.$route.params.id).then(resp => {
+        this.live = resp.data;
+        this.initPlayer();
+      });
+    }
   },
   methods: {
     back() {
@@ -60,16 +67,20 @@ export default {
     },
     initPlayer() {
       const settings = storage.get(constants.SETTINGS_KEY);
+      const params = {
+        api: btoa(settings.api_key),
+        appId: settings.app_id,
+        playerVersion: 4,
+        entityId: this.$route.params.id,
+        width: "400px",
+        height: "200px"
+      };
+      if (this.$route.params.type === 'live') {
+        params.streamName = this.live.channelName
+        params.feedId = this.live.lastFeedId
+      }
       window.UZ.Player.init(
-        "#player",
-        {
-          api: btoa(settings.api_key),
-          appId: settings.app_id,
-          playerVersion: 4,
-          entityId: this.$route.params.id,
-          width: "400px",
-          height: "200px"
-        },
+        "#player", params,
         function(player) {
           player.on("play", function() {
             console.log("play");
@@ -97,6 +108,7 @@ export default {
   data() {
     return {
       vod: null,
+      live: null,
       playerRules: {
         width: [
           {

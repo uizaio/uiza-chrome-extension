@@ -35,6 +35,12 @@ export default {
         const app_id = settings.app_id || ''
         const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/live/entity?appId=${app_id}&limit=5&page=1`
         return this.get(url)
+    },
+
+    getLive(id) {
+        const app_id = settings.app_id || ''
+        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/live/entity?appId=${app_id}&id=${id}`
+        return this.get(url)
     }
     // eslint-disable-next-line eol-last
 }

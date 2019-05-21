@@ -13,7 +13,7 @@ export default new Router({
         name: 'test',
         component: require('./components/Test.vue').default
     }, {
-        path: 'play/:id',
+        path: 'play/:type/:id',
         name: 'play',
         component: require('./components/Player.vue').default
     }]

@@ -11,18 +11,22 @@ let jq162 = window.jQuery.noConflict(true);
       ".reserved-drop-marker { position: relative; }.uiza-player-holder { background: url(" +
       playerholderimage +
       "); background-size: cover; }" +
-      ".uiza-ext-player { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }" +
-      "@supports (--custom:property){[style*='--aspect-ratio']{position:relative}[style*='--aspect-ratio']::before{content:'';display:block;padding-bottom:calc(100% / (var(--aspect-ratio)))}[style*='--aspect-ratio']>:first-child{position:absolute;top:0;left:0;height:100%}}"
+      ".uiza-ext-player { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }"
     );
   };
 
-  document.addEventListener("uizaExtInitCss", function (e) {
-    var url = e.detail;
-    var style = $("<style type='text/css' id='uiza-style' />").html(
-      GetInsertionCSS(url)
-    );
-    $('head').append(style);
-  });
+  // document.addEventListener("uizaExtInitCss", function (e) {
+  //   var url = e.detail;
+  //   var style = $("<style type='text/css' id='uiza-style' />").text(
+  //     GetInsertionCSS(url)
+  //   );
+  //   $('head').append(style);
+  // });
+
+  var style = $("<style type='text/css' id='uiza-style' />").text(
+    GetInsertionCSS('')
+  );
+  $('head').append(style);
 
   $(document)
     .find("body,html")
@@ -48,7 +52,7 @@ let jq162 = window.jQuery.noConflict(true);
         $(".reserved-drop-target").removeClass('reserved-drop-target');
         $(event.target).addClass('reserved-drop-target');
         $(event.target).append(
-          "<div class='reserved-drop-marker disabled-uiza-player-holder' style='--disabled-aspect-ratio:100/64;'><div id='uiza-ext-player" + increasedId + "'></div></div>"
+          "<div class='reserved-drop-marker disabled-uiza-player-holder'><div id='uiza-ext-player" + increasedId + "'></div></div>"
         );
         // console.log("Drag Over", event.target);
       }
@@ -65,14 +69,7 @@ let jq162 = window.jQuery.noConflict(true);
       $('.reserved-drop-marker').removeClass('reserved-drop-marker');
       $('.reserved-drop-target').removeClass('reserved-drop-target');
       window.UZ.Player.init(
-        "#uiza-ext-player" + increasedId, {
-          api: btoa(eventData.api_key),
-          appId: eventData.app_id,
-          playerVersion: 4,
-          entityId: eventData.item_id,
-          width: eventData.width,
-          height: eventData.height
-        },
+        "#uiza-ext-player" + increasedId, eventData.playerParams,
         function (player) {
           // 4. You can add logo at here
           // 5. You can add event listeners at here

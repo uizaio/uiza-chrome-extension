@@ -18,7 +18,7 @@ let jq162 = window.jQuery.noConflict(true);
 
   document.addEventListener("uizaExtInitCss", function (e) {
     var url = e.detail;
-    var style = $("<style type='text/css' id='uiza-style' uiza-data-reserved-styletag>").html(
+    var style = $("<style type='text/css' id='uiza-style' />").html(
       GetInsertionCSS(url)
     );
     $('head').append(style);

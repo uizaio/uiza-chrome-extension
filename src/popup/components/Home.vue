@@ -6,16 +6,18 @@
         el-tab-pane(label="VODs" name="vods")
           Videos
         el-tab-pane(label="Livestreams" name="live")
-          div hello 
+          LiveStreamings
 </template>
 <script>
 import Settings from "./Settings";
 import Videos from "./Videos";
+import LiveStreamings from "./LiveStreamings";
 
 export default {
   components: {
     Settings,
-    Videos
+    Videos,
+    LiveStreamings
   },
   data: () => ({
     activeTab: "settings"

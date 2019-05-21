@@ -11,7 +11,8 @@ let jq162 = window.jQuery.noConflict(true);
       ".reserved-drop-marker { position: relative; }.uiza-player-holder { background: url(" +
       playerholderimage +
       "); background-size: cover; }" +
-      ".uiza-ext-player { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }"
+      ".uiza-ext-player { position: relative; }" +
+      ".uiza-product-overlay { position: absolute; top: 60px; left: 30px; max-width: 140px; }.uiza-product-overlay-image { width: 140px; height: 200px;} .uiza-product-overlay-image img { object-fit: cover; width: 100%; height: 100% }"
     );
   };
 
@@ -27,6 +28,12 @@ let jq162 = window.jQuery.noConflict(true);
     GetInsertionCSS('')
   );
   $('head').append(style);
+
+  const product = {
+    name: 'Áo khoác Unisex kiểu dáng sơ mi caro không nón ',
+    photo: 'https://vn-test-11.slatic.net/p/41ae5761df99aa47847944aae9682b49.jpg_200x200Q100.jpg_.webp',
+    desc: 'ÁO khoác unisex kiểu dáng sơ mi sọc caro sẽ là điểm đáng tự hào được sáng tạo độc quyền.'
+  }
 
   $(document)
     .find("body,html")
@@ -52,7 +59,17 @@ let jq162 = window.jQuery.noConflict(true);
         $(".reserved-drop-target").removeClass('reserved-drop-target');
         $(event.target).addClass('reserved-drop-target');
         $(event.target).append(
-          "<div class='reserved-drop-marker disabled-uiza-player-holder'><div id='uiza-ext-player" + increasedId + "'></div></div>"
+          `<div class='reserved-drop-marker disabled-uiza-player-holder'>
+            <div id='uiza-ext-player${increasedId}' class="uiza-ext-player">
+              <div class="uiza-product-overlay">
+                <div class="uiza-product-overlay-image"><img src="${product.photo}" /></div>
+                <div class="uiza-product-overlay-name">${product.name}</div>
+                <div class="">
+                  <a href="#" class="uiza-product-overlay-cart">Add to cart</a>
+                </div>
+              </div>
+            </div>
+          </div>`
         );
         // console.log("Drag Over", event.target);
       }

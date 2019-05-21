@@ -65,7 +65,7 @@ export default {
       this.$router.push({
         name: "play",
         params: {
-          type: 'live',
+          type: "live",
           id: item.id
         }
       });
@@ -73,11 +73,17 @@ export default {
     onDragStart(event, item) {
       const settings = storage.get(constants.SETTINGS_KEY);
       let data = {
-        width: "500px",
-        height: "300px",
-        api_key: settings.api_key,
-        app_id: settings.app_id,
-        item_id: item.id
+        playerParams: {
+          api: btoa(settings.api_key),
+          appId: settings.app_id,
+          playerVersion: 4,
+          entityId: item.id,
+          streamName: item.channelName,
+          feedId: item.lastFeedId,
+          width: "500px",
+          height: "300px",
+          controls: false
+        }
       };
       event.dataTransfer.setData("text/plain", JSON.stringify(data));
       event.dataTransfer.dropEffect = "copy";

@@ -81,8 +81,8 @@ export default {
           streamName: item.channelName,
           feedId: item.lastFeedId,
           width: "500px",
-          height: "300px",
-          controls: false
+          height: "300px"
+          // controls: false
         }
       };
       event.dataTransfer.setData("text/plain", JSON.stringify(data));

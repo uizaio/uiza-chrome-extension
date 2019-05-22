@@ -5,10 +5,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <!-- Swiper -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"
     integrity="sha256-uckMYBvIGtce2L5Vf/mwld5arpR5JuhAEeJyjPZSUKY=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/css/swiper.min.css"
-    integrity="sha256-XwfUNXGiAjWyUGBhyXKdkRedMrizx1Ejqo/NReYNdUE=" crossorigin="anonymous" />
+    integrity="sha256-XwfUNXGiAjWyUGBhyXKdkRedMrizx1Ejqo/NReYNdUE=" crossorigin="anonymous" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.6/css/lightslider.min.css" integrity="sha256-ev+XS9lVA6/6vEe/p9pncQjsHB6g9UtAZYFLNViXxAA=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.6/js/lightslider.min.js" integrity="sha256-nHmCK+HOPMPezzS3ky9VKznMWH4sW4keT8HrMaDNbYo=" crossorigin="anonymous"></script>
   <!-- awesomeicon-->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
     integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
@@ -114,44 +116,161 @@
     }
 
     .uiza-product-list {
-      /* position: absolute;
+      display: none;
+      position: absolute;
+      height: 150px;
       bottom: 50px;
       left: 0;
-      right: 0; */
-      height: 140px;
-      background: rgba(255, 255, 255, .2);
+      right: 0;
+      background: linear-gradient(90deg,#fb9da3,#fb747c);
+      padding: 10px 0;
     }
-
-    .uiza-product-list-swiper {
-      width: 100%;
-      height: auto;
-      margin-left: auto;
-      margin-right: auto;
+    .uiza-product-list-toggle {
+      position: absolute;
+      left: 50%;
+      top: -20px;
+      margin-left: -20px;
+      width: 40px;
+      height: 40px;
+      background: #FFF;
+      border-radius: 100%;
+      text-align: center;
+      z-index: 99;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+      cursor: pointer;
+    }
+    .uiza-product-list-toggle i {
+      font-size: 30px;
+      margin: 5px 0 0 0;
     }
 
     .uiza-product-list-item {
-      width: 100px;
-      height: 140px;
-      padding: 5px;
-      margin: 10px;
-      background: yellow;
+      width: 300px;
+      height: 130px;
+      padding: 10px;
+      margin: 0 5px;
+      background: #FFF;
       position: relative;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+      border-radius: 10px;
     }
 
     .uiza-product-list-item img {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
+      height: 120px;
+      width: 100px;
+      float: left;
     }
-
+    .uiza-product-list-item .desc {
+      padding-left: 110px;
+    }
     .uiza-product-list-item h4 {
-      position: absolute;
-      bottom: 10px;
-      left: 0;
-      right: 0;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      margin-top: 0;
+      margin-bottom: 10px;
       overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+    }
+    .uiza-product-list-item .price {
+      color: #ff0010;
+      font-size: 1.8rem;
+      font-weight: 500;
+    }
+    .uiza-product-list-item button.uiza-product-view {
+      font-size: 1.4rem;
+      padding: .3rem .6rem;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(90deg,#b9081d,#f21a4c);
+      margin-top: 10px;
+      border: 0 !important;
+      border-radius: 6px;
+    }
+    .uiza-player-popup {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 0; right: 0;
+      background: rgba(255, 255, 255, .95);
+      border: #999 1px solid;
+      display: none;
+    }
+    .uiza-player-popup-exit {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: red;
+      cursor: pointer;
+    }
+    .uiza-player-popup-content {
+
+    }
+    .product-popup {
+      padding: 20px;
+    }
+    .product-popup-image {
+      width: 120px;
+      float: left;
+    }
+    .product-popup-image img {
+      object-fit: cover;
+      max-width: 100%;
+    }
+    .product-popup-content {
+      padding-left: 140px;
+    }
+    .product-popup-content h4 {
+      margin-top: 0;
+      font-size: 32px;
+    }
+    .product-popup-content .options span {
+      display: inline-block;
+      font-weight: 800;
+      vertical-align: middle;
+    } 
+    .uiza-color-picker {
+      list-style: none;
+      padding-left: 0 !important;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .uiza-color-picker-option {
+      display: inline-block;
+      margin-right: 10px;
+      width: 40px;
+      height: 40px;
+      border: #EEE 1px solid;
+    }
+    .uiza-color-picker-option.green {
+      background: green;
+    }
+    .uiza-color-picker-option.blue {
+      background: blue;
+    }
+    .uiza-color-picker-option.red {
+      background: red;
+    }
+    .product-popup-footer {
+      padding-left: 140px;
+    }
+    .product-popup-footer-btn {
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+      background-image: none;
+      border: none;
+      height: 40px;
+      color: #fff;
+      background-color: #e5101d;
+      font-weight: 500;
+      font-size: 1.4rem;
+      min-width: 10rem;
+      border-radius: 3px;
+      margin: 20px 20px 0 0;
+    }
+    .product-popup-footer-btn.btn-add {
+      background-color: orange;
     }
   </style>
   <!-- 2. The video player will prepend the player into this <div> tag. You should create css style for this tag -->
@@ -178,41 +297,10 @@
         <div class="uiza-controls-shopping-emotion"><a href="#"><i class="far fa-kiss-wink-heart"></i></a></div>
       </div>
       <div class="uiza-product-list">
+        <div class="uiza-product-list-toggle"><i class="fas fa-arrow-circle-down"></i></div>
         <div class="uiza-product-list-swiper swiper-container">
           <div class="uiza-product-list-wrapper swiper-wrapper">
-            <div class="uiza-product-list-item">
-              <img src="https://vn-test-11.slatic.net/p/d27315882e9212a5326fb97483514c80.jpg_200x200Q100.jpg_.webp" />
-              <h4>Sơ mi nam nữ in hình họa tiết hót 2019-2020</h4>
-            </div>
-            <div class="uiza-product-list-item">
-              <img
-                src="https://vn-test-11.slatic.net/original/82a71e67110d18b310aa4db82f834caf.jpg_200x200Q100.jpg_.webp" />
-              <h4>Chân váy ngắn kaki đuôi cástyle Hàn Quốc dịu dàng xinh xắn</h4>
-            </div>
-            <div class="uiza-product-list-item">
-              <img
-                src="https://vn-test-11.slatic.net/original/a39cbed057f30a5ba0323f9da9c5034f.jpg_200x200Q100.jpg_.webp" />
-              <h4>Bộ Quần Áo Thun Nam Tay Ngắn Quần Dài </h4>
-            </div>
-            <div class="uiza-product-list-item">
-              <img src="https://vn-test-11.slatic.net/p/c922e42de939efee508e83b5f0829a4a.jpg_200x200Q100.jpg_.webp" />
-              <h4>Sơ mi nam nữ in hình họa tiết hót 2019-2020</h4>
-            </div>
-            <div class="uiza-product-list-item">
-              <img
-                src="https://vn-test-11.slatic.net/original/bde72852b661180af50c97fa1e5c8ae4.jpg_200x200Q100.jpg_.webp" />
-              <h4>Sơ mi nam nữ in hình họa tiết hót 2019-2020</h4>
-            </div>
-            <div class="uiza-product-list-item">
-              <img
-                src="https://vn-test-11.slatic.net/original/9c70c78f24b76243d8931c5f3563fa83.jpg_200x200Q100.jpg_.webp" />
-              <h4>Sơ mi nam nữ in hình họa tiết hót 2019-2020</h4>
-            </div>
-            <div class="uiza-product-list-item">
-              <img
-                src="https://vn-test-11.slatic.net/original/263aece7027e196898f3b4946f676716.jpg_200x200Q100.jpg_.webp" />
-              <h4>Sơ mi nam nữ in hình họa tiết hót 2019-2020</h4>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -224,10 +312,39 @@
           </div>
         </div>
       </div>
+      <div class="uiza-player-popup">
+        <div class="uiza-player-popup-exit"><i class="far fa-times-circle"></i></div>
+        <div class="uiza-player-popup-content"></div>
+      </div>
     </div>
   </div>
-
   <script>
+    function showProduct(product) {
+      const element = `
+        <div class="product-popup">
+          <div class="product-popup-image"><img src="${product.image}" /></div>
+          <div class="product-popup-content">
+            <h4>${product.name}</h4>
+            <div class="desc">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</div>
+            <div class="options">
+              <span>Select color</span>
+              <ul class="uiza-color-picker">
+                <li class="uiza-color-picker-option active green"></li>
+                <li class="uiza-color-picker-option red"></li>
+                <li class="uiza-color-picker-option blue"></li>
+              </ul>
+            </div>
+          </div>
+          <div class="product-popup-footer">
+            <button class="product-popup-footer-btn btn-add">Add to cart</button>
+            <button class="product-popup-footer-btn">Buy now</button>
+          </div>
+        </div>
+      `
+      $('.uiza-player-popup-content').empty()
+        .append(element)
+        .closest('.uiza-player-popup').show();
+    }
     // 3. This code creates an UIZA player, and return the player for the callback
     window.UZ.Player.init(
       '#player', // player element, exp: #element_id, .element_class
@@ -252,13 +369,58 @@
       }
     );
     // eslint-disable-next-line no-new
-    new window.Swiper('.uiza-product-list-swiper', {
-      slidesPerView: 3,
-      spaceBetween: 30
-      // freeMode: true
-      // slideClass: 'uiza-product-list-item',
-      // wrapperClass: 'uiza-product-list-wrapper'
+
+    let products = [];
+    $.ajax({
+      'url': '/products.json',
+      'type': 'GET',
+      'dataType': 'json',
+      success: function(resp) {
+        $('.uiza-product-list-wrapper').empty()
+        products = resp.data.products;
+        products.forEach(function(item) {
+          const price = item.price.toLocaleString();
+          const product = `
+          <div class="uiza-product-list-item">
+              <img src="${item.image}" />
+              <div class="desc">
+                <h4>${item.name}</h4>
+                <div class="price">${price}</div>
+                <button class="uiza-product-view" data-id="${item.id}">View product</button>
+              </div>
+            </div>
+          `
+          $('.uiza-product-list-wrapper').append(product);
+        })
+        // showProduct(products[0]);
+        $('.uiza-product-list-wrapper').lightSlider({
+          autoWidth: true,
+          pager: false,
+          controls: false,
+          adaptiveHeight: true
+        });
+      }
     });
+
+    
+
+    $(document).on('click', '.uiza-product-view', function(e) {
+      e.preventDefault();
+      const id = $(this).data('id');
+      const product = products.find(x => x.id === id);
+      console.log(product);
+      showProduct(product);
+      
+    }).on('click', '.uiza-player-popup-exit', function(e) {
+      e.preventDefault();
+      $(this).closest('.uiza-player-popup').hide();
+    }).on('click', '.uiza-product-list-toggle', function(e) {
+      e.preventDefault();
+      $(this).closest('.uiza-product-list').hide();
+    }).on('click', '.uiza-controls-shopping-bag', function() {
+      $('.uiza-product-list').show();
+    });
+    
   </script>
 </body>
 

@@ -5,13 +5,6 @@ script.setAttribute("type", "text/javascript");
 script.setAttribute("src", scriptUrl);
 document.body.appendChild(script);
 
-// inject lightSlider+ SDKv
-scriptUrl = 'https://cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.6/js/lightslider.min.js';
-script = document.createElement("script");
-script.setAttribute("type", "text/javascript");
-script.setAttribute("src", scriptUrl);
-document.body.appendChild(script);
-
 // inject content script
 scriptUrl = chrome.extension.getURL("js/content.js");
 var script2 = document.createElement("script");

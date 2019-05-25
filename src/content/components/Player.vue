@@ -1,16 +1,17 @@
 <template lang="pug">
 .uiza-ext-player
-  .uiza-chat-messages
-    div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
-      strong {{ message.sender.userId }} says: 
-      //- time sent at {{ message.createdAt }}
-      span {{ message.message }}
+  .uiza-chat-messages(ref="chatScroller")
+    .uiza-chat-messages-wrapper
+      div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
+        strong {{ message.sender.userId }} says: 
+        //- time sent at {{ message.createdAt }}
+        span {{ message.message }}
   .uiza-controls(v-if="showControls")
     .uiza-controls-shopping-bag
       a(href='#' @click="showProducts = !showProducts")
         i.fas.fa-shopping-bag
     .uiza-controls-shopping-chat-input
-      input(type='text', placeholder='Enter your message')
+      input(v-model="chatMessage" type='text' placeholder='Enter your message' v-on:keyup.enter="sendMessage")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-cart
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
@@ -68,12 +69,17 @@ export default {
     this.initPlayer();
   },
   methods: {
+    scrollChat() {
+      setTimeout(function() {
+        this.$refs.chatScroller.scrollTop = this.$refs.chatScroller.scrollHeight;
+      }.bind(this), 100);
+    },
     connectSendBird() {
       const self = this;
-      const userId = "uiza" + Math.floor(Math.random() * 10);
+      self.chatUser = "uiza" + Math.floor(Math.random() * 10);
       self.sb = new SendBird({ appId: "A8D50190-B214-48B6-8A67-65EDE27CCED2" });
 
-      self.sb.connect(userId, function(user, error) {
+      self.sb.connect(self.chatUser, function(user, error) {
         if (error) {
           console.log(error);
         }
@@ -99,22 +105,40 @@ export default {
                   return;
                 }
                 self.chatMessages = messageList.reverse();
-                console.log("loaded messages", messageList);
+                self.scrollChat();
               });
+
+              var ChannelHandler = new self.sb.ChannelHandler();
+
+              ChannelHandler.onMessageReceived = function(channel, message) {
+                  console.log(channel, message);
+                  self.chatMessages.push(message);
+              };
+              self.sb.addChannelHandler('UNIQUE_HANDLER_ID', ChannelHandler);
             });
+            // self.currentChannel.onMessageReceived(function(channel, message) {
+            //   console.log('new message', message);
+            // });
           }
         );
       });
     },
     sendMessage() {
-      var params = new self.sb.UserMessageParams();
-      params.message = "Hi, guys!";
-      this.currentChannel.sendUserMessage(params, function(message, error) {
-        if (error) {
-          console.log("failed to send message", error);
-        }
-        console.log("sent", message);
-      });
+      const self = this;
+      if (this.chatMessage.trim().length) {
+        var params = new self.sb.UserMessageParams();
+        params.message = this.chatMessage;
+        this.currentChannel.sendUserMessage(params, function(message, error) {
+          if (error) {
+            console.log("failed to send message", error);
+            alert('Failed to send message, please try again');
+            return;
+          }
+          self.chatMessages.push(message)
+          self.chatMessage = '';
+          self.scrollChat();
+        });
+      }
     },
     initPlayer() {
       const self = this;
@@ -175,8 +199,10 @@ export default {
       selectedProduct: null,
       itemsInCart: 0,
       sb: null,
+      chatUser: '',
       currentChannel: null,
-      chatMessages: []
+      chatMessages: [],
+      chatMessage: ''
     };
   }
 };
@@ -186,6 +212,10 @@ export default {
 .uiza-ext-player {
   position: relative;
   font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  > iframe {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 .uiza-chat-messages {
   position: absolute;
@@ -194,14 +224,21 @@ export default {
   left: 0;
   width: 300px;
   overflow: auto;
-  background: rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  .uiza-chat-messages-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+  }
   &-item {
     padding: 3px 0 3px 10px;
     font-size: 12px;
     color: #fff;
+    flex: 1 1 auto;
   }
 }
 .uiza-product-overlay {

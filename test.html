@@ -194,6 +194,7 @@
       left: 0; right: 0;
       background: rgba(255, 255, 255, .95);
       border: #999 1px solid;
+      z-index: 100;
       display: none;
     }
     .uiza-player-popup-exit {
@@ -237,10 +238,11 @@
     }
     .uiza-color-picker-option {
       display: inline-block;
-      margin-right: 10px;
-      width: 40px;
-      height: 40px;
-      border: #EEE 1px solid;
+      margin: 0 5px;
+      width: 24px;
+      height: 24px;
+      border: #FFF 3px solid;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
     }
     .uiza-color-picker-option.green {
       background: green;
@@ -268,6 +270,7 @@
       min-width: 10rem;
       border-radius: 3px;
       margin: 20px 20px 0 0;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
     }
     .product-popup-footer-btn.btn-add {
       background-color: orange;
@@ -276,16 +279,6 @@
   <!-- 2. The video player will prepend the player into this <div> tag. You should create css style for this tag -->
   <div class="uiza-ext-player">
     <div id='player' class="uiza-ext-player" style="width: 700px; height: 400px;">
-      <div class="uiza-product-overlay">
-        <div class="uiza-product-overlay-image"><img
-            src="https://vn-test-11.slatic.net/p/41ae5761df99aa47847944aae9682b49.jpg_200x200Q100.jpg_.webp" /></div>
-        <div class="uiza-product-overlay-wrapper">
-          <div class="uiza-product-overlay-name">Áo khoác Unisex kiểu dáng sơ mi caro không nón</div>
-          <div class="">
-            <a href="#" class="uiza-product-overlay-cart">Add to cart</a>
-          </div>
-        </div>
-      </div>
       <div class="uiza-controls">
         <div class="uiza-controls-shopping-bag"><a href="#"><i class="fas fa-shopping-bag"></i></a></div>
         <div class="uiza-controls-shopping-chat-input">
@@ -345,6 +338,37 @@
         .append(element)
         .closest('.uiza-player-popup').show();
     }
+
+    function addOverlay(product) {
+      const template = `
+        <div class="uiza-product-overlay">
+          <div class="uiza-product-overlay-image">
+            <img src="${product.image}" />
+          </div>
+          <div class="uiza-product-overlay-wrapper">
+            <div class="uiza-product-overlay-name">${product.name}</div>
+            <div class="">
+              <a href="#" class="uiza-product-overlay-cart uiza-product-view" data-id="${product.id}">Add to cart</a>
+            </div>
+          </div>
+        </div>
+      `
+      $('#player').prepend(template);
+    }
+
+    function getCart() {
+      try {
+        return JSON.parse(localStorage.getItem('UIZA_EXT_CART'))
+      } catch (e) {
+        return []
+      }
+    }
+
+    function addToCart(product) {
+      let products = getCart()
+      products.push(product);
+      localStorage.setItem('UIZA_EXT_CART', JSON.stringify(products));
+    }
     // 3. This code creates an UIZA player, and return the player for the callback
     window.UZ.Player.init(
       '#player', // player element, exp: #element_id, .element_class
@@ -391,7 +415,10 @@
             </div>
           `
           $('.uiza-product-list-wrapper').append(product);
-        })
+        });
+
+        const randomProduct = products[Math.floor(Math.random() * products.length)];
+        addOverlay(randomProduct)
         // showProduct(products[0]);
         $('.uiza-product-list-wrapper').lightSlider({
           autoWidth: true,

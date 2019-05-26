@@ -13,12 +13,20 @@ script2.setAttribute("src", scriptUrl);
 document.body.appendChild(script2);
 
 script.onload = function () {
-  console.log('script loaded');
   var url = chrome.runtime.getURL("icons/playerholder.png");
-
   var evt = document.createEvent("CustomEvent");
   evt.initCustomEvent("uizaExtInitCss", true, true, url);
   document.dispatchEvent(evt);
-  console.log('dispatched event')
   // eslint-disable-next-line eol-last
 };
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendRespond) {
+    if (request.UIZA_EXT_PLAYER) {
+      console.log('receive event', request.UIZA_EXT_PLAYER);
+      var evt = document.createEvent("CustomEvent");
+      evt.initCustomEvent("uizaExtPlayerChanged", true, true, request.UIZA_EXT_PLAYER);
+      document.dispatchEvent(evt);
+    }
+  }
+);

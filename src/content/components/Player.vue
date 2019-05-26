@@ -1,5 +1,7 @@
 <template lang="pug">
-.uiza-ext-player
+.uiza-ext-player(ref="playerContainer" :style="{ height: height, width: width }")
+  a.uiza-logo(v-if="playerSettings" :href="playerSettings.brand_url" target="_blank")
+    img(:src="playerSettings.brand_logo")
   .uiza-chat-messages(ref="chatScroller")
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
@@ -42,7 +44,7 @@
       div
         a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = randomProduct") Add to cart
 
-  PlayerControls(class="controls" v-if="player" :player="player" :isLive="isLive")
+  PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
 
   PopupProduct(v-if="selectedProduct && showControls" :product="selectedProduct" @close="close" @cartChanged="onCartChanged")
 
@@ -64,15 +66,22 @@ export default {
     Slide
   },
   mounted() {
+    this.playerSettings = this.$parent.data.playerSettings;
+    document.addEventListener("uizaExtPlayerChanged", function(e) {
+      this.playerSettings = e.detail;
+    }.bind(this));
     this.connectSendBird();
     this.getItemsInCart();
     this.initPlayer();
   },
   methods: {
     scrollChat() {
-      setTimeout(function() {
-        this.$refs.chatScroller.scrollTop = this.$refs.chatScroller.scrollHeight;
-      }.bind(this), 100);
+      setTimeout(
+        function() {
+          this.$refs.chatScroller.scrollTop = this.$refs.chatScroller.scrollHeight;
+        }.bind(this),
+        100
+      );
     },
     connectSendBird() {
       const self = this;
@@ -111,10 +120,10 @@ export default {
               var ChannelHandler = new self.sb.ChannelHandler();
 
               ChannelHandler.onMessageReceived = function(channel, message) {
-                  console.log(channel, message);
-                  self.chatMessages.push(message);
+                console.log(channel, message);
+                self.chatMessages.push(message);
               };
-              self.sb.addChannelHandler('UNIQUE_HANDLER_ID', ChannelHandler);
+              self.sb.addChannelHandler("UNIQUE_HANDLER_ID", ChannelHandler);
             });
             // self.currentChannel.onMessageReceived(function(channel, message) {
             //   console.log('new message', message);
@@ -131,11 +140,11 @@ export default {
         this.currentChannel.sendUserMessage(params, function(message, error) {
           if (error) {
             console.log("failed to send message", error);
-            alert('Failed to send message, please try again');
+            alert("Failed to send message, please try again");
             return;
           }
-          self.chatMessages.push(message)
-          self.chatMessage = '';
+          self.chatMessages.push(message);
+          self.chatMessage = "";
           self.scrollChat();
         });
       }
@@ -144,8 +153,8 @@ export default {
       const self = this;
       const playerId = this.$parent.id + " .uiza-ext-player";
       const playerParams = { ...this.$parent.data.playerParams };
-      console.log(playerId, playerParams);
       window.UZ.Player.init(playerId, playerParams, function(player) {
+        console.log('hello', player);
         self.player = player;
         player.on("play", function() {
           self.showControls = true;
@@ -153,6 +162,8 @@ export default {
         player.on("pause", function() {
           self.showControls = false;
         });
+      }, function(player) {
+        console.log(player)
       });
     },
     getItemsInCart() {
@@ -176,6 +187,12 @@ export default {
     }
   },
   computed: {
+    width() {
+      return this.playerSettings ? this.playerSettings.width : this.$parent.data.playerParams.width;
+    },
+    height() {
+      return this.playerSettings ? this.playerSettings.height : this.$parent.data.playerParams.height;
+    },
     isLive() {
       return !!this.$parent.data.playerParams.feedId;
     },
@@ -194,15 +211,16 @@ export default {
   data() {
     return {
       player: null,
+      playerSettings: null,
       showControls: true,
       showProducts: false,
       selectedProduct: null,
       itemsInCart: 0,
       sb: null,
-      chatUser: '',
+      chatUser: "",
       currentChannel: null,
       chatMessages: [],
-      chatMessage: ''
+      chatMessage: ""
     };
   }
 };
@@ -213,8 +231,17 @@ export default {
   position: relative;
   font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   > iframe {
-    width: 100% !important;
-    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+  }
+}
+.uiza-logo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: block;
+  img {
+    max-width: 80px;
   }
 }
 .uiza-chat-messages {

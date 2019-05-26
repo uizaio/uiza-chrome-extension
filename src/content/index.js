@@ -2,10 +2,10 @@
 import Vue from "vue";
 import Player from "./components/Player.vue";
 import "@fortawesome/fontawesome-free/js/all.js";
-import 'vue-slider-component/theme/default.css';
+import "vue-slider-component/theme/default.css";
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
-const jsonData = require('./data.json');
+const jsonData = require("./data.json");
 
 Vue.component("uiza-ext-player", Player);
 window.$ = window.jQuery = require("jquery");
@@ -17,7 +17,8 @@ var jq162 = window.jQuery.noConflict(true);
   var isDragging = false;
   var developmentMockup = function() {
     if (self !== top) return;
-    if (window.location.hostname !== '127.0.0.1') return;
+    // eslint-disable-next-line no-constant-condition
+    if (window.location.hostname !== "127.0.0.1" || true) return;
     var eventData = {
       playerParams: {
         api: "dWFwLWZiOTA2NTIwMmVkNjQxMTFiNmYyZTU0NGEwYzExM2E5LThjYjYzODg0",
@@ -27,6 +28,14 @@ var jq162 = window.jQuery.noConflict(true);
         height: "300px",
         playerVersion: 4,
         width: "500px"
+      },
+      playerSettings: {
+        width: "1280px",
+        height: "600px",
+        color: "#FF0000",
+        brand_logo:
+          "https://storage.googleapis.com/shopdunk-images/tintucshopdunknew/2018/05/tai-sao-logo-hang-Apple-la-trai-tao-do-2.png",
+        brand_url: "https://apple.com"
       }
     };
     var increasedId = "test";
@@ -47,7 +56,7 @@ var jq162 = window.jQuery.noConflict(true);
   };
 
   $(document).ready(function() {
-    console.log('json', jsonData);
+    console.log("json", jsonData);
     developmentMockup();
   });
 
@@ -114,9 +123,9 @@ var jq162 = window.jQuery.noConflict(true);
       $(".reserved-drop-target").removeClass("reserved-drop-target");
 
       var playerId = "#uiza-ext-player" + increasedId;
-      $(playerId)
-        .css("width", eventData.playerParams.width)
-        .css("height", eventData.playerParams.height);
+      // $(playerId)
+      //   .css("width", eventData.playerParams.width)
+      //   .css("height", eventData.playerParams.height);
       $("#uiza-ext-player" + increasedId).append(
         "<uiza-ext-player></uiza-ext-player>"
       );

@@ -35,6 +35,7 @@ div
 }
 </style>
 <script>
+import { mapFields } from "vuex-map-fields";
 import storage from "../../ext/storage";
 import constants from "../constants";
 import uiza from "../services/uiza";
@@ -47,9 +48,6 @@ export default {
   created() {},
   mounted() {
     this.load();
-  },
-  computed: {
-    isConfigured: uiza.isConfigured
   },
   methods: {
     load() {
@@ -79,12 +77,18 @@ export default {
           playerVersion: 4,
           entityId: item.id,
           width: '500px',
-          height: '300px'
-        }
+          height: '300px',
+          controls: false
+        },
+        playerSettings: this.playerSettings
       };
       event.dataTransfer.setData("text/plain", JSON.stringify(data));
       event.dataTransfer.dropEffect = "copy";
     }
+  },
+  computed: {
+    isConfigured: uiza.isConfigured,
+    ...mapFields("settings", ["settings", "playerSettings"])
   },
   data() {
     return {

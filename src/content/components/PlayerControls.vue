@@ -1,19 +1,19 @@
 <template lang="pug">
 .uiza-player-controls
   //-  Play button
-  button.uiza-player-controls-play(v-show="!isPlaying" @click="play")
+  button.uiza-player-controls-play(v-show="!isPlaying" @click="play" :style="{ color: settings.color }")
     i.fas.fa-play
-  button.uiza-player-controls-play(v-show="isPlaying" @click="pause")
+  button.uiza-player-controls-play(v-show="isPlaying" @click="pause" :style="{ color: settings.color }")
     i.fas.fa-pause
   //- Volume button
-  button.uiza-player-controls-volume(v-show="currentVolume > 0" @click="mute")
+  button.uiza-player-controls-volume(v-show="currentVolume > 0" @click="mute" :style="{ color: settings.color }")
     i.fas.fa-volume-up
-  button.uiza-player-controls-volume(v-show="currentVolume <= 0" @click="unmute")
+  button.uiza-player-controls-volume(v-show="currentVolume <= 0" @click="unmute" :style="{ color: settings.color }")
     i.fas.fa-volume-mute
-  VueSlider(class="uiza-player-controls-volume-slider" v-model="currentVolume" :max="100")
+  VueSlider(class="uiza-player-controls-volume-slider" v-model="currentVolume" :max="100" :processStyle="{ background: settings.color }")
   //- Progress bar
   .uiza-player-controls-progress
-    VueSlider(v-if="!isLive" v-model="currentPos" :max="duration" @change="onVolumeChanged")
+    VueSlider(v-if="!isLive" v-model="currentPos" :max="duration" @change="onVolumeChanged" :processStyle="{ background: settings.color }")
   div(v-if="!isLive" class="uiza-player-controls-duration")
     span {{ formattedCurrentPos }}
     span /
@@ -21,7 +21,7 @@
   div(v-if="isLive" class="uiza-player-controls-live")
     //- i.far.fa-dot-circle
     span Live
-  button.uiza-player-controls-fullscreen(@click="fullscreen")
+  button.uiza-player-controls-fullscreen(@click="fullscreen" @change="onProgressChanged" :style="{ color: settings.color }")
     i.fas.fa-compress
 </template>
 
@@ -29,7 +29,7 @@
 import VueSlider from 'vue-slider-component'
 
 export default {
-  props: ["player", "isLive"],
+  props: ["player", "isLive", "settings"],
   components: {
     VueSlider
   },
@@ -59,7 +59,11 @@ export default {
       return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
     },
     fullscreen() {
-      this.player.enterFullWindow();
+      if (this.player.isFullscreen()) {
+        this.player.exitFullscreen();
+      } else {
+        this.player.requestFullscreen();
+      }
     },
     play() {
       this.player.play();
@@ -75,6 +79,11 @@ export default {
     },
     onVolumeChanged() {
       this.player.volume()
+    },
+    onProgressChanged() {
+      this.player.pause();
+      this.player.currentTime(this.currentPos / 1000);
+      this.player.play();
     }
   },
   computed: {
@@ -113,8 +122,9 @@ export default {
     border: none !important;
     outline: none !important;
     cursor: pointer;
+    color: #FFF;
     svg {
-      color: #FFF;
+      
     }
   }
   &-volume {

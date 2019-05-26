@@ -8,6 +8,22 @@ div
     el-form-item
       el-button(type='primary', @click='submitForm') Save
       el-button(@click='resetForm') Reset
+  el-form(:disabled='false' size='small' label-position='left' label-width="110px" :model='playerSettings' :rules='playerRules' ref='playerForm')
+    el-form-item(label='Player size')
+      el-col(:span='11')
+        el-input(v-model='playerSettings.width')
+      el-col(class="line" :span="2")
+        | x 
+      el-col(:span='11')
+        el-input(v-model='playerSettings.height')
+    el-form-item(label='Player color')
+      el-color-picker(v-model="playerSettings.color")
+    el-form-item(label='Brand logo', prop='brand_logo')
+      el-input(v-model='playerSettings.brand_logo')
+    el-form-item(label='Brand url', prop='brand_url')
+      el-input(v-model='playerSettings.brand_url')
+    el-form-item
+      el-button(type='primary', @click='submitPlayerForm') Save
   
 </template>
 
@@ -18,9 +34,13 @@ import constants from "../constants";
 
 export default {
   mounted() {
-    const data = storage.get(constants.SETTINGS_KEY);
-    if (data) {
-      this.settings = data;
+    const settings = storage.get(constants.SETTINGS_KEY);
+    if (settings) {
+      this.settings = settings;
+    }
+    const playerSettings = storage.get(constants.PLAYER_SETTINGS_KEY);
+    if (playerSettings) {
+      this.playerSettings = playerSettings;
     }
   },
   data() {
@@ -41,6 +61,32 @@ export default {
             trigger: "blur"
           }
         ]
+      },
+      playerRules: {
+        width: [
+          {
+            required: true,
+            message: "Please specify player's width",
+            trigger: "blur"
+          },
+          {
+            number: true,
+            message: "Height must be a number"
+          }
+        ],
+        height: [
+          {
+            required: true,
+            message: "Please specify player's height",
+            trigger: "blur"
+          },
+          {
+            number: true,
+            message: "Height must be a number"
+          }
+        ],
+        brand_logo: [],
+        brand_url: []
       }
     };
   },
@@ -58,15 +104,42 @@ export default {
           });
         } else {
           this.$notify({
-            title: "Success",
-            message: "This is a success message",
-            type: "success"
+            title: "Error",
+            message: "Please correct the input fields",
+            type: "error"
           });
         }
       });
     },
     resetForm() {
       this.$refs.settingsForm.resetFields();
+    },
+    submitPlayerForm() {
+      const self = this;
+      this.$refs.playerForm.validate(valid => {
+        if (valid) {
+          storage.set(constants.PLAYER_SETTINGS_KEY, this.playerSettings);
+          // emit playerChanged event on injected script
+          chrome.tabs.query({"active": true, "currentWindow": true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                "UIZA_EXT_PLAYER": self.playerSettings
+              }
+            );
+          });
+          this.$alert("Settings save successfully", "Uiza Extension", {
+            confirmButtonText: "OK"
+          });
+        } else {
+          this.$notify({
+            title: "Error",
+            message: "Please correct the input fields",
+            type: "error"
+          });
+        }
+      });
+    },
+    resetPlayerForm() {
+      this.$refs.playerForm.resetFields();
     }
   }
 };

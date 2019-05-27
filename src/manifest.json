@@ -1,7 +1,7 @@
 {
   "name": "Uiza extension",
   "short_name": "Uiza Extension",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Used for placing a video/livestream from Uiza API to webpage for demo purpose",
   "author": "trinvh.com@gmail.com",
   "manifest_version": 2,

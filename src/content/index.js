@@ -12,13 +12,13 @@ window.$ = window.jQuery = require("jquery");
 
 var jq162 = window.jQuery.noConflict(true);
 
-(function($) {
+(function ($) {
   var increasedId = 0;
   var isDragging = false;
-  var developmentMockup = function() {
+  var developmentMockup = function () {
     if (self !== top) return;
     // eslint-disable-next-line no-constant-condition
-    if (window.location.hostname !== "127.0.0.1" || true) return;
+    if (window.location.hostname !== "127.0.0.1" || false) return;
     var eventData = {
       playerParams: {
         api: "dWFwLWZiOTA2NTIwMmVkNjQxMTFiNmYyZTU0NGEwYzExM2E5LThjYjYzODg0",
@@ -33,8 +33,7 @@ var jq162 = window.jQuery.noConflict(true);
         width: "1280px",
         height: "600px",
         color: "#FF0000",
-        brand_logo:
-          "https://storage.googleapis.com/shopdunk-images/tintucshopdunknew/2018/05/tai-sao-logo-hang-Apple-la-trai-tao-do-2.png",
+        brand_logo: "https://storage.googleapis.com/shopdunk-images/tintucshopdunknew/2018/05/tai-sao-logo-hang-Apple-la-trai-tao-do-2.png",
         brand_url: "https://apple.com"
       }
     };
@@ -55,12 +54,12 @@ var jq162 = window.jQuery.noConflict(true);
     });
   };
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     console.log("json", jsonData);
     developmentMockup();
   });
 
-  var GetInsertionCSS = function() {
+  var GetInsertionCSS = function () {
     return `
     .reserved-drop-target {
       border: red 1px solid! important;
@@ -79,15 +78,15 @@ var jq162 = window.jQuery.noConflict(true);
 
   $(document)
     .find("body,html")
-    .on("dragenter", function(event) {
+    .on("dragenter", function (event) {
       event.stopPropagation();
     })
     .find("*")
-    .on("dragenter", function(event) {
+    .on("dragenter", function (event) {
       event.preventDefault();
       event.stopPropagation();
     })
-    .on("dragover", function(event) {
+    .on("dragover", function (event) {
       event.preventDefault();
       event.stopPropagation();
       if (isDragging) {
@@ -112,7 +111,7 @@ var jq162 = window.jQuery.noConflict(true);
 
   $(document)
     .find("body,html")
-    .on("drop", function(event) {
+    .on("drop", function (event) {
       event.preventDefault();
       event.stopPropagation();
 

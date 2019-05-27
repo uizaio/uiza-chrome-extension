@@ -10,10 +10,10 @@
     i.fas.fa-volume-up
   button.uiza-player-controls-volume(v-show="currentVolume <= 0" @click="unmute" :style="{ color: settings.color }")
     i.fas.fa-volume-mute
-  VueSlider(class="uiza-player-controls-volume-slider" v-model="currentVolume" :max="100" :processStyle="{ background: settings.color }")
+  VueSlider(class="uiza-player-controls-volume-slider" v-model="currentVolume" :max="100" @change="onVolumeChanged" :processStyle="{ background: settings.color }")
   //- Progress bar
   .uiza-player-controls-progress
-    VueSlider(v-if="!isLive" v-model="currentPos" :max="duration" @change="onVolumeChanged" :processStyle="{ background: settings.color }")
+    VueSlider(v-if="!isLive" v-model="currentPos" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
   div(v-if="!isLive" class="uiza-player-controls-duration")
     span {{ formattedCurrentPos }}
     span /
@@ -21,12 +21,12 @@
   div(v-if="isLive" class="uiza-player-controls-live")
     //- i.far.fa-dot-circle
     span Live
-  button.uiza-player-controls-fullscreen(@click="fullscreen" @change="onProgressChanged" :style="{ color: settings.color }")
+  button.uiza-player-controls-fullscreen(@click="fullscreen" :style="{ color: settings.color }")
     i.fas.fa-compress
 </template>
 
 <script>
-import VueSlider from 'vue-slider-component'
+import VueSlider from "vue-slider-component";
 
 export default {
   props: ["player", "isLive", "settings"],
@@ -35,28 +35,30 @@ export default {
   },
   mounted() {
     const self = this;
-    this.player.on('play', () => {
-      self.isPlaying = true
-    })
-    this.player.on('pause', () => {
+    this.player.on("play", () => {
+      self.isPlaying = true;
+    });
+    this.player.on("pause", () => {
       self.isPlaying = false;
-    })
-    this.player.on('durationchange', (val) => {
+    });
+    this.player.on("durationchange", val => {
       // get duration in miliseconds
-      self.duration = self.player.duration() ? self.player.duration() * 1000 : 0;
-    })
-    this.player.on('volumechange', () => {
+      self.duration = self.player.duration()
+        ? self.player.duration() * 1000
+        : 0;
+    });
+    this.player.on("volumechange", () => {
       self.currentVolume = self.player.volume() * 100;
-    })
-    this.player.on('timeupdate', (val) => {
+    });
+    this.player.on("timeupdate", val => {
       self.currentPos = self.player.currentTime() * 1000;
-    })
+    });
   },
   methods: {
     millisToMinutesAndSeconds(millis) {
       var minutes = Math.floor(millis / 60000);
       var seconds = ((millis % 60000) / 1000).toFixed(0);
-      return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+      return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
     },
     fullscreen() {
       if (this.player.isFullscreen()) {
@@ -78,12 +80,12 @@ export default {
       this.player.volume(1);
     },
     onVolumeChanged() {
-      this.player.volume()
+      this.player.volume();
     },
     onProgressChanged() {
-      this.player.pause();
+      console.log("Before progress changed", this.player.currentTime());
       this.player.currentTime(this.currentPos / 1000);
-      this.player.play();
+      console.log("After progress changed", this.player.currentTime());
     }
   },
   computed: {
@@ -100,7 +102,7 @@ export default {
       currentPos: 0,
       duration: 0,
       currentVolume: 100
-    }
+    };
   }
 };
 </script>
@@ -109,11 +111,12 @@ export default {
 .uiza-player-controls {
   position: absolute;
   bottom: 0;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   display: flex;
   padding: 10px;
   flex-direction: row;
-  color: #FFF;
+  color: #fff;
   background: rgba(0, 0, 0, 0.3);
   > button {
     flex: 0 0 auto;
@@ -122,9 +125,8 @@ export default {
     border: none !important;
     outline: none !important;
     cursor: pointer;
-    color: #FFF;
+    color: #fff;
     svg {
-      
     }
   }
   &-volume {

@@ -31,6 +31,7 @@ div
 import { mapFields } from "vuex-map-fields";
 import storage from "../../ext/storage";
 import constants from "../constants";
+// import uiza from "../services/uiza";
 
 export default {
   mounted() {
@@ -44,6 +45,22 @@ export default {
     }
   },
   data() {
+    var checkAppId = function(rule, value, callback) {
+      const regex = /^[a-zA-Z0-9]+$/;
+      if (!regex.test(value)) {
+        callback(new Error("Invalid App ID pattern"));
+      } else {
+        callback();
+      }
+    };
+    var apiKey = function(rule, value, callback) {
+      const regex = /^uap-[a-zA-Z0-9-]+$/;
+      if (!regex.test(value)) {
+        callback(new Error("Invalid API Key pattern"));
+      } else {
+        callback();
+      }
+    };
     return {
       disabled: false,
       rules: {
@@ -52,14 +69,16 @@ export default {
             required: true,
             message: "Please input Uiza API key",
             trigger: "blur"
-          }
+          },
+          { validator: apiKey, trigger: "blur" }
         ],
         app_id: [
           {
             required: true,
             message: "Please input Uiza App ID",
             trigger: "blur"
-          }
+          },
+          { validator: checkAppId, trigger: "blur" }
         ]
       },
       playerRules: {
@@ -99,9 +118,17 @@ export default {
         if (valid) {
           storage.set(constants.SETTINGS_KEY, this.settings);
           this.disabled = true;
-          this.$alert("Settings save successfully", "Uiza Extension", {
-            confirmButtonText: "OK"
+          this.$notify({
+            title: "Success",
+            message: "Your credentials have been saved",
+            type: "success"
           });
+          // uiza
+          //   .checkCredentials(this.settings.app_id, this.settings.api_key)
+          //   .then(resp => {
+          // console.log("fasfsa", resp);
+          //   })
+          //   .finally(() => {});
         } else {
           this.$notify({
             title: "Error",
@@ -120,11 +147,12 @@ export default {
         if (valid) {
           storage.set(constants.PLAYER_SETTINGS_KEY, this.playerSettings);
           // emit playerChanged event on injected script
-          chrome.tabs.query({"active": true, "currentWindow": true}, function(tabs) {
+          chrome.tabs.query({ active: true, currentWindow: true }, function(
+            tabs
+          ) {
             chrome.tabs.sendMessage(tabs[0].id, {
-                "UIZA_EXT_PLAYER": self.playerSettings
-              }
-            );
+              UIZA_EXT_PLAYER: self.playerSettings
+            });
           });
           this.$alert("Settings save successfully", "Uiza Extension", {
             confirmButtonText: "OK"

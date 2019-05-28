@@ -19,6 +19,17 @@ export default {
         }).then(resp => resp.json());
     },
 
+    checkCredentials(appId, apiToken) {
+        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/admin/org?appId=${appId}`
+        return fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': apiToken
+            }
+        }).then(resp => resp.json());
+    },
+
     getSingleVOD(id) {
         const app_id = settings.app_id || ''
         const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/media/entity?appId=${app_id}&id=${id}`

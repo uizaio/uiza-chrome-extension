@@ -23,12 +23,11 @@
       a(href='#')
         i.fas.fa-share-alt
     .uiza-controls-shopping-emotion
-      el-popover(placement="top-start" title="Title" width="200" trigger="hover" content="this is content, this is content, this is content")
+      el-popover(placement="top-end" title="Stickers" width="200" trigger="hover")
         a(href='#' slot="reference")
           i.far.fa-kiss-wink-heart
-        div(slot="—" class="popup" v-show="showStickers")
-          div(class="heart" @click="isHeartHappy = !isHeartHappy" :class="[ isHeartHappy ? 'happy' : 'broken']") ❤
-          div(class="heart1" @click="isHeart1Happy = !isHeart1Happy" :class="[ isHeartHappy ? 'heart-line' : 'broken1']") ❤
+        div(class="popup")
+          img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
   .uiza-product-list(v-if="showProducts && showControls")
     .uiza-product-list-toggle(@click="showProducts = false")
@@ -52,12 +51,13 @@
   PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
 
   PopupProduct(v-if="selectedProduct && showControls" :product="selectedProduct" @close="close" @cartChanged="onCartChanged")
-
+  Congras(v-if="currentSticker" :data="currentSticker")
 </template>
 
 <script>
 import PopupProduct from "./Product";
 import PlayerControls from "./PlayerControls";
+import Congras from "./Congras";
 import { Carousel, Slide } from "vue-carousel";
 import SendBird from "sendbird";
 
@@ -67,14 +67,18 @@ export default {
   components: {
     PopupProduct,
     PlayerControls,
+    Congras,
     Carousel,
     Slide
   },
   mounted() {
     this.playerSettings = this.$parent.data.playerSettings;
-    document.addEventListener("uizaExtPlayerChanged", function(e) {
-      this.playerSettings = e.detail;
-    }.bind(this));
+    document.addEventListener(
+      "uizaExtPlayerChanged",
+      function(e) {
+        this.playerSettings = e.detail;
+      }.bind(this)
+    );
     this.connectSendBird();
     this.getItemsInCart();
     this.initPlayer();
@@ -158,18 +162,23 @@ export default {
       const self = this;
       const playerId = this.$parent.id + " .uiza-ext-player";
       const playerParams = { ...this.$parent.data.playerParams };
-      window.UZ.Player.init(playerId, playerParams, function(player) {
-        console.log('hello', player);
-        self.player = player;
-        player.on("play", function() {
-          self.showControls = true;
-        });
-        player.on("pause", function() {
-          self.showControls = false;
-        });
-      }, function(player) {
-        console.log(player)
-      });
+      window.UZ.Player.init(
+        playerId,
+        playerParams,
+        function(player) {
+          console.log("hello", player);
+          self.player = player;
+          player.on("play", function() {
+            self.showControls = true;
+          });
+          player.on("pause", function() {
+            self.showControls = false;
+          });
+        },
+        function(player) {
+          console.log(player);
+        }
+      );
     },
     getItemsInCart() {
       try {
@@ -189,14 +198,24 @@ export default {
     },
     goToCart() {
       location.href = this.jsonData.cart_url;
+    },
+    stickerClicked(item) {
+      this.currentSticker = item;
+      setTimeout(() => {
+        this.currentSticker = null;
+      }, 3000);
     }
   },
   computed: {
     width() {
-      return this.playerSettings ? this.playerSettings.width : this.$parent.data.playerParams.width;
+      return this.playerSettings
+        ? this.playerSettings.width
+        : this.$parent.data.playerParams.width;
     },
     height() {
-      return this.playerSettings ? this.playerSettings.height : this.$parent.data.playerParams.height;
+      return this.playerSettings
+        ? this.playerSettings.height
+        : this.$parent.data.playerParams.height;
     },
     isLive() {
       return !!this.$parent.data.playerParams.feedId;
@@ -226,9 +245,17 @@ export default {
       currentChannel: null,
       chatMessages: [],
       chatMessage: "",
-      showStickers: false,
-      isHeartHappy: false,
-      isHeart1Happy: false
+      stickers: [
+        {
+          icon: "https://sc.mogicons.com/c/192.jpg",
+          gif: "https://media.giphy.com/media/3oKIPqM8BJ0ofNQOzK/source.gif"
+        },
+        {
+          icon: "https://sc.mogicons.com/c/65.jpg",
+          gif: "https://media.giphy.com/media/kKJOslHFyVddKwNOlY/source.gif"
+        }
+      ],
+      currentSticker: null
     };
   }
 };
@@ -459,108 +486,4 @@ export default {
     border-radius: 6px;
   }
 }
-.heart {
-  width: 20px;
-  height: 20px;
-  transform: translateZ(0);
-  color: #aaa;
-  font-size: 3em;
-  cursor: pointer;
-  position: relative;
-  transition: all .3s ease;
-}
-.heart:hover {
-  animation: pulse .6s linear;
-}
-.heart:before {
-  content: "❤";
-  position: absolute;
-  color: #A12B2B;
-  opacity: 0;
-}
-.heart.happy {
-  color: #A12B2B;
-}
-.heart.happy:before {
-  opacity: 0;
-  transform: translateY(-30px) rotateZ(5deg);
-  animation: fly 1s ease;
-}
-.heart.broken {
-  color: #aaa;
-  position: relative;
-  transition: all .3s ease;
-}
-.heart.broken:before, .heart.broken:after {
-  content: "❤";
-  opacity: 1;
-  color: #ccc;
-  position: absolute;
-  top: -150px;
-  transform: scale(3) rotateZ(0);
-}
-.heart.broken:before {
-  clip: rect(0, 20px, 200px, 0);
-  animation: break-left 1s ease forwards;
-}
-.heart.broken:after {
-  clip: rect(0, 50px, 200px, 25px);
-  animation: break-right 1s ease forwards;
-}
-@keyframes pulse {
-  50% {
-    transform: scale(1.1);
-  }
-}
-@keyframes fly {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px) rotateZ(15deg);
-  }
-  50% {
-    opacity: .75;
-    transform: scale(4) translateY(-30px) rotateZ(-15deg);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(4) translateY(-50px) rotateZ(15deg);
-  }
-}
-@keyframes break-left {
-  0% {
-    opacity: 1;
-    transform: scale(3) rotateZ(0);
-  }
-  20% {
-    opacity: .5;
-    transform: scale(3) translateX(-10px) rotateZ(-20deg) translateY(0);
-  }
-  50% {
-    opacity: .5;
-    transform: scale(3) translateX(-10px) rotateZ(-20deg) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(3) translateX(-30px) rotateZ(-25deg) translateY(50px);
-  }
-}
-@keyframes break-right {
-  0% {
-    opacity: 1;
-    transform: scale(3) rotateZ(0);
-  }
-  20% {
-    opacity: .5;
-    transform: scale(3) translateX(10px) rotateZ(20deg) translateY(0);
-  }
-  50% {
-    opacity: .5;
-    transform: scale(3) translateX(10px) rotateZ(20deg) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(3) translateX(30px) rotateZ(25deg) translateY(50px);
-  }
-}
-
 </style>

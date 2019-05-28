@@ -38,13 +38,13 @@ export default {
 
     getVODs() {
         const app_id = settings.app_id || ''
-        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/media/entity?appId=${app_id}&limit=5&page=1`
+        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/media/entity?appId=${app_id}&limit=1000`
         return this.get(url)
     },
 
     getLiveStreamings() {
         const app_id = settings.app_id || ''
-        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/live/entity?appId=${app_id}&limit=5&page=1`
+        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/live/entity?appId=${app_id}&limit=1000`
         return this.get(url)
     },
 

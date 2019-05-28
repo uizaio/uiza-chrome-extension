@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+div(class="uiza-scroll-wrapper")
   div(v-if='isConfigured' class="medias" v-loading="isLoading" element-loading-text="Loading... Please wait for a moment")
       //- el-button(@click="load") Load
       p Hold your mouse on the video item and drag it onto the webpage
@@ -9,27 +9,30 @@ div
           div(class='item-content')
               h4 {{ item.name }}
               p.date {{ item.createdAt }}
-      Player(v-if="playing" :entityId="playing.id")
   div(v-else)
     | Not configured
 </template>
 <style lang="scss">
-.item {
-  display: flex;
-  padding: 10px 0;
-  border-bottom: #eee 1px solid;
-  cursor: grab;
-  &-thumbnail {
-    flex: 0 0 120px;
-    img {
-      max-width: 120px;
+.uiza-scroll-wrapper {
+  height: calc(100vh - 80px);
+  overflow: auto;
+  .item {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: #eee 1px solid;
+    cursor: grab;
+    &-thumbnail {
+      flex: 0 0 120px;
+      img {
+        max-width: 120px;
+      }
     }
-  }
-  &-content {
-    flex: 1;
-    padding-left: 10px;
-    h4 {
-      margin-top: 0;
+    &-content {
+      flex: 1;
+      padding-left: 10px;
+      h4 {
+        margin-top: 0;
+      }
     }
   }
 }
@@ -93,8 +96,7 @@ export default {
   data() {
     return {
       isLoading: false,
-      vods: [],
-      playing: null
+      vods: []
     };
   }
 };

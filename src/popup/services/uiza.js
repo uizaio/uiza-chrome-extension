@@ -10,6 +10,7 @@ export default {
     },
 
     get(url) {
+        settings = storage.get(constants.SETTINGS_KEY)
         return fetch(url, {
             method: 'GET',
             headers: {
@@ -20,14 +21,23 @@ export default {
     },
 
     checkCredentials(appId, apiToken) {
-        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/admin/org?appId=${appId}`
+        const url = `https://ap-southeast-1-api.uiza.co/api/public/v4/media/entity?appId=${appId}&limit=0`
         return fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': apiToken
             }
-        }).then(resp => resp.json());
+        }).then(resp => {
+            console.log('resp', resp);
+            if (resp.status !== 200) {
+                throw new Error(resp.status)
+            }
+            return resp;
+        }).then(resp => resp.json())
+        .catch(err => {
+            return Promise.reject(err)
+        });
     },
 
     getSingleVOD(id) {

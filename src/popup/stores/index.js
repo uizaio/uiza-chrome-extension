@@ -4,11 +4,11 @@ import settings from "./settings";
 
 Vue.use(Vuex);
 
-const debug = process.env.NODE_ENV !== "production";
+// const debug = process.env.NODE_ENV !== "production";
 
 export default new Vuex.Store({
   modules: {
     settings
   },
-  strict: debug
+  strict: false
 });

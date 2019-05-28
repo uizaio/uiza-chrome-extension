@@ -4,9 +4,9 @@
         el-tab-pane(label="Settings" name="settings")
           Settings(@settingsSaved="onSettingsSaved")
         el-tab-pane(label="VODs" name="vods")
-          Videos
+          Videos(v-if="activeTab === 'vods'")
         el-tab-pane(label="Livestreams" name="live")
-          LiveStreamings
+          LiveStreamings(v-if="activeTab === 'live'")
 </template>
 <script>
 import Settings from "./Settings";

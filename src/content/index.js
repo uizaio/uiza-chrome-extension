@@ -3,6 +3,9 @@ import Vue from "vue";
 import Player from "./components/Player.vue";
 import "@fortawesome/fontawesome-free/js/all.js";
 import "vue-slider-component/theme/default.css";
+import ElementUI from 'element-ui';
+
+Vue.use(ElementUI);
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 const jsonData = require("./data.json");

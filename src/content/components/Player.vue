@@ -23,8 +23,13 @@
       a(href='#')
         i.fas.fa-share-alt
     .uiza-controls-shopping-emotion
-      a(href='#')
-        i.far.fa-kiss-wink-heart
+      el-popover(placement="top-start" title="Title" width="200" trigger="hover" content="this is content, this is content, this is content")
+        a(href='#' slot="reference")
+          i.far.fa-kiss-wink-heart
+        div(slot="—" class="popup" v-show="showStickers")
+          div(class="heart" @click="isHeartHappy = !isHeartHappy" :class="[ isHeartHappy ? 'happy' : 'broken']") ❤
+          div(class="heart1" @click="isHeart1Happy = !isHeart1Happy" :class="[ isHeartHappy ? 'heart-line' : 'broken1']") ❤
+   
   .uiza-product-list(v-if="showProducts && showControls")
     .uiza-product-list-toggle(@click="showProducts = false")
       i.fas.fa-arrow-circle-down
@@ -220,7 +225,10 @@ export default {
       chatUser: "",
       currentChannel: null,
       chatMessages: [],
-      chatMessage: ""
+      chatMessage: "",
+      showStickers: false,
+      isHeartHappy: false,
+      isHeart1Happy: false
     };
   }
 };
@@ -451,4 +459,108 @@ export default {
     border-radius: 6px;
   }
 }
+.heart {
+  width: 20px;
+  height: 20px;
+  transform: translateZ(0);
+  color: #aaa;
+  font-size: 3em;
+  cursor: pointer;
+  position: relative;
+  transition: all .3s ease;
+}
+.heart:hover {
+  animation: pulse .6s linear;
+}
+.heart:before {
+  content: "❤";
+  position: absolute;
+  color: #A12B2B;
+  opacity: 0;
+}
+.heart.happy {
+  color: #A12B2B;
+}
+.heart.happy:before {
+  opacity: 0;
+  transform: translateY(-30px) rotateZ(5deg);
+  animation: fly 1s ease;
+}
+.heart.broken {
+  color: #aaa;
+  position: relative;
+  transition: all .3s ease;
+}
+.heart.broken:before, .heart.broken:after {
+  content: "❤";
+  opacity: 1;
+  color: #ccc;
+  position: absolute;
+  top: -150px;
+  transform: scale(3) rotateZ(0);
+}
+.heart.broken:before {
+  clip: rect(0, 20px, 200px, 0);
+  animation: break-left 1s ease forwards;
+}
+.heart.broken:after {
+  clip: rect(0, 50px, 200px, 25px);
+  animation: break-right 1s ease forwards;
+}
+@keyframes pulse {
+  50% {
+    transform: scale(1.1);
+  }
+}
+@keyframes fly {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) rotateZ(15deg);
+  }
+  50% {
+    opacity: .75;
+    transform: scale(4) translateY(-30px) rotateZ(-15deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(4) translateY(-50px) rotateZ(15deg);
+  }
+}
+@keyframes break-left {
+  0% {
+    opacity: 1;
+    transform: scale(3) rotateZ(0);
+  }
+  20% {
+    opacity: .5;
+    transform: scale(3) translateX(-10px) rotateZ(-20deg) translateY(0);
+  }
+  50% {
+    opacity: .5;
+    transform: scale(3) translateX(-10px) rotateZ(-20deg) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3) translateX(-30px) rotateZ(-25deg) translateY(50px);
+  }
+}
+@keyframes break-right {
+  0% {
+    opacity: 1;
+    transform: scale(3) rotateZ(0);
+  }
+  20% {
+    opacity: .5;
+    transform: scale(3) translateX(10px) rotateZ(20deg) translateY(0);
+  }
+  50% {
+    opacity: .5;
+    transform: scale(3) translateX(10px) rotateZ(20deg) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3) translateX(30px) rotateZ(25deg) translateY(50px);
+  }
+}
+
 </style>

@@ -118,17 +118,12 @@ export default {
         if (valid) {
           storage.set(constants.SETTINGS_KEY, this.settings);
           this.disabled = true;
+          this.$emit("settingsSaved");
           this.$notify({
             title: "Success",
             message: "Your credentials have been saved",
             type: "success"
           });
-          // uiza
-          //   .checkCredentials(this.settings.app_id, this.settings.api_key)
-          //   .then(resp => {
-          // console.log("fasfsa", resp);
-          //   })
-          //   .finally(() => {});
         } else {
           this.$notify({
             title: "Error",
@@ -154,9 +149,13 @@ export default {
               UIZA_EXT_PLAYER: self.playerSettings
             });
           });
-          this.$alert("Settings save successfully", "Uiza Extension", {
-            confirmButtonText: "OK"
-          });
+          this.$alert(
+            "Settings are saved successfully. Drag and drop a player to webpage to see the changes.",
+            "Uiza Extension",
+            {
+              confirmButtonText: "OK"
+            }
+          );
         } else {
           this.$notify({
             title: "Error",

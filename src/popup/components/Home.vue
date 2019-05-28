@@ -2,7 +2,7 @@
     div(class="root")
       el-tabs(v-model="activeTab")
         el-tab-pane(label="Settings" name="settings")
-          Settings
+          Settings(@settingsSaved="onSettingsSaved")
         el-tab-pane(label="VODs" name="vods")
           Videos
         el-tab-pane(label="Livestreams" name="live")
@@ -25,6 +25,10 @@ export default {
   computed: {},
   created() {},
   mounted() {},
-  methods: {}
+  methods: {
+    onSettingsSaved() {
+      this.activeTab = "vods";
+    }
+  }
 };
 </script>

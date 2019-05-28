@@ -62,7 +62,6 @@ export default {
     });
     this.player.on("qualitieschange", () => {
       self.qualities = self.player.qualities();
-      console.log("fasfasf", self.qualities);
       if (self.qualities.length) {
         self.selectedQuality = self.qualities[0];
       }
@@ -98,7 +97,7 @@ export default {
     },
     onProgressChanged() {
       this.player.currentTime(this.currentPos / 1000);
-      this.player.pause();
+      // this.player.pause();
     },
     onChangeQuality(item) {
       this.selectedQuality = item;

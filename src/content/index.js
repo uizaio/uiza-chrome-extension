@@ -4,7 +4,7 @@ import Player from "./components/Player.vue";
 import "@fortawesome/fontawesome-free/js/all.js";
 import "vue-slider-component/theme/default.css";
 import ElementUI from 'element-ui';
-
+import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -33,8 +33,8 @@ var jq162 = window.jQuery.noConflict(true);
         width: "500px"
       },
       playerSettings: {
-        width: "1280px",
-        height: "600px",
+        width: "500px",
+        height: "300px",
         color: "#FF0000",
         brand_logo: "https://storage.googleapis.com/shopdunk-images/tintucshopdunknew/2018/05/tai-sao-logo-hang-Apple-la-trai-tao-do-2.png",
         brand_url: "https://apple.com"

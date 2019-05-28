@@ -21,6 +21,12 @@
   div(v-if="isLive" class="uiza-player-controls-live")
     //- i.far.fa-dot-circle
     span Live
+  el-dropdown(v-if="qualities.length" placement="top" size="mini" @command="onChangeQuality")
+    button(class="uiza-player-controls-levels" )
+      i.fas.fa-cogs
+    el-dropdown-menu(slot="dropdown")
+      el-dropdown-item(v-for="item in qualities" v-bind:key="item.label" :command="item" :disabled="selectedQuality && selectedQuality.label === item.label")
+        | {{ item.label }}
   button.uiza-player-controls-fullscreen(@click="fullscreen" :style="{ color: settings.color }")
     i.fas.fa-compress
 </template>
@@ -37,6 +43,7 @@ export default {
     const self = this;
     this.player.on("play", () => {
       self.isPlaying = true;
+      // self.qualities = self.player.qualities();
     });
     this.player.on("pause", () => {
       self.isPlaying = false;
@@ -52,6 +59,13 @@ export default {
     });
     this.player.on("timeupdate", val => {
       self.currentPos = self.player.currentTime() * 1000;
+    });
+    this.player.on("qualitieschange", () => {
+      self.qualities = self.player.qualities();
+      console.log("fasfasf", self.qualities);
+      if (self.qualities.length) {
+        self.selectedQuality = self.qualities[0];
+      }
     });
   },
   methods: {
@@ -80,12 +94,16 @@ export default {
       this.player.volume(1);
     },
     onVolumeChanged() {
-      this.player.volume();
+      this.player.volume(this.currentVolume / 100);
     },
     onProgressChanged() {
-      console.log("Before progress changed", this.player.currentTime());
       this.player.currentTime(this.currentPos / 1000);
-      console.log("After progress changed", this.player.currentTime());
+      this.player.pause();
+    },
+    onChangeQuality(item) {
+      this.selectedQuality = item;
+      const index = this.qualities.indexOf(item);
+      this.player.currentLevel(index);
     }
   },
   computed: {
@@ -101,7 +119,9 @@ export default {
       isPlaying: false,
       currentPos: 0,
       duration: 0,
-      currentVolume: 100
+      currentVolume: 100,
+      qualities: [],
+      selectedQuality: null
     };
   }
 };
@@ -118,8 +138,10 @@ export default {
   flex-direction: row;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
-  > button {
+  > * {
     flex: 0 0 auto;
+  }
+  button {
     margin: 0 5px;
     background: transparent !important;
     border: none !important;

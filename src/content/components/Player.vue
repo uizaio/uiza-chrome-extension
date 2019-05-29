@@ -1,5 +1,5 @@
 <template lang="pug">
-.uiza-ext-player(ref="playerContainer" :style="{ height: height, width: width }")
+.uiza-ext-player(ref="playerContainer" :style="{ height: height, width: width, maxWidth: '100%' }")
   a.uiza-logo(v-if="playerSettings" :href="playerSettings.brand_url" target="_blank")
     img(:src="playerSettings.brand_logo")
   .uiza-chat-messages(ref="chatScroller")

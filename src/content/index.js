@@ -132,9 +132,12 @@ var jq162 = window.jQuery.noConflict(true);
       // $(playerId)
       //   .css("width", eventData.playerParams.width)
       //   .css("height", eventData.playerParams.height);
-      $("#uiza-ext-player" + increasedId).append(
+      $(playerId).append(
         "<uiza-ext-player></uiza-ext-player>"
       );
+      console.log('event data', eventData);
+      eventData.playerSettings.width = $(playerId).width();
+      eventData.playerParams.width = $(playerId).width();
       new Vue({
         el: playerId,
         data: {

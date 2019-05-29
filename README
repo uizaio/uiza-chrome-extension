@@ -2,4 +2,10 @@
 
 This extension is used for demo purpose
 
-# 
+# Development
+
+Install dependencies:
+`yarn` or `npm install`
+
+Start the development server:
+`yarn run dev`

@@ -21,11 +21,18 @@
   div(v-if="isLive" class="uiza-player-controls-live")
     //- i.far.fa-dot-circle
     span Live
-  el-dropdown(v-if="qualities.length" placement="top" size="mini" @command="onChangeQuality")
-    button(class="uiza-player-controls-levels" )
-      i.fas.fa-cogs
-    el-dropdown-menu(slot="dropdown")
-      el-dropdown-item(v-for="item in qualities" v-bind:key="item.label" :command="item" :disabled="selectedQuality && selectedQuality.label === item.label")
+  //- el-dropdown(v-if="qualities.length" placement="top" size="mini" @command="onChangeQuality")
+  //-   button(class="uiza-player-controls-levels" )
+  //-     i.fas.fa-cogs
+  //-   el-dropdown-menu(slot="dropdown")
+  //-     el-dropdown-item(v-for="item in qualities" v-bind:key="item.label" :command="item" :disabled="selectedQuality && selectedQuality.label === item.label")
+  //-       | {{ item.label }}
+  dropdown(align="top" v-if="qualities.length" :close-on-click="true")
+    template(slot="btn")
+      button(class="uiza-player-controls-levels")
+        i.fas.fa-cogs
+    template(slot="body")
+      el-button(@click="onChangeQuality(item)" size="mini" v-for="item in qualities" v-bind:key="item.label" :disabled="selectedQuality && selectedQuality.label === item.label")
         | {{ item.label }}
   button.uiza-player-controls-fullscreen(@click="fullscreen" :style="{ color: settings.color }")
     i.fas.fa-compress
@@ -33,11 +40,13 @@
 
 <script>
 import VueSlider from "vue-slider-component";
+import Dropdown from 'bp-vuejs-dropdown';
 
 export default {
   props: ["player", "isLive", "settings"],
   components: {
-    VueSlider
+    VueSlider,
+    Dropdown
   },
   mounted() {
     const self = this;
@@ -127,6 +136,21 @@ export default {
 </script>
 
 <style lang="scss">
+.bp-dropdown {
+  margin-top: -4px;
+  &__btn {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  &__body {
+    background-color: rgba(0, 0, 0, .6) !important;
+    .el-button {
+      display: block;
+      margin: 0 !important;
+    }
+  }
+}
 .uiza-player-controls {
   position: absolute;
   bottom: 0;

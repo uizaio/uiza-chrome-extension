@@ -1,6 +1,6 @@
 <template lang='pug'>
 div
-  el-form(:disabled='disabled' label-position='left' label-width="110px" :model='settings' :rules='rules' ref='settingsForm')
+  el-form(:disabled='disabled' size="small" label-position='left' label-width="120px" :model='settings' :rules='rules' ref='settingsForm')
     el-form-item(label='App ID', prop='app_id')
       el-input(v-model='settings.app_id')
     el-form-item(label='API key', prop='api_key')
@@ -9,19 +9,28 @@ div
       el-button(type='primary', @click='submitForm') Save
       el-button(@click='resetForm') Reset
   el-form(:disabled='false' size='small' label-position='left' label-width="110px" :model='playerSettings' :rules='playerRules' ref='playerForm')
-    el-form-item(label='Player size')
-      el-col(:span='11')
-        el-input(v-model='playerSettings.width')
-      el-col(class="line" :span="2")
-        | x 
-      el-col(:span='11')
-        el-input(v-model='playerSettings.height')
+    //- el-form-item(label='Player size')
+    //-   el-col(:span='11')
+    //-     el-input(v-model='playerSettings.width')
+    //-   el-col(class="line" :span="2")
+    //-     | x 
+    //-   el-col(:span='11')
+    //-     el-input(v-model='playerSettings.height')
     el-form-item(label='Player color')
       el-color-picker(v-model="playerSettings.color")
     el-form-item(label='Brand logo', prop='brand_logo')
       el-input(v-model='playerSettings.brand_logo')
     el-form-item(label='Brand url', prop='brand_url')
       el-input(v-model='playerSettings.brand_url')
+    el-form-item(label='Product overlay', prop='brand_url')
+      el-row(:gutter="5" v-for="(item, index) in playerSettings.ads" v-bind:key="index")
+        el-col(:span="15")
+          el-time-picker(placeholder="Pick a time" v-model="item.time" style="width: 100%" @change="changeTime(item)")
+        el-col(:span="6")
+          el-input(v-model='item.duration' placeholder="Duration" @change="checkAddCue")
+      el-row(:gutter="5")
+        el-col(:span="15") Time
+        el-col(:span="5") Duration
     el-form-item
       el-button(type='primary', @click='submitPlayerForm') Save
   
@@ -31,6 +40,7 @@ div
 import { mapFields } from "vuex-map-fields";
 import storage from "../../ext/storage";
 import constants from "../constants";
+import _ from 'lodash';
 // import uiza from "../services/uiza";
 
 export default {
@@ -41,7 +51,7 @@ export default {
     }
     const playerSettings = storage.get(constants.PLAYER_SETTINGS_KEY);
     if (playerSettings) {
-      this.playerSettings = playerSettings;
+      this.playerSettings = _.merge(this.playerSettings, playerSettings);
     }
   },
   data() {
@@ -113,6 +123,21 @@ export default {
     ...mapFields("settings", ["settings", "playerSettings"])
   },
   methods: {
+    checkAddCue() {
+      // const hasEmpty = _.find(this.playerSettings.ads, ad => {
+      //   return !ad.time && ad.duration <= 0;
+      // });
+      // if (!hasEmpty) {
+      //   this.playerSettings.ads.push({
+      //     time: new Date(2017, 12, 12, 0, 0, 30),
+      //     duration: 20
+      //   });
+      // }
+    },
+    changeTime(item) {
+      console.log(item);
+      this.checkAddCue();
+    },
     submitForm() {
       this.$refs.settingsForm.validate(valid => {
         if (valid) {

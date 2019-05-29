@@ -40,13 +40,15 @@
             .price {{ product.price }}
             button.uiza-product-view(@click="selectedProduct = product") View product
 
-  .uiza-product-overlay(v-if="products.length && showControls")
-    .uiza-product-overlay-image
-      img(:src="randomProduct.image")
-    .uiza-product-overlay-wrapper
-      .uiza-product-overlay-name {{ randomProduct.name }}
-      div
-        a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = randomProduct") Add to cart
+  .uiza-product-overlay(v-if="products.length && showControls && playerSettings && overlayProduct")
+    //- div(v-for="(item, index) in playerSettings.ads" v-bind:key="index")
+    div
+      .uiza-product-overlay-image
+        img(:src="overlayProduct.image")
+      .uiza-product-overlay-wrapper
+        .uiza-product-overlay-name {{ overlayProduct.name }}
+        div
+          a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") Add to cart
 
   PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
 
@@ -73,10 +75,15 @@ export default {
   },
   mounted() {
     this.playerSettings = this.$parent.data.playerSettings;
+    this.setupOverlay();
     document.addEventListener(
       "uizaExtPlayerChanged",
       function(e) {
         this.playerSettings = e.detail;
+        this.overlayTimeouts.forEach((handler) => {
+          clearTimeout(handler);
+        });
+        this.setupOverlay();
       }.bind(this)
     );
     this.connectSendBird();
@@ -84,6 +91,11 @@ export default {
     this.initPlayer();
   },
   methods: {
+    setupOverlay() {
+      this.playerSettings.ads.forEach((ad) => {
+
+      })
+    },
     scrollChat() {
       setTimeout(
         function() {
@@ -174,6 +186,20 @@ export default {
           player.on("pause", function() {
             self.showControls = false;
           });
+          player.on("timeupdate", function() {
+            const currentSeconds = Math.round(player.currentTime())
+            // console.log(currentSeconds, self.playerSettings.ads)
+            self.playerSettings.ads.forEach(function(ad) {
+              const time = new Date(Date.parse(ad.time));
+              const adTime = time.getHours() * 60 * 60 + time.getMinutes() * 60 + time.getSeconds();
+              if (adTime === currentSeconds) {
+                self.overlayProduct = self.randomProduct;
+                setTimeout(() => {
+                  self.overlayProduct = null;
+                }, ad.duration * 1000);
+              }
+            })
+          })
         },
         function(player) {
           console.log(player);
@@ -245,6 +271,8 @@ export default {
       currentChannel: null,
       chatMessages: [],
       chatMessage: "",
+      overlayTimeouts: [],
+      overlayProduct: null,
       stickers: [
         {
           icon: "https://sc.mogicons.com/c/192.jpg",

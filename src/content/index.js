@@ -5,7 +5,10 @@ import "@fortawesome/fontawesome-free/js/all.js";
 import "vue-slider-component/theme/default.css";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import Dropdown from 'bp-vuejs-dropdown';
+
 Vue.use(ElementUI);
+Vue.use(Dropdown);
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 const jsonData = require("./data.json");
@@ -37,7 +40,8 @@ var jq162 = window.jQuery.noConflict(true);
         height: "300px",
         color: "#FF0000",
         brand_logo: "https://storage.googleapis.com/shopdunk-images/tintucshopdunknew/2018/05/tai-sao-logo-hang-Apple-la-trai-tao-do-2.png",
-        brand_url: "https://apple.com"
+        brand_url: "https://apple.com",
+        ads: []
       }
     };
     var increasedId = "test";

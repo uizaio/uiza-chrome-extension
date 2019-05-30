@@ -1,5 +1,8 @@
 <template lang="pug">
 .uiza-player-controls
+  //- Progress bar
+  .uiza-player-controls-progress
+    VueSlider(v-model="currentPos" :dot-size="3" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
   //-  Play button
   button.uiza-player-controls-play(v-show="!isPlaying" @click="play" :style="{ color: settings.color }")
     i.fas.fa-play
@@ -10,23 +13,19 @@
     i.fas.fa-volume-up
   button.uiza-player-controls-volume(v-show="currentVolume <= 0" @click="unmute" :style="{ color: settings.color }")
     i.fas.fa-volume-mute
+  //- Volume slider
   VueSlider(class="uiza-player-controls-volume-slider" v-model="currentVolume" :max="100" @change="onVolumeChanged" :processStyle="{ background: settings.color }")
-  //- Progress bar
-  .uiza-player-controls-progress
-    VueSlider(v-if="!isLive" v-model="currentPos" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
+  //- Live button
+  div(v-if="isLive" @click="seekToLive" class="uiza-player-controls-live")
+    span(:class="{ 'inactive': isLive && isSeeked }") Live
+  //- Spacer
+  div.uiza-player-controls-spacer
+  //- Duration
   div(v-if="!isLive" class="uiza-player-controls-duration")
     span {{ formattedCurrentPos }}
     span /
     span {{ formattedDuration }}
-  div(v-if="isLive" class="uiza-player-controls-live")
-    //- i.far.fa-dot-circle
-    span Live
-  //- el-dropdown(v-if="qualities.length" placement="top" size="mini" @command="onChangeQuality")
-  //-   button(class="uiza-player-controls-levels" )
-  //-     i.fas.fa-cogs
-  //-   el-dropdown-menu(slot="dropdown")
-  //-     el-dropdown-item(v-for="item in qualities" v-bind:key="item.label" :command="item" :disabled="selectedQuality && selectedQuality.label === item.label")
-  //-       | {{ item.label }}
+  //- Qualities
   dropdown(align="top" v-if="qualities.length" :close-on-click="true")
     template(slot="btn")
       button(class="uiza-player-controls-levels")
@@ -34,6 +33,7 @@
     template(slot="body")
       el-button(@click="onChangeQuality(item)" size="mini" v-for="item in qualities" v-bind:key="item.label" :disabled="selectedQuality && selectedQuality.label === item.label")
         | {{ item.label }}
+  //- Fullscreen
   button.uiza-player-controls-fullscreen(@click="fullscreen" :style="{ color: settings.color }")
     i.fas.fa-compress
 </template>
@@ -67,6 +67,7 @@ export default {
       self.currentVolume = self.player.volume() * 100;
     });
     this.player.on("timeupdate", val => {
+      console.log('time update', self.player.currentTime());
       self.currentPos = self.player.currentTime() * 1000;
     });
     this.player.on("qualitieschange", () => {
@@ -106,7 +107,16 @@ export default {
     },
     onProgressChanged() {
       this.player.currentTime(this.currentPos / 1000);
-      // this.player.pause();
+      console.log(this.currentPos / 1000, this.player.duration());
+      if (this.currentPos / 1000 < this.player.duration()) {
+        this.isSeeked = true;
+      } else {
+        this.isSeeked = false;
+      }
+    },
+    seekToLive() {
+      this.player.currentTime(this.player.duration());
+      this.isSeeked = false;
     },
     onChangeQuality(item) {
       this.selectedQuality = item;
@@ -125,6 +135,7 @@ export default {
   data() {
     return {
       isPlaying: false,
+      isSeeked: false,
       currentPos: 0,
       duration: 0,
       currentVolume: 100,
@@ -157,7 +168,7 @@ export default {
   left: 0;
   right: 0;
   display: flex;
-  padding: 10px;
+  padding: 20px 10px 10px 10px;
   flex-direction: row;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
@@ -179,23 +190,37 @@ export default {
       flex: 0 0 60px;
     }
   }
-  &-progress {
+  &-spacer {
     flex: 1;
-    margin: 0 0 0 20px;
+  }
+  &-progress {
+    position: absolute;
+    top: 0;
+    left: 0; right: 0;
+    margin: 0;
   }
   &-duration {
     margin-left: 10px;
     font-size: 12px;
   }
   &-live {
+    margin-top: -4px;
+    margin-left: 10px;
     svg {
       color: red;
     }
     span {
       margin-left: 5px;
-      font-size: 12px;
-      font-weight: 800;
-      color: red;
+      font-size: 11px;
+      font-weight: 500;
+      color: #EEE;
+      background: red;
+      padding: 1px 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      &.inactive {
+        background: #CCC;
+      }
     }
   }
 }

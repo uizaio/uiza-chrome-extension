@@ -79,8 +79,8 @@ export default {
           appId: settings.app_id,
           playerVersion: 4,
           entityId: item.id,
-          width: '500px',
-          height: '300px',
+          width: '685px',
+          height: '385px',
           controls: false
         },
         playerSettings: this.playerSettings

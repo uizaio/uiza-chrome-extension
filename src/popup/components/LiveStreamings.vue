@@ -82,8 +82,8 @@ export default {
           entityId: item.id,
           streamName: item.channelName,
           feedId: item.lastFeedId,
-          width: "500px",
-          height: "300px",
+          width: "685px",
+          height: "385px",
           controls: false
         },
         playerSettings: this.playerSettings

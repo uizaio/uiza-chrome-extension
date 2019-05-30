@@ -1,18 +1,23 @@
 /* eslint-disable no-new */
 import Vue from "vue";
 import Player from "./components/Player.vue";
+import PlayerHolder from './components/PlayerHolder.vue';
 import "@fortawesome/fontawesome-free/js/all.js";
 import "vue-slider-component/theme/default.css";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import Dropdown from 'bp-vuejs-dropdown';
+// eslint-disable-next-line no-unused-vars
+import _ from 'lodash';
 
 Vue.use(ElementUI);
 Vue.use(Dropdown);
+Vue.use(require('vue-moment'));
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 const jsonData = require("./data.json");
 
+Vue.component('uiza-ext-player-holder', PlayerHolder);
 Vue.component("uiza-ext-player", Player);
 window.$ = window.jQuery = require("jquery");
 
@@ -44,12 +49,24 @@ var jq162 = window.jQuery.noConflict(true);
         ads: []
       }
     };
+    // live
+    eventData = _.merge({
+      playerParams: {
+        feedId: 'fa5876e6-5088-4459-ba82-f4b92f8672f9',
+        entityId: 'e001f8e0-72ca-413c-9519-4ce8ad28b878',
+        streamName: '60d3fd6f-cd03-4987-af10-8ae1c106f0c7'
+      }
+    }, eventData);
     var increasedId = "test";
     var playerId = "#uiza-ext-player" + increasedId;
     var div = $("<div id='uiza-ext-player" + increasedId + "'></div>")
       .css("width", eventData.playerParams.width)
-      .css("height", eventData.playerParams.height)
-      .append("<uiza-ext-player></uiza-ext-player>");
+      .css("height", eventData.playerParams.height);
+    if (eventData.playerParams.feedId) {
+      div.append("<uiza-ext-player-holder></uiza-ext-player-holder>");
+    } else {
+      div.append("<uiza-ext-player></uiza-ext-player>");
+    }
     $("body").append(div);
     new Vue({
       el: playerId,
@@ -128,18 +145,26 @@ var jq162 = window.jQuery.noConflict(true);
       $(".reserved-drop-marker").removeClass("reserved-drop-marker");
       $(".reserved-drop-target").removeClass("reserved-drop-target");
 
+      // var playerId = "#uiza-ext-player" + increasedId;
+      // // $(playerId)
+      // //   .css("width", eventData.playerParams.width)
+      // //   .css("height", eventData.playerParams.height);
+      // $(playerId).append(
+      //   "<uiza-ext-player></uiza-ext-player>"
+      // );
       var playerId = "#uiza-ext-player" + increasedId;
-      // $(playerId)
-      //   .css("width", eventData.playerParams.width)
-      //   .css("height", eventData.playerParams.height);
-      $(playerId).append(
-        "<uiza-ext-player></uiza-ext-player>"
-      );
+      $(playerId).parent().parent().css('z-index', 99999999);
+      if (eventData.playerParams.feedId) {
+        $(playerId).parent().parent().replaceWith("<div id='uiza-ext-player" + increasedId + "'></div>");
+        $(playerId).append("<uiza-ext-player-holder></uiza-ext-player-holder>");
+      } else {
+        $(playerId).append("<uiza-ext-player></uiza-ext-player>");
+      }
       console.log('event data', eventData);
-      eventData.playerSettings.width = $(playerId).width();
-      eventData.playerParams.width = $(playerId).width();
+      // eventData.playerSettings.width = $(playerId).width();
+      // eventData.playerParams.width = $(playerId).width();
       new Vue({
-        el: playerId,
+        el: playerId + ", .el-dialog__wrapper",
         data: {
           id: playerId,
           data: eventData,

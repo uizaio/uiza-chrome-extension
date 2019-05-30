@@ -5,16 +5,16 @@
   .uiza-chat-messages(ref="chatScroller")
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
-        strong {{ message.sender.userId }} says: 
-        //- time sent at {{ message.createdAt }}
-        span {{ message.message }}
+        strong {{ message.sender.userId }} 
+        span.time {{ message.createdAt | moment("from", "now") }}
+        div.message {{ message.message }}
   .uiza-controls(v-if="showControls")
-    .uiza-controls-shopping-bag
-      a(href='#' @click="showProducts = !showProducts")
-        i.fas.fa-shopping-bag
     .uiza-controls-shopping-chat-input
       input(v-model="chatMessage" type='text' placeholder='Enter your message' v-on:keyup.enter="sendMessage")
     .uiza-controls-shopping-spacer
+    .uiza-controls-shopping-bag
+      a(href='#' @click="showProducts = !showProducts")
+        i.fas.fa-shopping-bag
     .uiza-controls-shopping-cart
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
       a(href='#' @click="goToCart()")
@@ -23,11 +23,17 @@
       a(href='#')
         i.fas.fa-share-alt
     .uiza-controls-shopping-emotion
-      el-popover(placement="top-end" title="Stickers" width="200" trigger="hover")
-        a(href='#' slot="reference")
+      dropdown(align="top" :x="-80" :y="-60" :close-on-click="true")
+        template(slot="btn")
           i.far.fa-kiss-wink-heart
-        div(class="popup")
-          img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
+        template(slot="body")
+          div(class="popup")
+            img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
+      //- el-popover(placement="top-end" title="Stickers" width="200" trigger="hover")
+      //-   a(href='#' slot="reference")
+      //-     i.far.fa-kiss-wink-heart
+      //-   div(class="popup")
+      //-     img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
   .uiza-product-list(v-if="showProducts && showControls")
     .uiza-product-list-toggle(@click="showProducts = false")
@@ -62,6 +68,7 @@ import PlayerControls from "./PlayerControls";
 import Congras from "./Congras";
 import { Carousel, Slide } from "vue-carousel";
 import SendBird from "sendbird";
+import Dropdown from "bp-vuejs-dropdown";
 
 const UIZA_EXT_CART = "UIZA_EXT_CART";
 
@@ -71,16 +78,23 @@ export default {
     PlayerControls,
     Congras,
     Carousel,
-    Slide
+    Slide,
+    Dropdown
   },
+  props: ["params", "settings", "json", "id"],
   mounted() {
-    this.playerSettings = this.$parent.data.playerSettings;
+    this.playerSettings = !this.settings
+      ? this.$parent.data.playerSettings
+      : this.settings;
+    this.playerParams = !this.params
+      ? this.$parent.data.playerParams
+      : this.params;
     this.setupOverlay();
     document.addEventListener(
       "uizaExtPlayerChanged",
       function(e) {
         this.playerSettings = e.detail;
-        this.overlayTimeouts.forEach((handler) => {
+        this.overlayTimeouts.forEach(handler => {
           clearTimeout(handler);
         });
         this.setupOverlay();
@@ -92,9 +106,7 @@ export default {
   },
   methods: {
     setupOverlay() {
-      this.playerSettings.ads.forEach((ad) => {
-
-      })
+      this.playerSettings.ads.forEach(ad => {});
     },
     scrollChat() {
       setTimeout(
@@ -172,11 +184,10 @@ export default {
     },
     initPlayer() {
       const self = this;
-      const playerId = this.$parent.id + " .uiza-ext-player";
-      const playerParams = { ...this.$parent.data.playerParams };
+      console.log("polayerid", self.playerId);
       window.UZ.Player.init(
-        playerId,
-        playerParams,
+        self.playerId,
+        self.playerParams,
         function(player) {
           console.log("hello", player);
           self.player = player;
@@ -187,19 +198,22 @@ export default {
             self.showControls = false;
           });
           player.on("timeupdate", function() {
-            const currentSeconds = Math.round(player.currentTime())
+            const currentSeconds = Math.round(player.currentTime());
             // console.log(currentSeconds, self.playerSettings.ads)
             self.playerSettings.ads.forEach(function(ad) {
               const time = new Date(Date.parse(ad.time));
-              const adTime = time.getHours() * 60 * 60 + time.getMinutes() * 60 + time.getSeconds();
+              const adTime =
+                time.getHours() * 60 * 60 +
+                time.getMinutes() * 60 +
+                time.getSeconds();
               if (adTime === currentSeconds) {
                 self.overlayProduct = self.randomProduct;
                 setTimeout(() => {
                   self.overlayProduct = null;
                 }, ad.duration * 1000);
               }
-            })
-          })
+            });
+          });
         },
         function(player) {
           console.log(player);
@@ -234,20 +248,19 @@ export default {
   },
   computed: {
     width() {
-      return this.playerSettings
-        ? this.playerSettings.width
-        : this.$parent.data.playerParams.width;
+      return this.playerSettings ? this.playerSettings.width : 0;
     },
     height() {
-      return this.playerSettings
-        ? this.playerSettings.height
-        : this.$parent.data.playerParams.height;
+      return this.playerSettings ? this.playerSettings.height : 0;
     },
     isLive() {
-      return !!this.$parent.data.playerParams.feedId;
+      return !!this.playerParams.feedId;
     },
     jsonData() {
-      return this.$parent.jsonData;
+      return this.$parent.jsonData || this.json;
+    },
+    playerId() {
+      return (this.id || this.$parent.id) + " .uiza-ext-player";
     },
     products() {
       return this.jsonData.products;
@@ -261,6 +274,7 @@ export default {
   data() {
     return {
       player: null,
+      playerParams: null,
       playerSettings: null,
       showControls: true,
       showProducts: false,
@@ -275,12 +289,15 @@ export default {
       overlayProduct: null,
       stickers: [
         {
-          icon: "https://sc.mogicons.com/c/192.jpg",
-          gif: "https://media.giphy.com/media/3oKIPqM8BJ0ofNQOzK/source.gif"
+          icon:
+            "https://mir-s3-cdn-cf.behance.net/project_modules/disp/65ea2034559659.56d57de06cea2.gif",
+          // gif: "https://media.giphy.com/media/3oKIPqM8BJ0ofNQOzK/source.gif"
+          gif: "https://media.giphy.com/media/McmuC1HeylawPz6hYk/giphy.gif"
         },
         {
-          icon: "https://sc.mogicons.com/c/65.jpg",
-          gif: "https://media.giphy.com/media/kKJOslHFyVddKwNOlY/source.gif"
+          icon:
+            "https://mir-s3-cdn-cf.behance.net/project_modules/disp/e4299734559659.56d57de04bda4.gif",
+          gif: "https://media3.giphy.com/media/5z5NIlNjK0NxpsecKh/source.gif"
         }
       ],
       currentSticker: null
@@ -292,6 +309,7 @@ export default {
 <style lang="scss">
 .uiza-ext-player {
   position: relative;
+  z-index: 2147483647;
   font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   > iframe {
     min-width: 100% !important;
@@ -309,7 +327,7 @@ export default {
 }
 .uiza-chat-messages {
   position: absolute;
-  top: 0;
+  top: 100px;
   bottom: 90px;
   left: 0;
   width: 300px;
@@ -321,14 +339,25 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    background: rgba(255, 255, 255, 0.1);
     pointer-events: none;
   }
   &-item {
-    padding: 3px 0 3px 10px;
-    font-size: 12px;
-    color: #fff;
+    padding: 3px 10px 3px 20px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    color: #222;
+    margin: 5px 0 5px 10px;
+    border-radius: 20px;
+    overflow: hidden;
     flex: 1 1 auto;
+    align-self: flex-start;
+    min-width: 150px;
+    .time {
+      font-size: 11px;
+    }
+    .message {
+      color: #111;
+    }
   }
 }
 .uiza-product-overlay {
@@ -414,6 +443,24 @@ export default {
       right: -15px;
       font-weight: 600;
       border: #ddd 1px solid;
+    }
+  }
+  &-shopping-emotion {
+    .bp-dropdown {
+      &__btn {
+        background-color: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        svg {
+          line-height: 30px;
+          font-size: 20px;
+          color: #fff;
+        }
+      }
+      &__body {
+        border-radius: 60px;
+        padding: 0 !important;
+      }
     }
   }
 }

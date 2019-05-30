@@ -22,6 +22,8 @@ div
       el-input(v-model='playerSettings.brand_logo')
     el-form-item(label='Brand url', prop='brand_url')
       el-input(v-model='playerSettings.brand_url')
+    el-form-item(label='Cart url', prop='cart_url')
+      el-input(v-model='playerSettings.cart_url')
     el-form-item(label='Product overlay', prop='brand_url')
       el-row(:gutter="5" v-for="(item, index) in playerSettings.ads" v-bind:key="index")
         el-col(:span="15")
@@ -116,7 +118,8 @@ export default {
           }
         ],
         brand_logo: [],
-        brand_url: []
+        brand_url: [],
+        cart_url: []
       }
     };
   },

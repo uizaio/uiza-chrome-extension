@@ -8,6 +8,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.2",
     "axios": "^0.17.0",
+    "bp-vuejs-dropdown": "^2.1.1",
     "element-ui": "^2.0.1",
     "jquery": "^3.4.1",
     "lodash": "^4.17.4",

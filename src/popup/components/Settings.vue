@@ -1,12 +1,12 @@
 <template lang='pug'>
 div
-  el-form(:disabled='disabled' size="small" label-position='left' label-width="120px" :model='settings' :rules='rules' ref='settingsForm')
+  el-form(:disabled='disabled || isValidating' size="small" label-position='left' label-width="120px" :model='settings' :rules='rules' ref='settingsForm')
     el-form-item(label='App ID', prop='app_id')
       el-input(v-model='settings.app_id')
     el-form-item(label='API key', prop='api_key')
       el-input(v-model='settings.api_key')
     el-form-item
-      el-button(type='primary', @click='submitForm') Save
+      el-button(:loading="isValidating" type='primary' @click='submitForm') Save
       el-button(@click='resetForm') Reset
   el-form(:disabled='false' size='small' label-position='left' label-width="110px" :model='playerSettings' :rules='playerRules' ref='playerForm')
     //- el-form-item(label='Player size')
@@ -32,7 +32,7 @@ div
         el-col(:span="15") Time
         el-col(:span="5") Duration
     el-form-item
-      el-button(type='primary', @click='submitPlayerForm') Save
+      el-button(type='primary' @click='submitPlayerForm') Save
   
 </template>
 
@@ -41,7 +41,7 @@ import { mapFields } from "vuex-map-fields";
 import storage from "../../ext/storage";
 import constants from "../constants";
 import _ from 'lodash';
-// import uiza from "../services/uiza";
+import uiza from "../services/uiza";
 
 export default {
   mounted() {
@@ -73,6 +73,7 @@ export default {
     };
     return {
       disabled: false,
+      isValidating: false,
       rules: {
         api_key: [
           {
@@ -141,14 +142,29 @@ export default {
     submitForm() {
       this.$refs.settingsForm.validate(valid => {
         if (valid) {
-          storage.set(constants.SETTINGS_KEY, this.settings);
-          this.disabled = true;
-          this.$emit("settingsSaved");
-          this.$notify({
-            title: "Success",
-            message: "Your credentials have been saved",
-            type: "success"
-          });
+          this.isValidating = true;
+          uiza.checkCredentials(this.settings.app_id, this.settings.api_key)
+            .then(() => {
+              storage.set(constants.SETTINGS_KEY, this.settings);
+              this.disabled = true;
+              this.$emit("settingsSaved");
+              this.$notify({
+                title: "Success",
+                message: "Your credentials have been saved",
+                type: "success"
+              });
+            })
+            .catch(err => {
+              console.log(err);
+              this.$notify({
+                title: 'Invalid credentials',
+                message: 'Invalid credentials. Please check again',
+                type: 'error'
+              })
+            })
+            .finally(() => {
+              this.isValidating = false;
+            })
         } else {
           this.$notify({
             title: "Error",

@@ -84,7 +84,7 @@ export default {
           feedId: item.lastFeedId,
           width: "685px",
           height: "385px",
-          controls: false
+          controls: true
         },
         playerSettings: this.playerSettings
       };

@@ -2,9 +2,9 @@
 div
   el-form(:disabled='disabled || isValidating' size="small" label-position='left' label-width="120px" :model='settings' :rules='rules' ref='settingsForm')
     el-form-item(label='App ID', prop='app_id')
-      el-input(v-model='settings.app_id')
+      el-input(v-model='settings.app_id' v-on:change="saveDraft" @paste="saveDraft")
     el-form-item(label='API key', prop='api_key')
-      el-input(v-model='settings.api_key')
+      el-input(v-model='settings.api_key' v-on:change="saveDraft" @paste="saveDraft")
     el-form-item
       el-button(:loading="isValidating" type='primary' @click='submitForm') Save
       el-button(@click='resetForm') Reset
@@ -50,6 +50,10 @@ export default {
     const settings = storage.get(constants.SETTINGS_KEY);
     if (settings) {
       this.settings = settings;
+    } else {
+      const draft = {...storage.get(constants.SETTINGS_DRAFT_KEY)};
+      console.log(draft);
+      this.settings = _.merge(this.settings, draft);
     }
     const playerSettings = storage.get(constants.PLAYER_SETTINGS_KEY);
     if (playerSettings) {
@@ -127,6 +131,13 @@ export default {
     ...mapFields("settings", ["settings", "playerSettings"])
   },
   methods: {
+    saveDraft() {
+      console.log('on change')
+      storage.set(constants.SETTINGS_DRAFT_KEY, {
+        api_key: this.settings.api_key,
+        app_id: this.settings.app_id
+      });
+    },
     checkAddCue() {
       // const hasEmpty = _.find(this.playerSettings.ads, ad => {
       //   return !ad.time && ad.duration <= 0;
@@ -139,7 +150,6 @@ export default {
       // }
     },
     changeTime(item) {
-      console.log(item);
       this.checkAddCue();
     },
     submitForm() {

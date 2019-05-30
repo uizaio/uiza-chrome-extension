@@ -2,6 +2,8 @@
 .uiza-ext-player(ref="playerContainer" :style="{ height: height, width: width, maxWidth: '100%' }")
   a.uiza-logo(v-if="playerSettings" :href="playerSettings.brand_url" target="_blank")
     img(:src="playerSettings.brand_logo")
+  //- a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
+  //-   i.fas.fa-play-circle
   .uiza-chat-messages(ref="chatScroller" v-if="isLive")
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
@@ -13,7 +15,7 @@
       input(v-model="chatMessage" type='text' placeholder='Enter your message' v-on:keyup.enter="sendMessage")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
-      a(href='#' @click="showProducts = !showProducts")
+      a(@click="showProducts = !showProducts")
         i.fas.fa-shopping-bag
     .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
@@ -24,23 +26,17 @@
         i.fas.fa-share-alt
     .uiza-controls-shopping-emotion
       img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
-      //- dropdown(align="top" :x="-80" :y="-60" :close-on-click="true")
-      //-   template(slot="btn")
-      //-     i.far.fa-kiss-wink-heart
-      //-   template(slot="body")
-      //-     div(class="popup")
-      //-       img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
   .uiza-product-list(v-if="showProducts && showControls")
     .uiza-product-list-toggle(@click="showProducts = false")
       i.fas.fa-arrow-circle-down
     carousel.uiza-product-list-swiper(:paginationEnabled="false" :perPage="10")
-        slide.uiza-product-list-item(v-for="product in products" v-bind:key="product.id")
-          img(:src='product.image')
-          .desc
-            h4 {{ product.name }}
-            .price {{ product.price }}
-            button.uiza-product-view(@click="selectedProduct = product") View product
+      slide.uiza-product-list-item(v-for="product in products" v-bind:key="product.id")
+        img(:src='product.image')
+        .desc
+          h4 {{ product.name }}
+          .price {{ product.price }}
+          button.uiza-product-view(@click="selectedProduct = product") View product
 
   .uiza-product-overlay(v-if="products.length && showControls && playerSettings && overlayProduct")
     //- div(v-for="(item, index) in playerSettings.ads" v-bind:key="index")
@@ -52,7 +48,7 @@
         div
           a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") Add to cart
 
-  PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
+  //- PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
 
   PopupProduct(v-if="selectedProduct && showControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
   Congras(v-if="currentSticker" :data="currentSticker")
@@ -199,6 +195,7 @@ export default {
           self.player = player;
           player.on("play", function() {
             self.showControls = true;
+            self.isPlaying = true;
             // count viewing time
             if (!self.playInterval) {
               self.playInterval = setInterval(function() {
@@ -221,6 +218,7 @@ export default {
           });
           player.on("pause", function() {
             self.showControls = false;
+            self.isPlaying = false;
           });
           player.on("timeupdate", function() {
             // const currentSeconds = Math.round(player.currentTime());
@@ -244,6 +242,9 @@ export default {
           console.log(player);
         }
       );
+    },
+    play() {
+      this.player.play();
     },
     getItemsInCart() {
       try {
@@ -296,6 +297,7 @@ export default {
   data() {
     return {
       player: null,
+      isPlaying: false,
       playerParams: null,
       playerSettings: null,
       showControls: true,
@@ -332,6 +334,18 @@ export default {
 </script>
 
 <style lang="scss">
+.uiza-center-play-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  margin-top: -30px;
+  margin-left: -30px;
+  cursor: pointer;
+  svg {
+    color: rgba(255, 255, 255, .5);
+    width: 60px !important;
+    height: 60px !important;
+  }
+}
 .social-share-dialog {
   margin-top: calc(15vh + 80px) !important;
   border-radius: 30px;

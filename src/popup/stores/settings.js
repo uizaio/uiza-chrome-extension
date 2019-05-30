@@ -9,10 +9,9 @@ const state = {
     width: '685px',
     height: '385px',
     color: "#FF0000",
-    brand_logo:
-      "https://storage.googleapis.com/shopdunk-images/tintucshopdunknew/2018/05/tai-sao-logo-hang-Apple-la-trai-tao-do-2.png",
-    brand_url: "https://apple.com",
-    cart_url: "https://google.com",
+    brand_logo: "https://lavima.vn/wp-content/uploads/2018/08/logo-tiki.png",
+    brand_url: "https://tiki.vn",
+    cart_url: "https://tiki.vn/checkout/cart",
     ads: [
       {
         time: new Date(2017, 12, 12, 0, 0, 10, 0),

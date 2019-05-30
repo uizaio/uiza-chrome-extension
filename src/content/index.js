@@ -34,7 +34,7 @@ var jq162 = window.jQuery.noConflict(true);
       playerParams: {
         api: "dWFwLWZiOTA2NTIwMmVkNjQxMTFiNmYyZTU0NGEwYzExM2E5LThjYjYzODg0",
         appId: "fb9065202ed64111b6f2e544a0c113a9",
-        controls: false,
+        controls: true,
         entityId: "7631a97a-47f6-4786-a22f-ddf6d9fe22c3",
         height: "300px",
         playerVersion: 4,

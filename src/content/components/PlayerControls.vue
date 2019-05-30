@@ -35,6 +35,10 @@
     template(slot="body")
       el-button(@click="onChangeQuality(item)" size="mini" v-for="item in qualities" v-bind:key="item.label" :disabled="selectedQuality && selectedQuality.label === item.label")
         | {{ item.label }}
+
+  //- PIP
+  button
+    i.fab.fa-pied-piper-pp
   //- Fullscreen
   button.uiza-player-controls-fullscreen(@click="fullscreen" :style="{ color: settings.color }")
     i.fas.fa-compress

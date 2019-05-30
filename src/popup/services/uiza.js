@@ -6,6 +6,7 @@ var settings = storage.get(constants.SETTINGS_KEY)
 export default {
 
     isConfigured() {
+        settings = storage.get(constants.SETTINGS_KEY);
         return settings || false;
     },
 

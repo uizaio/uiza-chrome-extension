@@ -15,8 +15,8 @@
         ul.uiza-color-picker
             li.uiza-color-picker-option(v-for="color in colors" v-bind:key="color" @click="selectColor(color)" :class="[ color, color === selectedColor ? 'active' : '' ]")
     .product-popup-footer
-        button.product-popup-footer-btn.btn-add(@click="addToCart") Add to cart
-        //- button.product-popup-footer-btn Buy now
+        a.product-popup-footer-btn.btn-add(@click="addToCart") Add to cart
+        a(:href="settings.cart_url" target="_blank" class="product-popup-footer-btn") Buy now
 
 </template>
 
@@ -24,7 +24,12 @@
 const UIZA_EXT_CART = 'UIZA_EXT_CART';
 
 export default {
-    props: ['product'],
+    props: ['product', 'settings'],
+    mounted() {
+      setTimeout(function() {
+        console.table(this.settings);
+      }.bind(this), 1000);
+    },
     methods: {
         close() {
             this.$emit('close');
@@ -144,13 +149,14 @@ export default {
   color: #fff;
   background-color: #e5101d;
   font-weight: 500;
-  font-size: 1.4rem;
-  min-width: 10rem;
+  font-size: 20px;
+  min-width: 8rem;
   //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
   border-radius: 3px;
   margin: 20px 20px 0 0;
   //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  text-decoration: none;
   &.btn-add {
     background-color: orange;
   }

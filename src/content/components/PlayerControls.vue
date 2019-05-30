@@ -3,6 +3,8 @@
   //- Progress bar
   .uiza-player-controls-progress
     VueSlider(v-model="currentPos" :dot-size="3" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
+      template(v-slot:process="{ start, end, style }")
+        div(class="vue-slider-process custom-class" :style="[style]")
   //-  Play button
   button.uiza-player-controls-play(v-show="!isPlaying" @click="play" :style="{ color: settings.color }")
     i.fas.fa-play
@@ -91,7 +93,8 @@ export default {
       }
     },
     play() {
-      this.player.play();
+      const self = this;
+      self.player.play();
     },
     pause() {
       this.player.pause();
@@ -107,7 +110,6 @@ export default {
     },
     onProgressChanged() {
       this.player.currentTime(this.currentPos / 1000);
-      console.log(this.currentPos / 1000, this.player.duration());
       if (this.currentPos / 1000 < this.player.duration()) {
         this.isSeeked = true;
       } else {

@@ -46,17 +46,18 @@ var jq162 = window.jQuery.noConflict(true);
         color: "#FF0000",
         brand_logo: "https://storage.googleapis.com/shopdunk-images/tintucshopdunknew/2018/05/tai-sao-logo-hang-Apple-la-trai-tao-do-2.png",
         brand_url: "https://apple.com",
+        cart_url: "https://apple.com",
         ads: []
       }
     };
     // live
-    eventData = _.merge({
-      playerParams: {
-        feedId: 'fa5876e6-5088-4459-ba82-f4b92f8672f9',
-        entityId: 'e001f8e0-72ca-413c-9519-4ce8ad28b878',
-        streamName: '60d3fd6f-cd03-4987-af10-8ae1c106f0c7'
-      }
-    }, eventData);
+    // eventData = _.merge({
+    //   playerParams: {
+    //     feedId: 'fa5876e6-5088-4459-ba82-f4b92f8672f9',
+    //     entityId: 'e001f8e0-72ca-413c-9519-4ce8ad28b878',
+    //     streamName: '60d3fd6f-cd03-4987-af10-8ae1c106f0c7'
+    //   }
+    // }, eventData);
     var increasedId = "test";
     var playerId = "#uiza-ext-player" + increasedId;
     var div = $("<div id='uiza-ext-player" + increasedId + "'></div>")
@@ -153,7 +154,7 @@ var jq162 = window.jQuery.noConflict(true);
       //   "<uiza-ext-player></uiza-ext-player>"
       // );
       var playerId = "#uiza-ext-player" + increasedId;
-      $(playerId).parent().parent().css('z-index', 99999999);
+      // $(playerId).parent().parent().css('z-index', 99999999);
       if (eventData.playerParams.feedId) {
         $(playerId).parent().parent().replaceWith("<div id='uiza-ext-player" + increasedId + "'></div>");
         $(playerId).append("<uiza-ext-player-holder></uiza-ext-player-holder>");

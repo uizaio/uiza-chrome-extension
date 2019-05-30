@@ -2,38 +2,34 @@
 .uiza-ext-player(ref="playerContainer" :style="{ height: height, width: width, maxWidth: '100%' }")
   a.uiza-logo(v-if="playerSettings" :href="playerSettings.brand_url" target="_blank")
     img(:src="playerSettings.brand_logo")
-  .uiza-chat-messages(ref="chatScroller")
+  .uiza-chat-messages(ref="chatScroller" v-if="isLive")
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
         strong {{ message.sender.userId }} 
         span.time {{ message.createdAt | moment("from", "now") }}
         div.message {{ message.message }}
   .uiza-controls(v-if="showControls")
-    .uiza-controls-shopping-chat-input
+    .uiza-controls-shopping-chat-input(v-if="isLive")
       input(v-model="chatMessage" type='text' placeholder='Enter your message' v-on:keyup.enter="sendMessage")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
       a(href='#' @click="showProducts = !showProducts")
         i.fas.fa-shopping-bag
-    .uiza-controls-shopping-cart
+    .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
-      a(href='#' @click="goToCart()")
+      a(:href='playerSettings.cart_url' target="_blank")
         i.fas.fa-shopping-cart
     .uiza-controls-shopping-share
-      a(href='#')
+      a(@click="isSharing = true")
         i.fas.fa-share-alt
     .uiza-controls-shopping-emotion
-      dropdown(align="top" :x="-80" :y="-60" :close-on-click="true")
-        template(slot="btn")
-          i.far.fa-kiss-wink-heart
-        template(slot="body")
-          div(class="popup")
-            img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
-      //- el-popover(placement="top-end" title="Stickers" width="200" trigger="hover")
-      //-   a(href='#' slot="reference")
+      img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
+      //- dropdown(align="top" :x="-80" :y="-60" :close-on-click="true")
+      //-   template(slot="btn")
       //-     i.far.fa-kiss-wink-heart
-      //-   div(class="popup")
-      //-     img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
+      //-   template(slot="body")
+      //-     div(class="popup")
+      //-       img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
   .uiza-product-list(v-if="showProducts && showControls")
     .uiza-product-list-toggle(@click="showProducts = false")
@@ -58,8 +54,11 @@
 
   PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
 
-  PopupProduct(v-if="selectedProduct && showControls" :product="selectedProduct" @close="close" @cartChanged="onCartChanged")
+  PopupProduct(v-if="selectedProduct && showControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
   Congras(v-if="currentSticker" :data="currentSticker")
+  el-dialog(:visible.sync="isSharing" custom-class='social-share-dialog' :width="'200px'" :append-to-body="true" :top="'20vh'")
+    vue-goodshare-facebook(title_social="" has_icon button_design="outline")
+    vue-goodshare-twitter(title_social="" has_counter has_icon button_design="outline")
 </template>
 
 <script>
@@ -69,6 +68,9 @@ import Congras from "./Congras";
 import { Carousel, Slide } from "vue-carousel";
 import SendBird from "sendbird";
 import Dropdown from "bp-vuejs-dropdown";
+import VueGoodshare from "vue-goodshare";
+import VueGoodshareFacebook from "vue-goodshare/src/providers/Facebook.vue";
+import VueGoodshareTwitter from "vue-goodshare/src/providers/Twitter.vue";
 
 const UIZA_EXT_CART = "UIZA_EXT_CART";
 
@@ -79,7 +81,10 @@ export default {
     Congras,
     Carousel,
     Slide,
-    Dropdown
+    Dropdown,
+    VueGoodshare,
+    VueGoodshareFacebook,
+    VueGoodshareTwitter
   },
   props: ["params", "settings", "json", "id"],
   mounted() {
@@ -109,12 +114,14 @@ export default {
       this.playerSettings.ads.forEach(ad => {});
     },
     scrollChat() {
-      setTimeout(
-        function() {
-          this.$refs.chatScroller.scrollTop = this.$refs.chatScroller.scrollHeight;
-        }.bind(this),
-        100
-      );
+      if (this.isLive) {
+        setTimeout(
+          function() {
+            this.$refs.chatScroller.scrollTop = this.$refs.chatScroller.scrollHeight;
+          }.bind(this),
+          100
+        );
+      }
     },
     connectSendBird() {
       const self = this;
@@ -189,30 +196,48 @@ export default {
         self.playerId,
         self.playerParams,
         function(player) {
-          console.log("hello", player);
           self.player = player;
           player.on("play", function() {
             self.showControls = true;
+            // count viewing time
+            if (!self.playInterval) {
+              self.playInterval = setInterval(function() {
+                self.playedTime += 1;
+                self.playerSettings.ads.forEach(function(ad) {
+                  const time = new Date(Date.parse(ad.time));
+                  const adTime =
+                    time.getHours() * 60 * 60 +
+                    time.getMinutes() * 60 +
+                    time.getSeconds();
+                  if (adTime === self.playedTime) {
+                    self.overlayProduct = self.randomProduct;
+                    setTimeout(() => {
+                      self.overlayProduct = null;
+                    }, ad.duration * 1000);
+                  }
+                });
+              }, 1000);
+            }
           });
           player.on("pause", function() {
             self.showControls = false;
           });
           player.on("timeupdate", function() {
-            const currentSeconds = Math.round(player.currentTime());
+            // const currentSeconds = Math.round(player.currentTime());
             // console.log(currentSeconds, self.playerSettings.ads)
-            self.playerSettings.ads.forEach(function(ad) {
-              const time = new Date(Date.parse(ad.time));
-              const adTime =
-                time.getHours() * 60 * 60 +
-                time.getMinutes() * 60 +
-                time.getSeconds();
-              if (adTime === currentSeconds) {
-                self.overlayProduct = self.randomProduct;
-                setTimeout(() => {
-                  self.overlayProduct = null;
-                }, ad.duration * 1000);
-              }
-            });
+            // self.playerSettings.ads.forEach(function(ad) {
+            //   const time = new Date(Date.parse(ad.time));
+            //   const adTime =
+            //     time.getHours() * 60 * 60 +
+            //     time.getMinutes() * 60 +
+            //     time.getSeconds();
+            //   if (adTime === currentSeconds) {
+            //     self.overlayProduct = self.randomProduct;
+            //     setTimeout(() => {
+            //       self.overlayProduct = null;
+            //     }, ad.duration * 1000);
+            //   }
+            // });
           });
         },
         function(player) {
@@ -236,9 +261,6 @@ export default {
       this.close();
       this.showProducts = false;
     },
-    goToCart() {
-      location.href = this.jsonData.cart_url;
-    },
     stickerClicked(item) {
       this.currentSticker = item;
       setTimeout(() => {
@@ -254,7 +276,7 @@ export default {
       return this.playerSettings ? this.playerSettings.height : 0;
     },
     isLive() {
-      return !!this.playerParams.feedId;
+      return this.playerParams && !!this.playerParams.feedId;
     },
     jsonData() {
       return this.$parent.jsonData || this.json;
@@ -287,26 +309,44 @@ export default {
       chatMessage: "",
       overlayTimeouts: [],
       overlayProduct: null,
+      isSharing: false,
       stickers: [
         {
           icon:
             "https://mir-s3-cdn-cf.behance.net/project_modules/disp/65ea2034559659.56d57de06cea2.gif",
           // gif: "https://media.giphy.com/media/3oKIPqM8BJ0ofNQOzK/source.gif"
           gif: "https://media.giphy.com/media/McmuC1HeylawPz6hYk/giphy.gif"
-        },
-        {
-          icon:
-            "https://mir-s3-cdn-cf.behance.net/project_modules/disp/e4299734559659.56d57de04bda4.gif",
-          gif: "https://media3.giphy.com/media/5z5NIlNjK0NxpsecKh/source.gif"
         }
+        // {
+        //   icon:
+        //     "https://mir-s3-cdn-cf.behance.net/project_modules/disp/e4299734559659.56d57de04bda4.gif",
+        //   gif: "https://media3.giphy.com/media/5z5NIlNjK0NxpsecKh/source.gif"
+        // }
       ],
-      currentSticker: null
+      currentSticker: null,
+      playInterval: null,
+      playedTime: 0
     };
   }
 };
 </script>
 
 <style lang="scss">
+.social-share-dialog {
+  margin-top: calc(15vh + 80px) !important;
+  border-radius: 30px;
+  overflow: hidden;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 20px 0 !important;
+    text-align: center;
+  }
+}
+.vue-slider-rail {
+  cursor: pointer;
+}
 .uiza-ext-player {
   position: relative;
   z-index: 2147483647;
@@ -314,6 +354,7 @@ export default {
   > iframe {
     min-width: 100% !important;
     min-height: 100% !important;
+    max-width: 100%;
   }
 }
 .uiza-logo {
@@ -446,6 +487,11 @@ export default {
     }
   }
   &-shopping-emotion {
+    margin: -8px 5px 0 0 !important;
+    > img {
+      width: 36px;
+      cursor: pointer;
+    }
     .bp-dropdown {
       &__btn {
         background-color: transparent !important;
@@ -487,7 +533,7 @@ export default {
   bottom: 50px;
   left: 0;
   right: 0;
-  background: linear-gradient(90deg, #fb9da3, #fb747c);
+  background: rgba(255, 255, 255, 0.3);
   padding: 10px 0;
 }
 .uiza-product-list-toggle {

@@ -5,7 +5,7 @@ div(class="uiza-scroll-wrapper")
       p Hold your mouse on the video item and drag it onto the webpage
       div(draggable @dragstart="onDragStart($event, item)" class='item' v-for="item in livestreamings" @click="playItem(item)")
           div(class='item-thumbnail')
-              img(:src='item.thumbnail || "https://dashboard.uiza.io/assets/img/image-not-available.jpg"')
+              img(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
           div(class='item-content')
               h4 {{ item.name }}
               p.date {{ item.createdAt }}

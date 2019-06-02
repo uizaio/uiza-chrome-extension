@@ -303,8 +303,10 @@ export default {
     font-size: 12px;
   }
   &-levels {
-    button {
-      margin-top: 5px;
+    .bp-dropdown__body {
+      button {
+        margin: 4px 0 !important;
+      }
     }
     svg {
       display: none !important;

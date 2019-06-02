@@ -34,7 +34,7 @@ var jq162 = window.jQuery.noConflict(true);
       playerParams: {
         api: "dWFwLWZiOTA2NTIwMmVkNjQxMTFiNmYyZTU0NGEwYzExM2E5LThjYjYzODg0",
         appId: "fb9065202ed64111b6f2e544a0c113a9",
-        controls: true,
+        controls: false,
         entityId: "7631a97a-47f6-4786-a22f-ddf6d9fe22c3",
         height: "300px",
         playerVersion: 4,
@@ -63,7 +63,8 @@ var jq162 = window.jQuery.noConflict(true);
     var div = $("<div id='uiza-ext-player" + increasedId + "'></div>")
       .css("width", eventData.playerParams.width)
       .css("height", eventData.playerParams.height);
-    if (eventData.playerParams.feedId) {
+    // eslint-disable-next-line no-constant-condition
+    if (eventData.playerParams.feedId || true) {
       div.append("<uiza-ext-player-holder></uiza-ext-player-holder>");
     } else {
       div.append("<uiza-ext-player></uiza-ext-player>");
@@ -146,16 +147,9 @@ var jq162 = window.jQuery.noConflict(true);
       $(".reserved-drop-marker").removeClass("reserved-drop-marker");
       $(".reserved-drop-target").removeClass("reserved-drop-target");
 
-      // var playerId = "#uiza-ext-player" + increasedId;
-      // // $(playerId)
-      // //   .css("width", eventData.playerParams.width)
-      // //   .css("height", eventData.playerParams.height);
-      // $(playerId).append(
-      //   "<uiza-ext-player></uiza-ext-player>"
-      // );
       var playerId = "#uiza-ext-player" + increasedId;
-      // $(playerId).parent().parent().css('z-index', 99999999);
-      if (eventData.playerParams.feedId) {
+      // eslint-disable-next-line no-constant-condition
+      if (eventData.playerParams.feedId || true) {
         $(playerId).parent().parent().replaceWith("<div id='uiza-ext-player" + increasedId + "'></div>");
         $(playerId).append("<uiza-ext-player-holder></uiza-ext-player-holder>");
       } else {

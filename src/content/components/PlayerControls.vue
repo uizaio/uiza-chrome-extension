@@ -7,46 +7,58 @@
         div(class="vue-slider-process custom-class" :style="[style]")
   //-  Play button
   button.uiza-player-controls-play(v-show="!isPlaying" @click="play" :style="{ color: settings.color }")
-    i.fas.fa-play
+    i.fas2.fa-play
   button.uiza-player-controls-play(v-show="isPlaying" @click="pause" :style="{ color: settings.color }")
-    i.fas.fa-pause
+    i.fas2.fa-pause
+  //- Forward reward
+  button.uiza-player-controls-play(@click="reward" :style="{ color: settings.color }")
+    i.fas2.fa-reward
+  button.uiza-player-controls-play(@click="forward" :style="{ color: settings.color }")
+    i.fas2.fa-forward
   //- Volume button
-  button.uiza-player-controls-volume(v-show="currentVolume > 0" @click="mute" :style="{ color: settings.color }")
-    i.fas.fa-volume-up
-  button.uiza-player-controls-volume(v-show="currentVolume <= 0" @click="unmute" :style="{ color: settings.color }")
-    i.fas.fa-volume-mute
-  //- Volume slider
-  VueSlider(class="uiza-player-controls-volume-slider" v-model="currentVolume" :max="100" @change="onVolumeChanged" :processStyle="{ background: settings.color }")
+  div.uiza-player-controls-volume(@mouseover="isVolumeShown = true" @mouseleave="transitVolumeHide")
+    button(v-show="currentVolume === 100" @click="mute" :style="{ color: settings.color }")
+      i.fas2.fa-volume-up
+    button(v-show="currentVolume > 0 && currentVolume < 100" @click="mute" :style="{ color: settings.color }")
+      i.fas2.fa-volume-middle
+    button(v-show="currentVolume === 0" @click="unmute" :style="{ color: settings.color }")
+      i.fas2.fa-volume-mute
+    //- Volume slider
+    div(class="uiza-player-controls-volume-slider" @mouseover.stop="transitVolumeShow" @mouseleave.stop="isVolumeShown = false" v-if="isVolumeShown")
+      VueSlider(direction="btt" :height="50" :dotSize="8" v-model="currentVolume" :max="100" @change="onVolumeChanged" :processStyle="{ background: settings.color }")
   //- Live button
   div(v-if="isLive" @click="seekToLive" class="uiza-player-controls-live")
     span(:class="{ 'inactive': isLive && isSeeked }") Live
-  //- Spacer
-  div.uiza-player-controls-spacer
   //- Duration
   div(v-if="!isLive" class="uiza-player-controls-duration")
     span {{ formattedCurrentPos }}
     span /
     span {{ formattedDuration }}
+  //- Spacer
+  div.uiza-player-controls-spacer
   //- Qualities
-  dropdown(align="top" v-if="qualities.length" :close-on-click="true")
+  dropdown(class="uiza-player-controls-levels" align="top" v-if="qualities.length" :close-on-click="true")
     template(slot="btn")
-      button(class="uiza-player-controls-levels")
-        i.fas.fa-cogs
+      button()
+        i.fas2.fa-cogs
     template(slot="body")
       el-button(@click="onChangeQuality(item)" size="mini" v-for="item in qualities" v-bind:key="item.label" :disabled="selectedQuality && selectedQuality.label === item.label")
         | {{ item.label }}
 
   //- PIP
-  button
-    i.fab.fa-pied-piper-pp
+  button(v-if="!isPiP" @click="requestPIP")
+    i.fas2.fa-pip
+  button(v-if="isPiP" @click="exitPIP")
+    i.fas2.fa-pip-off
   //- Fullscreen
   button.uiza-player-controls-fullscreen(@click="fullscreen" :style="{ color: settings.color }")
-    i.fas.fa-compress
+    i.fas2.fa-fullscreen
 </template>
 
 <script>
 import VueSlider from "vue-slider-component";
 import Dropdown from 'bp-vuejs-dropdown';
+import EventBus from '../EventBus';
 
 export default {
   props: ["player", "isLive", "settings"],
@@ -73,7 +85,6 @@ export default {
       self.currentVolume = self.player.volume() * 100;
     });
     this.player.on("timeupdate", val => {
-      console.log('time update', self.player.currentTime());
       self.currentPos = self.player.currentTime() * 1000;
     });
     this.player.on("qualitieschange", () => {
@@ -103,11 +114,32 @@ export default {
     pause() {
       this.player.pause();
     },
+    reward() {
+      const change = Math.min(this.player.duration(), 10);
+      this.player.currentTime(this.player.currentTime() - change);
+    },
+    forward() {
+      const change = Math.min(Math.abs(this.player.duration() - this.player.currentTime()), 10);
+      if (change > 0) {
+       this.player.currentTime(this.player.currentTime() + change);
+      }
+    },
     mute() {
       this.player.volume(0);
     },
     unmute() {
       this.player.volume(1);
+    },
+    transitVolumeHide() {
+      this.transitVolumeTimeout = setTimeout(function() {
+        this.isVolumeShown = false;
+      }.bind(this), 1000);
+    },
+    transitVolumeShow(e) {
+      e.stopPropagation();
+      clearTimeout(this.transitVolumeTimeout);
+      console.log('clear timeout');
+      this.isVolumeShown = true;
     },
     onVolumeChanged() {
       this.player.volume(this.currentVolume / 100);
@@ -128,7 +160,15 @@ export default {
       this.selectedQuality = item;
       const index = this.qualities.indexOf(item);
       this.player.currentLevel(index);
-    }
+    },
+    requestPIP() {
+      this.isPiP = true;
+      EventBus.$emit('onTogglePIP')
+    },
+    exitPIP() {
+      this.isPiP = false;
+      EventBus.$emit('onTogglePIP')
+    }  
   },
   computed: {
     formattedCurrentPos() {
@@ -145,29 +185,75 @@ export default {
       currentPos: 0,
       duration: 0,
       currentVolume: 100,
+      isVolumeShown: false,
+      transitVolumeTimeout: null,
       qualities: [],
-      selectedQuality: null
+      selectedQuality: null,
+      isPiP: false
     };
   }
 };
 </script>
 
 <style lang="scss">
-.bp-dropdown {
-  margin-top: -4px;
-  &__btn {
-    background-color: transparent !important;
-    border: none !important;
-    padding: 0 !important;
+// Uiza theme
+@charset "UTF-8";
+
+@font-face {
+  font-family: "uiza";
+  src:url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.eot");
+  src:url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.eot?#iefix") format("embedded-opentype"),
+    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.woff") format("woff"),
+    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.ttf") format("truetype"),
+    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.svg#videojs-uiza-fonts-15") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+.fas2 {
+  &:before {
+    font-style: normal !important;
+    font-family: "uiza";
+    content: "\e009"!important;
+    color: #eee;
+    font-size: 1.3em !important;
   }
-  &__body {
-    background-color: rgba(0, 0, 0, .6) !important;
-    .el-button {
-      display: block;
-      margin: 0 !important;
-    }
+  
+  &.fa-play:before {
+    content: "\e009"!important;
+  }
+  &.fa-pause:before {
+    content: "\e00a" !important;
+  }
+  &.fa-reward:before {
+    content: "\e007" !important;
+  }
+  &.fa-forward:before {
+    content: "\e008" !important;
+  }
+  &.fa-volume-up:before {
+    content: "\e003" !important;
+  }
+  &.fa-volume-middle:before {
+    content: "\e002" !important;
+  }
+  &.fa-volume-mute:before {
+    content: "\e000" !important;
+  }
+  &.fa-cogs:before {
+    content: "\e013" !important;
+  }
+  &.fa-pip:before {
+    content: "\e011" !important;
+  }
+  &.fa-pip-off:before {
+    content: "\e012" !important;
+  }
+  &.fa-fullscreen:before {
+    content: "\e00c" !important;
   }
 }
+
 .uiza-player-controls {
   position: absolute;
   bottom: 0;
@@ -182,7 +268,10 @@ export default {
     flex: 0 0 auto;
   }
   button {
-    margin: 0 5px;
+    margin: 0 5px !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    height: auto !important;
     background: transparent !important;
     border: none !important;
     outline: none !important;
@@ -192,8 +281,11 @@ export default {
     }
   }
   &-volume {
+    position: relative;
     &-slider {
-      flex: 0 0 60px;
+      position: absolute;
+      top: -76px;
+      left: 14px;
     }
   }
   &-spacer {
@@ -206,8 +298,17 @@ export default {
     margin: 0;
   }
   &-duration {
+    margin-top: 1px;
     margin-left: 10px;
     font-size: 12px;
+  }
+  &-levels {
+    button {
+      margin-top: 5px;
+    }
+    svg {
+      display: none !important;
+    }
   }
   &-live {
     margin-top: -4px;

@@ -1,9 +1,9 @@
 <template lang="pug">
-.uiza-ext-player(ref="playerContainer" :style="{ height: height, width: width, maxWidth: '100%' }")
+.uiza-ext-player(:id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ height: height, width: width, maxWidth: '100%' }")
   a.uiza-logo(v-if="playerSettings" :href="playerSettings.brand_url" target="_blank")
     img(:src="playerSettings.brand_logo")
-  //- a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
-  //-   i.fas.fa-play-circle
+  a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
+    i.fas.fa-play-circle
   .uiza-chat-messages(ref="chatScroller" v-if="isLive")
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
@@ -22,8 +22,14 @@
       a(:href='playerSettings.cart_url' target="_blank")
         i.fas.fa-shopping-cart
     .uiza-controls-shopping-share
-      a(@click="isSharing = true")
-        i.fas.fa-share-alt
+      dropdown(align="top" :close-on-click="true" :x="-80")
+        template(slot="btn")
+          i.fas.fa-share-alt
+        template(slot="body")
+          vue-goodshare-facebook(title_social="" has_icon button_design="outline")
+          vue-goodshare-twitter(title_social="" has_counter has_icon button_design="outline")
+      //- a(@click="isSharing = true")
+      //-   i.fas.fa-share-alt
     .uiza-controls-shopping-emotion
       img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
@@ -48,13 +54,10 @@
         div
           a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") Add to cart
 
-  //- PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
+  PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
 
   PopupProduct(v-if="selectedProduct && showControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
   Congras(v-if="currentSticker" :data="currentSticker")
-  el-dialog(:visible.sync="isSharing" custom-class='social-share-dialog' :width="'200px'" :append-to-body="true" :top="'20vh'")
-    vue-goodshare-facebook(title_social="" has_icon button_design="outline")
-    vue-goodshare-twitter(title_social="" has_counter has_icon button_design="outline")
 </template>
 
 <script>
@@ -67,6 +70,7 @@ import Dropdown from "bp-vuejs-dropdown";
 import VueGoodshare from "vue-goodshare";
 import VueGoodshareFacebook from "vue-goodshare/src/providers/Facebook.vue";
 import VueGoodshareTwitter from "vue-goodshare/src/providers/Twitter.vue";
+import EventBus from '../EventBus.js';
 
 const UIZA_EXT_CART = "UIZA_EXT_CART";
 
@@ -83,6 +87,11 @@ export default {
     VueGoodshareTwitter
   },
   props: ["params", "settings", "json", "id"],
+  created() {
+    EventBus.$on('onTogglePIP', function() {
+      this.isMinimized = !this.isMinimized;
+    }.bind(this));
+  },
   mounted() {
     this.playerSettings = !this.settings
       ? this.$parent.data.playerSettings
@@ -187,14 +196,13 @@ export default {
     },
     initPlayer() {
       const self = this;
-      console.log("polayerid", self.playerId);
       window.UZ.Player.init(
         self.playerId,
         self.playerParams,
         function(player) {
           self.player = player;
           player.on("play", function() {
-            self.showControls = true;
+            // self.showControls = true;
             self.isPlaying = true;
             // count viewing time
             if (!self.playInterval) {
@@ -217,29 +225,9 @@ export default {
             }
           });
           player.on("pause", function() {
-            self.showControls = false;
+            // self.showControls = false;
             self.isPlaying = false;
           });
-          player.on("timeupdate", function() {
-            // const currentSeconds = Math.round(player.currentTime());
-            // console.log(currentSeconds, self.playerSettings.ads)
-            // self.playerSettings.ads.forEach(function(ad) {
-            //   const time = new Date(Date.parse(ad.time));
-            //   const adTime =
-            //     time.getHours() * 60 * 60 +
-            //     time.getMinutes() * 60 +
-            //     time.getSeconds();
-            //   if (adTime === currentSeconds) {
-            //     self.overlayProduct = self.randomProduct;
-            //     setTimeout(() => {
-            //       self.overlayProduct = null;
-            //     }, ad.duration * 1000);
-            //   }
-            // });
-          });
-        },
-        function(player) {
-          console.log(player);
         }
       );
     },
@@ -283,7 +271,7 @@ export default {
       return this.$parent.jsonData || this.json;
     },
     playerId() {
-      return (this.id || this.$parent.id) + " .uiza-ext-player";
+      return '#' + (this.id || this.$parent.id) + ".uiza-ext-player";
     },
     products() {
       return this.jsonData.products;
@@ -327,13 +315,23 @@ export default {
       ],
       currentSticker: null,
       playInterval: null,
-      playedTime: 0
+      playedTime: 0,
+      isMinimized: false
     };
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+* {
+  line-height: 1.1 !important;
+}
+button {
+  min-width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+}
+
 .uiza-center-play-btn {
   position: absolute;
   top: 50%; left: 50%;
@@ -346,24 +344,13 @@ export default {
     height: 60px !important;
   }
 }
-.social-share-dialog {
-  margin-top: calc(15vh + 80px) !important;
-  border-radius: 30px;
-  overflow: hidden;
-  .el-dialog__header {
-    display: none;
-  }
-  .el-dialog__body {
-    padding: 20px 0 !important;
-    text-align: center;
-  }
-}
+
 .vue-slider-rail {
   cursor: pointer;
 }
 .uiza-ext-player {
   position: relative;
-  z-index: 2147483647;
+  z-index: 2147483646;
   font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   > iframe {
     min-width: 100% !important;
@@ -466,6 +453,9 @@ export default {
   left: 0;
   right: 0;
   display: flex;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
   > div {
     flex: 0 0 auto;
     margin: 0 10px;
@@ -500,10 +490,10 @@ export default {
       border: #ddd 1px solid;
     }
   }
-  &-shopping-emotion {
-    margin: -8px 5px 0 0 !important;
+  &-shopping-emotion, &-shopping-share {
+    margin-right: 0 !important;
     > img {
-      width: 36px;
+      width: 36px !important;
       cursor: pointer;
     }
     .bp-dropdown {
@@ -511,7 +501,9 @@ export default {
         background-color: transparent !important;
         border: none !important;
         padding: 0 !important;
+        margin: 12px 0 0 10px !important;
         svg {
+          margin-top: 3px !important;
           line-height: 30px;
           font-size: 20px;
           color: #fff;
@@ -593,29 +585,29 @@ export default {
   }
   h4 {
     font-size: 12px;
-    margin-top: 0;
-    margin-bottom: 5px;
+    line-height: 15px;
+    margin: 0 0 5px 0 !important;
     text-overflow: ellipsis;
     max-width: 100%;
-    height: 30px;
+    height: 30px !important;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     overflow: hidden;
   }
   .price {
     color: #ff0010;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 12px !important;
+    line-height: 12px !important;
+    font-weight: 500 !important;
   }
   button.uiza-product-view {
-    font-size: 14px;
-    padding: 4px 10px;
-    font-weight: 500;
-    color: #fff;
+    font-size: 11px !important;
+    padding: 2px 6px !important;
+    font-weight: 500 !important;
+    color: #fff !important;
     cursor: pointer;
     background: linear-gradient(90deg, #b9081d, #f21a4c);
-    margin-top: 10px;
+    margin: 0 !important;
     border: 0 !important;
     //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
     border-radius: 6px;

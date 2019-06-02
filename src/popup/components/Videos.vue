@@ -81,7 +81,7 @@ export default {
           entityId: item.id,
           width: '685px',
           height: '385px',
-          controls: true
+          controls: false
         },
         playerSettings: this.playerSettings
       };

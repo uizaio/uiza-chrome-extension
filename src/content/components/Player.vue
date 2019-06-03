@@ -1,5 +1,5 @@
 <template lang="pug">
-.uiza-ext-player(:id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ height: height, width: width, maxWidth: '100%' }")
+.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ height: height, width: width, maxWidth: '100%', maxHeight: '100%' }")
   a.uiza-logo(v-if="playerSettings" :href="playerSettings.brand_url" target="_blank")
     img(:src="playerSettings.brand_logo")
   a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
@@ -19,7 +19,7 @@
         i.fas.fa-shopping-bag
     .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
-      a(:href='playerSettings.cart_url' target="_blank")
+      a(@click="goToCart")
         i.fas.fa-shopping-cart
     .uiza-controls-shopping-share
       dropdown(align="top" :close-on-click="true" :x="-80")
@@ -64,7 +64,7 @@
       | Back
     h4 Thank you for watching!
     h4 Don't forget to check out your cart for payment
-    a(:href="playerSettings.cart_url" target="_blank")
+    a(@click="goToCart")
       img(src="https://cdn0.iconfinder.com/data/icons/webshop-essentials/100/shopping-cart-512.png")
 
   Congras(v-if="currentSticker" :data="currentSticker")
@@ -125,6 +125,14 @@ export default {
     this.initPlayer();
   },
   methods: {
+    goToCart() {
+      var win = window.open(this.playerSettings.cart_url, '_blank');
+      win.focus();
+    },
+    preventParentClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    },
     setupOverlay() {
       this.playerSettings.ads.forEach(ad => {});
     },
@@ -211,8 +219,9 @@ export default {
         self.playerParams,
         function(player) {
           self.player = player;
+          console.log(player);
           self.player.on("timeupdate", val => {
-            if (self.player.currentTime() >= self.player.duration()) {
+            if (!self.isLive && self.player.currentTime() >= self.player.duration()) {
               self.isEnded = true;
             }
           });
@@ -425,6 +434,10 @@ button {
       font-size: 24px;
       font-weight: 600;
       text-shadow: #CCC 1px 1px 1px;
+      margin: 0 !important;
+      &:first-child {
+        margin-top: 30px;
+      }
     }
     img {
       width: 100px;

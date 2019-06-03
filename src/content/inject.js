@@ -30,3 +30,15 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+document.addEventListener("uiza-ext-request-pip", function(data) {
+  chrome.runtime.sendMessage({ UIZA_EXT_REQUEST_PIP: true }, function(resp) {
+    console.log(resp);
+  })
+});
+
+document.addEventListener("uiza-ext-exit-pip", function(data) {
+  chrome.runtime.sendMessage({ UIZA_EXT_REQUEST_PIP: false }, function(resp) {
+    console.log(resp);
+  })
+});

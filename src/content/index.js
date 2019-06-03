@@ -26,6 +26,7 @@ var jq162 = window.jQuery.noConflict(true);
 (function ($) {
   var increasedId = 0;
   var isDragging = false;
+
   var developmentMockup = function () {
     if (self !== top) return;
     // eslint-disable-next-line no-constant-condition
@@ -51,13 +52,13 @@ var jq162 = window.jQuery.noConflict(true);
       }
     };
     // live
-    // eventData = _.merge({
-    //   playerParams: {
-    //     feedId: 'fa5876e6-5088-4459-ba82-f4b92f8672f9',
-    //     entityId: 'e001f8e0-72ca-413c-9519-4ce8ad28b878',
-    //     streamName: '60d3fd6f-cd03-4987-af10-8ae1c106f0c7'
-    //   }
-    // }, eventData);
+    eventData = _.merge({
+      playerParams: {
+        feedId: 'afef9b62-3fb2-4c7f-9c06-470c9f3d357f',
+        entityId: '4adbe50e-b3c2-46cc-999a-a94a13b744a3',
+        streamName: 'fd87567a-caa9-41af-ac96-d54a8126118d'
+      }
+    }, eventData);
     var increasedId = "test";
     var playerId = "#uiza-ext-player" + increasedId;
     var div = $("<div id='uiza-ext-player" + increasedId + "'></div>")

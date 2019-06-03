@@ -3,10 +3,10 @@ div.uiza-ext-player-holder(ref="mainWrapper")
     div.uiza-ext-player-holder-img(v-if="isLive" v-on:click.stop="showPlayer")
         img(src="https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif" alt="View live stream")
         span.uiza-ext-player-holder-text {{ thumbText }}
-    div(v-else :class="{ 'uiza-ext-player-minimized': isPip }")
+    div(v-else :class="{ 'uiza-ext-player-minimized-disabled': isPip }")
         Player(:params="playerParams" :settings="playerSettings" :json="jsonData" :id="rawId")
     //- el-dialog(:visible.sync="isDialogShown" :width="playerParams.width" :append-to-body="true" :lock-scroll="false" :id="rawId")
-    div(ref="fixedPlayer" v-show="isDialogShown" id="uiza-ext-player-fixed" class="uiza-ext-player-fixed" :class="{ 'uiza-ext-player-fixed-minimized': isPip }")
+    div(ref="fixedPlayer" v-show="isDialogShown" id="uiza-ext-player-fixed" class="uiza-ext-player-fixed" :class="{ 'uiza-ext-player-fixed-minimized-disabled': isPip }")
         button.uiza-ext-player-fixed-close(@click="closePopup")
             i.fas.fa-times
         Player(v-if="isDialogShown" :params="playerParams" :settings="playerSettings" :json="jsonData" :id="rawId")
@@ -24,9 +24,6 @@ export default {
     created() {
         EventBus.$on('onTogglePIP', function() {
             this.isPip = !this.isPip;
-            if (this.isPip) {
-                
-            }
         }.bind(this))
     },
     mounted() {
@@ -39,6 +36,18 @@ export default {
                 self.isPip = false;
             }
         };
+    },
+    watch: {
+        isPip: function(newVal, oldVal) {
+            const customEvent = document.createEvent('Event');
+            if (newVal) {
+                customEvent.initEvent('uiza-ext-request-pip');
+                document.dispatchEvent(customEvent);
+            } else {
+                customEvent.initEvent('uiza-ext-exit-pip');
+                document.dispatchEvent(customEvent);
+            }
+        }
     },
     methods: {
         showPlayer($event) {
@@ -95,6 +104,8 @@ export default {
     top: auto !important;
     right: 5px !important;
     bottom: 5px !important;
+    width: 380px !important;
+    height: 230px !important;
 }
 .uiza-ext-player-fixed {
     position: fixed;
@@ -109,6 +120,11 @@ export default {
         top: auto !important;
         right: 5px !important;
         bottom: 5px !important;
+        width: 380px !important;
+        height: 230px !important;
+        &-disabled {
+            display: none !important;
+        }
     }
     &-close {
         position: absolute !important;

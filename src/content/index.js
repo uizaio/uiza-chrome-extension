@@ -37,9 +37,9 @@ var jq162 = window.jQuery.noConflict(true);
         appId: "fb9065202ed64111b6f2e544a0c113a9",
         controls: false,
         entityId: "7631a97a-47f6-4786-a22f-ddf6d9fe22c3",
-        height: "300px",
+        height: "100%",
         playerVersion: 4,
-        width: "500px"
+        width: "100%"
       },
       playerSettings: {
         width: "500px",
@@ -157,8 +157,8 @@ var jq162 = window.jQuery.noConflict(true);
         $(playerId).append("<uiza-ext-player></uiza-ext-player>");
       }
       console.log('event data', eventData);
-      // eventData.playerSettings.width = $(playerId).width();
-      // eventData.playerParams.width = $(playerId).width();
+      eventData.playerSettings.width = '100%';
+      eventData.playerParams.width = '100%';
       new Vue({
         el: playerId + ", .el-dialog__wrapper",
         data: {

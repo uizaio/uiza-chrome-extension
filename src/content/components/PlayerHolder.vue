@@ -1,8 +1,10 @@
 <template lang="pug">
-div.uiza-ext-player-holder
-    div.uiza-ext-player-holder-img(v-on:click.stop="showPlayer")
+div.uiza-ext-player-holder(ref="mainWrapper")
+    div.uiza-ext-player-holder-img(v-if="isLive" v-on:click.stop="showPlayer")
         img(src="https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif" alt="View live stream")
         span.uiza-ext-player-holder-text {{ thumbText }}
+    div(v-else :class="{ 'uiza-ext-player-minimized': isPip }")
+        Player(:params="playerParams" :settings="playerSettings" :json="jsonData" :id="rawId")
     //- el-dialog(:visible.sync="isDialogShown" :width="playerParams.width" :append-to-body="true" :lock-scroll="false" :id="rawId")
     div(ref="fixedPlayer" v-show="isDialogShown" id="uiza-ext-player-fixed" class="uiza-ext-player-fixed" :class="{ 'uiza-ext-player-fixed-minimized': isPip }")
         button.uiza-ext-player-fixed-close(@click="closePopup")
@@ -21,9 +23,22 @@ export default {
     },
     created() {
         EventBus.$on('onTogglePIP', function() {
-            // this.isDialogShown = !this.isDialogShown;
             this.isPip = !this.isPip;
+            if (this.isPip) {
+                
+            }
         }.bind(this))
+    },
+    mounted() {
+        const self = this;
+        window.onscroll = function() {
+            const bounding = self.$refs.mainWrapper.getBoundingClientRect();
+            if (bounding.y + bounding.height < 0) {
+                self.isPip = true;
+            } else {
+                self.isPip = false;
+            }
+        };
     },
     methods: {
         showPlayer($event) {
@@ -44,6 +59,9 @@ export default {
         },
         playerSettings() {
             return this.$parent.data.playerSettings
+        },
+        isLive() {
+            return this.playerParams && !!this.playerParams.feedId;
         },
         jsonData() {
             return this.$parent.jsonData;
@@ -69,12 +87,23 @@ export default {
 </script>
 
 <style lang="scss">
+.uiza-ext-player-minimized {
+    position: fixed !important;
+    z-index: 9999999 !important;
+    position: fixed !important;
+    left: auto !important;
+    top: auto !important;
+    right: 5px !important;
+    bottom: 5px !important;
+}
 .uiza-ext-player-fixed {
     position: fixed;
     top: calc(50vh - 180px);
     left: calc(50vw - 340px);
     z-index: 9999999;
     &.uiza-ext-player-fixed-minimized {
+        position: fixed !important;
+        z-index: 9999999 !important;
         position: fixed !important;
         left: auto !important;
         top: auto !important;
@@ -115,6 +144,12 @@ export default {
         color: red;
         font-size: 16px;
         font-weight: 600;
+    }
+    iframe {
+        min-width: 100% !important;
+        max-width: 100% !important;
+        min-height: 100% !important;
+        max-height: 100% !important;
     }
 }
 .el-dialog {

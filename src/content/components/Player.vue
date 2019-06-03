@@ -52,11 +52,21 @@
       .uiza-product-overlay-wrapper
         .uiza-product-overlay-name {{ overlayProduct.name }}
         div
-          a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") Add to cart
+          a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") View Product
 
   PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
 
   PopupProduct(v-if="selectedProduct && showControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
+
+  div(class="uiza-ext-player-ended" v-if="playerSettings && isEnded")
+    .uiza-ext-player-ended-exit(@click="isEnded = false")
+      i.fas.fa-arrow-circle-left
+      | Back
+    h4 Thank you for watching!
+    h4 Don't forget to check out your cart for payment
+    a(:href="playerSettings.cart_url" target="_blank")
+      img(src="https://cdn0.iconfinder.com/data/icons/webshop-essentials/100/shopping-cart-512.png")
+
   Congras(v-if="currentSticker" :data="currentSticker")
 </template>
 
@@ -201,6 +211,11 @@ export default {
         self.playerParams,
         function(player) {
           self.player = player;
+          self.player.on("timeupdate", val => {
+            if (self.player.currentTime() >= self.player.duration()) {
+              self.isEnded = true;
+            }
+          });
           player.on("play", function() {
             // self.showControls = true;
             self.isPlaying = true;
@@ -271,7 +286,12 @@ export default {
       return this.$parent.jsonData || this.json;
     },
     playerId() {
-      return '#' + (this.id || this.$parent.id) + ".uiza-ext-player";
+      // if (this.isLive) {
+      //   return '#' + this.id + '.uiza-ext-player';
+      // } else {
+      //   return this.$parent.id + " .uiza-ext-player";
+      // }
+      return ('#' + (this.id || this.$parent.id) + ".uiza-ext-player").replace('##', '#');
     },
     products() {
       return this.jsonData.products;
@@ -286,6 +306,7 @@ export default {
     return {
       player: null,
       isPlaying: false,
+      isEnded: false,
       playerParams: null,
       playerSettings: null,
       showControls: true,
@@ -331,7 +352,29 @@ button {
   height: auto !important;
   margin: 0 !important;
 }
-
+.bp-dropdown {
+  margin-top: -4px;
+  &__btn {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    button {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+    .bp-dropdown__icon {
+        display: none !important;
+    }
+  }
+  &__body {
+    background-color: rgba(0, 0, 0, .6) !important;
+    .el-button {
+      display: block;
+      margin: 0 !important;
+    }
+  }
+}
 .uiza-center-play-btn {
   position: absolute;
   top: 50%; left: 50%;
@@ -352,10 +395,40 @@ button {
   position: relative;
   z-index: 2147483646;
   font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
-  > iframe {
+  iframe {
     min-width: 100% !important;
     min-height: 100% !important;
     max-width: 100%;
+  }
+  &-ended {
+    position: absolute;
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #FFF !important;
+    border: #CCC 1px solid;
+    &-exit {
+      position: absolute;
+      left: 5px;
+      top: 10px;
+      color: #000;
+      cursor: pointer;
+      svg {
+        margin-right: 10px;
+      }
+    }
+    h4 {
+      color: #ff0010;
+      font-size: 24px;
+      font-weight: 600;
+      text-shadow: #CCC 1px 1px 1px;
+    }
+    img {
+      width: 100px;
+    }
   }
 }
 .uiza-logo {

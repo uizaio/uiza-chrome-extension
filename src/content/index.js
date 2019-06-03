@@ -69,7 +69,7 @@ var jq162 = window.jQuery.noConflict(true);
     } else {
       div.append("<uiza-ext-player></uiza-ext-player>");
     }
-    $("body").append(div);
+    $("body").prepend(div);
     new Vue({
       el: playerId,
       data: {

@@ -138,7 +138,6 @@ export default {
     transitVolumeShow(e) {
       e.stopPropagation();
       clearTimeout(this.transitVolumeTimeout);
-      console.log('clear timeout');
       this.isVolumeShown = true;
     },
     onVolumeChanged() {
@@ -303,6 +302,7 @@ export default {
     font-size: 12px;
   }
   &-levels {
+    margin-top: -2px;
     .bp-dropdown__body {
       button {
         margin: 4px 0 !important;

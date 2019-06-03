@@ -1,7 +1,8 @@
 <template lang="pug">
 .uiza-player-popup
   .uiza-player-popup-exit(@click="close")
-    i.far.fa-times-circle
+    i.fas.fa-arrow-circle-left
+    | Back
   .uiza-player-popup-content
     .product-popup
     .product-popup-image
@@ -11,9 +12,9 @@
         .desc
         | Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...
         .options
-        span Select color
-        ul.uiza-color-picker
-            li.uiza-color-picker-option(v-for="color in colors" v-bind:key="color" @click="selectColor(color)" :class="[ color, color === selectedColor ? 'active' : '' ]")
+          span Select color
+          ul.uiza-color-picker
+              li.uiza-color-picker-option(v-for="color in colors" v-bind:key="color" @click="selectColor(color)" :class="[ color, color === selectedColor ? 'active' : '' ]")
     .product-popup-footer
         a.product-popup-footer-btn.btn-add(@click="addToCart") Add to cart
         a(:href="settings.cart_url" target="_blank" class="product-popup-footer-btn") Buy now
@@ -80,8 +81,8 @@ export default {
 }
 .uiza-player-popup-exit {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  left: 5px;
+  top: 10px;
   color: red;
   cursor: pointer;
 }
@@ -102,6 +103,9 @@ export default {
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 20px;
+  }
+  .options {
+    margin-top: 10px;
   }
   .options span {
     display: inline-block;

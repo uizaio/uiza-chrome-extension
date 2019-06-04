@@ -52,10 +52,12 @@ export default {
     methods: {
         showPlayer($event) {
             $event.preventDefault();
-            this.isDialogShown = true;
-            setTimeout(function() {
-                $(this.$refs.fixedPlayer).appendTo('body');
-            }.bind(this), 100);
+            if (!this.isDialogShown) {
+                this.isDialogShown = true;
+                setTimeout(function() {
+                    $(this.$refs.fixedPlayer).appendTo('body');
+                }.bind(this), 100);
+            }
         },
         closePopup() {
             this.isDialogShown = false;

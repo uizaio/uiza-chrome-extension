@@ -37,7 +37,7 @@
   //- Spacer
   div.uiza-player-controls-spacer
   //- Qualities
-  dropdown(class="uiza-player-controls-levels" align="top" v-if="!isLive && qualities.length" :close-on-click="true")
+  dropdown(class="uiza-player-controls-levels" align="top" v-if="qualities.length" :close-on-click="true")
     template(slot="btn")
       button()
         i.fas2.fa-cogs

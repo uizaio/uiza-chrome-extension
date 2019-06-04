@@ -456,6 +456,7 @@ button {
   top: 10px;
   right: 10px;
   display: block;
+  cursor: pointer;
   img {
     max-width: 80px;
   }

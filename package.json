@@ -1,8 +1,8 @@
 {
-  "name": "vue-chrome-extension-template",
+  "name": "uiza-chrome-extension",
   "version": "0.0.2",
-  "description": "vue.js chrome extension template (wcer)",
-  "author": "works.yura@gmail.com",
+  "description": "Uiza chrome extension",
+  "author": "dev@uiza.io",
   "license": "MIT",
   "private": false,
   "dependencies": {

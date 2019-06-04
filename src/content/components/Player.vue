@@ -22,14 +22,17 @@
       a(@click="goToCart")
         i.fas.fa-shopping-cart
     .uiza-controls-shopping-share
-      dropdown(align="top" :close-on-click="true" :x="-80")
-        template(slot="btn")
-          i.fas.fa-share-alt
-        template(slot="body")
-          vue-goodshare-facebook(title_social="" has_icon button_design="outline")
-          vue-goodshare-twitter(title_social="" has_counter has_icon button_design="outline")
-      //- a(@click="isSharing = true")
-      //-   i.fas.fa-share-alt
+      //- dropdown(align="top" :close-on-click="true" :x="-80")
+      //-   template(slot="btn")
+      //-     i.fas.fa-share-alt
+      //-   template(slot="body")
+      //-     vue-goodshare-facebook(title_social="" has_icon button_design="outline")
+      //-     vue-goodshare-twitter(title_social="" has_counter has_icon button_design="outline")
+      a(@click="isSharing = !isSharing")
+        i.fas.fa-share-alt
+      div.uiza-controls-shopping-share-popup(v-if="isSharing")
+        vue-goodshare-facebook(@onClick="isSharing = false" title_social="" has_icon button_design="outline")
+        vue-goodshare-twitter(@onClick="isSharing = false" title_social="" has_counter has_icon button_design="outline")
     .uiza-controls-shopping-emotion
       img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
@@ -582,6 +585,15 @@ button {
   }
   &-shopping-emotion, &-shopping-share {
     margin-right: 0 !important;
+    &-popup {
+      position: absolute;
+      top: -50px;
+      left: -100px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 15px;
+      border-radius: 40px;
+      width: 130px;
+    }  
     > img {
       width: 36px !important;
       cursor: pointer;

@@ -17,7 +17,7 @@
               li.uiza-color-picker-option(v-for="color in colors" v-bind:key="color" @click="selectColor(color)" :class="[ color, color === selectedColor ? 'active' : '' ]")
     .product-popup-footer
         a.product-popup-footer-btn.btn-add(@click="addToCart") Add to cart
-        a(:href="settings.cart_url" target="_blank" class="product-popup-footer-btn") Buy now
+        a(@click="goToCart" target="_blank" class="product-popup-footer-btn") Buy now
 
 </template>
 
@@ -57,6 +57,10 @@ export default {
                 });
             }
             localStorage.setItem(UIZA_EXT_CART, JSON.stringify(productsInCart));
+        },
+        goToCart() {
+          var win = window.open(this.settings.cart_url, '_blank');
+          win.focus();
         }
     },
     data() {
@@ -85,6 +89,9 @@ export default {
   top: 10px;
   color: red;
   cursor: pointer;
+  svg {
+    margin-right: 10px;
+  }
 }
 .product-popup {
   padding: 20px;
@@ -149,7 +156,8 @@ export default {
   cursor: pointer;
   background-image: none;
   border: none;
-  height: 40px;
+  height: 40px !important;
+  line-height: 40px !important;
   color: #fff;
   background-color: #e5101d;
   font-weight: 500;

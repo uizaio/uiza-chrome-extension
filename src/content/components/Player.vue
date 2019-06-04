@@ -1,6 +1,6 @@
 <template lang="pug">
-.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ height: height, width: width, maxWidth: '100%', maxHeight: '100%' }")
-  a.uiza-logo(v-if="playerSettings" :href="playerSettings.brand_url" target="_blank")
+.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ height: '385px', width: '685px', maxWidth: '100%', maxHeight: '100%' }")
+  a.uiza-logo(v-if="playerSettings" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
   a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
     i.fas.fa-play-circle
@@ -125,6 +125,10 @@ export default {
     this.initPlayer();
   },
   methods: {
+    openBrandUrl() {
+      var win = window.open(this.playerSettings.brand_url, '_blank');
+      win.focus();
+    },
     goToCart() {
       var win = window.open(this.playerSettings.cart_url, '_blank');
       win.focus();
@@ -214,12 +218,12 @@ export default {
     },
     initPlayer() {
       const self = this;
+      console.log(self.playerParams);
       window.UZ.Player.init(
         self.playerId,
         self.playerParams,
         function(player) {
           self.player = player;
-          console.log(player);
           self.player.on("timeupdate", val => {
             if (!self.isLive && self.player.currentTime() >= self.player.duration()) {
               self.isEnded = true;
@@ -352,7 +356,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 * {
   line-height: 1.1 !important;
 }

@@ -11,9 +11,9 @@
   button.uiza-player-controls-play(v-show="isPlaying" @click="pause" :style="{ color: settings.color }")
     i.fas2.fa-pause
   //- Forward reward
-  button.uiza-player-controls-play(@click="reward" :style="{ color: settings.color }")
+  button.uiza-player-controls-play(v-if="!isLive" @click="reward" :style="{ color: settings.color }")
     i.fas2.fa-reward
-  button.uiza-player-controls-play(@click="forward" :style="{ color: settings.color }")
+  button.uiza-player-controls-play(v-if="!isLive" @click="forward" :style="{ color: settings.color }")
     i.fas2.fa-forward
   //- Volume button
   div.uiza-player-controls-volume(@mouseover="isVolumeShown = true" @mouseleave="transitVolumeHide")
@@ -37,7 +37,7 @@
   //- Spacer
   div.uiza-player-controls-spacer
   //- Qualities
-  dropdown(class="uiza-player-controls-levels" align="top" v-if="qualities.length" :close-on-click="true")
+  dropdown(class="uiza-player-controls-levels" align="top" v-if="!isLive && qualities.length" :close-on-click="true")
     template(slot="btn")
       button()
         i.fas2.fa-cogs
@@ -313,8 +313,8 @@ export default {
     }
   }
   &-live {
-    margin-top: -4px;
-    margin-left: 10px;
+    margin-top: -0 !important;
+    margin-left: 10px !important;
     svg {
       color: red;
     }

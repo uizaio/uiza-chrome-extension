@@ -17,12 +17,13 @@ export default {
       const targets = this.$refs.voucher;
       // eslint-disable-next-line no-unused-vars
       const targetImage = this.$refs.image;
-      console.log(this.$refs.main.width);
+      self.width = this.$refs.main.clientWidth;
+      self.height = this.$refs.main.clientHeight;
       this.$anime
         .timeline()
         .add({
           targets,
-          translateX: 300,
+          translateX: (self.width - 70) / 2,
           easing: "easeInOutSine",
           duration: 2000,
           endDelay: 1000,
@@ -36,8 +37,7 @@ export default {
         })
         .add({
           targets,
-          translateX: 300,
-          translateY: 260,
+          translateY: self.height - 160,
           easing: "easeOutExpo",
           duration: 2000
         })
@@ -62,7 +62,6 @@ export default {
         });
     },
     onImageLoaded() {
-      console.log(this.$refs.image.width);
       this.width = this.$refs.image.width;
       this.height = this.$refs.image.height;
       //   setTimeout(

@@ -1,17 +1,17 @@
 <template lang="pug">
 .uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
-  UizaEgg(v-if="!isLive && showEgg")
-  a.uiza-logo(v-if="playerSettings" @click="openBrandUrl")
+  UizaEgg(v-if="!isLive && showEgg && !noControls")
+  a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
   a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
     i.fas.fa-play-circle
-  .uiza-chat-messages(ref="chatScroller" v-if="isLive")
+  .uiza-chat-messages(ref="chatScroller" v-if="isLive && !noControls")
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
         strong {{ message.sender.userId }} 
         span.time {{ message.createdAt | moment("from", "now") }}
         div.message {{ message.message }}
-  .uiza-controls(v-if="showControls")
+  .uiza-controls(v-if="showControls && !noControls")
     .uiza-controls-shopping-chat-input(v-if="isLive")
       input(v-model="chatMessage" type='text' placeholder='Enter your message' v-on:keyup.enter="sendMessage")
     .uiza-controls-shopping-spacer
@@ -37,7 +37,7 @@
     .uiza-controls-shopping-emotion
       img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
-  .uiza-product-list(v-if="showProducts && showControls")
+  .uiza-product-list(v-if="showProducts && showControls && !noControls")
     .uiza-product-list-toggle(@click="showProducts = false")
       i.fas.fa-arrow-circle-down
     carousel.uiza-product-list-swiper(:paginationEnabled="false" :perPage="10")
@@ -48,7 +48,7 @@
           .price {{ product.price }}
           button.uiza-product-view(@click="selectedProduct = product") View product
 
-  .uiza-product-overlay(v-if="products.length && showControls && playerSettings && overlayProduct")
+  .uiza-product-overlay(v-if="products.length && showControls && playerSettings && overlayProduct && !noControls")
     //- div(v-for="(item, index) in playerSettings.ads" v-bind:key="index")
     div
       .uiza-product-overlay-image
@@ -58,11 +58,11 @@
         div
           a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") View Product
 
-  PlayerControls(class="controls" v-if="player" :player="player" :settings="playerSettings" :isLive="isLive")
+  PlayerControls(class="controls" v-if="player && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
 
-  PopupProduct(v-if="selectedProduct && showControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
+  PopupProduct(v-if="selectedProduct && showControls && !noControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
 
-  div(class="uiza-ext-player-ended" v-if="playerSettings && isEnded")
+  div(class="uiza-ext-player-ended" v-if="playerSettings && isEnded && !noControls")
     .uiza-ext-player-ended-exit(@click="isEnded = false")
       i.fas.fa-arrow-circle-left
       | Back
@@ -71,7 +71,7 @@
     a(@click="goToCart")
       img(src="https://cdn0.iconfinder.com/data/icons/webshop-essentials/100/shopping-cart-512.png")
 
-  Congras(v-if="currentSticker" :data="currentSticker")
+  Congras(v-if="currentSticker && !noControls" :data="currentSticker")
 </template>
 
 <script>
@@ -328,6 +328,9 @@ export default {
       return this.products.length
         ? this.products[Math.floor(Math.random() * this.products.length)]
         : null;
+    },
+    noControls() {
+      return this.playerParams && this.playerParams.noControls;
     }
   },
   data() {
@@ -429,6 +432,13 @@ button {
     min-width: 100% !important;
     min-height: 100% !important;
     max-width: 100%;
+  }
+  .uiza-egg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
   &-ended {
     position: absolute;

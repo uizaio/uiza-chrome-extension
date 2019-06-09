@@ -9,6 +9,7 @@ div(class="uiza-scroll-wrapper")
           div(class='item-content')
               h4 {{ item.name }}
               p.date {{ item.createdAt }}
+              el-checkbox(v-model="item.noControls") Hide player's controls
   div(v-else)
     | Not configured
 </template>
@@ -31,7 +32,7 @@ div(class="uiza-scroll-wrapper")
       flex: 1;
       padding-left: 10px;
       h4 {
-        margin-top: 0;
+        margin: 0;
       }
     }
   }
@@ -63,13 +64,18 @@ export default {
       }
     },
     playItem(item) {
-      this.$router.push({
-        name: "play",
-        params: {
-          type: "vod",
-          id: item.id
-        }
-      });
+      // eslint-disable-next-line no-constant-condition
+      if (true) {
+        return false;
+      } else {
+        this.$router.push({
+          name: "play",
+          params: {
+            type: "vod",
+            id: item.id
+          }
+        });
+      }
     },
     onDragStart(event, item) {
       const settings = storage.get(constants.SETTINGS_KEY);
@@ -81,7 +87,8 @@ export default {
           entityId: item.id,
           width: "685px",
           height: "385px",
-          controls: false
+          controls: false,
+          noControls: item.noControls
         },
         playerSettings: this.playerSettings,
         chromeUrl: chrome.runtime.getURL("pages/popup.html")

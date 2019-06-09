@@ -1,24 +1,6 @@
-chrome.webRequest.onHeadersReceived.addListener(details => {
-    for (var i = 0; i < details.responseHeaders.length; i++) {
-        var header = details.responseHeaders[i];
-        if (['x-content-security-policy', 'content-security-policy', 'x-webkit-csp'].indexOf(header.name.toLowerCase()) > -1) {
-            header.value = "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
-        }
-    };
-
-    return {
-        responseHeaders: details.responseHeaders
-    };
-}, {
-    urls: ["*://*/*"]
-}, ['blocking', 'responseHeaders']);
-
-chrome.runtime.onMessage.addListener(
-    function (request, sender, sendRespond) {
-        if (request.UIZA_EXT_REQUEST_PIP) {
-            console.log('receive event', request.UIZA_EXT_REQUEST_PIP, request.UIZA_EXT_REQUEST_PIP_FRAME_ID);
-            chrome.tabs.executeScript({
-                code: `
+function enablePiP(frameId) {
+    chrome.tabs.executeScript({
+        code: `
         (async () => {
             const videos = Array.from(document.querySelectorAll('video'))
             .filter(video => video.readyState != 0)
@@ -43,12 +25,14 @@ chrome.runtime.onMessage.addListener(
             }
         })();
         `,
-                allFrames: true,
-                frameId: request.UIZA_EXT_REQUEST_PIP_FRAME_ID || 0
-            });
-        } else if (request.UIZA_EXT_REQUEST_PIP === false) {
-            chrome.tabs.executeScript({
-                code: `
+        frameId: frameId || 0,
+        allFrames: true
+    });
+}
+
+function disablePiP(frameId) {
+    chrome.tabs.executeScript({
+        code: `
         (async () => {
             const videos = Array.from(document.querySelectorAll('video'))
             .filter(video => video.readyState != 0)
@@ -69,13 +53,13 @@ chrome.runtime.onMessage.addListener(
             }
         })();
         `,
-                allFrames: true,
-                frameId: request.UIZA_EXT_REQUEST_PIP_FRAME_ID || 0
-            });
-        }
-        sendRespond({
-            ok: true
-        })
-    }
+        frameId: frameId || 0,
+        allFrames: true
+    });
+}
+
+export {
+    enablePiP,
+    disablePiP
     // eslint-disable-next-line eol-last
-);
+}

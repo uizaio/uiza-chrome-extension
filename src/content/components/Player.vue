@@ -1,5 +1,6 @@
 <template lang="pug">
-.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ height: '385px', width: '685px', maxWidth: '100%', maxHeight: '100%' }")
+.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
+  UizaEgg
   a.uiza-logo(v-if="playerSettings" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
   a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
@@ -74,6 +75,7 @@
 </template>
 
 <script>
+import UizaEgg from "./Egg";
 import PopupProduct from "./Product";
 import PlayerControls from "./PlayerControls";
 import Congras from "./Congras";
@@ -83,12 +85,13 @@ import Dropdown from "bp-vuejs-dropdown";
 import VueGoodshare from "vue-goodshare";
 import VueGoodshareFacebook from "vue-goodshare/src/providers/Facebook.vue";
 import VueGoodshareTwitter from "vue-goodshare/src/providers/Twitter.vue";
-import EventBus from '../EventBus.js';
+import EventBus from "../EventBus.js";
 
 const UIZA_EXT_CART = "UIZA_EXT_CART";
 
 export default {
   components: {
+    UizaEgg,
     PopupProduct,
     PlayerControls,
     Congras,
@@ -101,9 +104,12 @@ export default {
   },
   props: ["params", "settings", "json", "id"],
   created() {
-    EventBus.$on('onTogglePIP', function() {
-      this.isMinimized = !this.isMinimized;
-    }.bind(this));
+    EventBus.$on(
+      "onTogglePIP",
+      function(val) {
+        this.isMinimized = val;
+      }.bind(this)
+    );
   },
   mounted() {
     this.playerSettings = !this.settings
@@ -129,11 +135,11 @@ export default {
   },
   methods: {
     openBrandUrl() {
-      var win = window.open(this.playerSettings.brand_url, '_blank');
+      var win = window.open(this.playerSettings.brand_url, "_blank");
       win.focus();
     },
     goToCart() {
-      var win = window.open(this.playerSettings.cart_url, '_blank');
+      var win = window.open(this.playerSettings.cart_url, "_blank");
       win.focus();
     },
     preventParentClick(e) {
@@ -222,45 +228,47 @@ export default {
     initPlayer() {
       const self = this;
       console.log(self.playerParams);
-      window.UZ.Player.init(
-        self.playerId,
-        self.playerParams,
-        function(player) {
-          self.player = player;
-          self.player.on("timeupdate", val => {
-            if (!self.isLive && self.player.currentTime() >= self.player.duration()) {
-              self.isEnded = true;
-            }
-          });
-          player.on("play", function() {
-            // self.showControls = true;
-            self.isPlaying = true;
-            // count viewing time
-            if (!self.playInterval) {
-              self.playInterval = setInterval(function() {
-                self.playedTime += 1;
-                self.playerSettings.ads.forEach(function(ad) {
-                  const time = new Date(Date.parse(ad.time));
-                  const adTime =
-                    time.getHours() * 60 * 60 +
-                    time.getMinutes() * 60 +
-                    time.getSeconds();
-                  if (adTime === self.playedTime) {
-                    self.overlayProduct = self.randomProduct;
-                    setTimeout(() => {
-                      self.overlayProduct = null;
-                    }, ad.duration * 1000);
-                  }
-                });
-              }, 1000);
-            }
-          });
-          player.on("pause", function() {
-            // self.showControls = false;
-            self.isPlaying = false;
-          });
-        }
-      );
+      window.UZ.Player.init(self.playerId, self.playerParams, function(player) {
+        self.player = player;
+        self.player.on("timeupdate", val => {
+          if (
+            !self.isLive &&
+            self.player.currentTime() >= self.player.duration()
+          ) {
+            self.isEnded = true;
+          }
+        });
+        self.player.on("ended", function() {
+          EventBus.$emit("onTogglePIP", false);
+        });
+        player.on("play", function() {
+          // self.showControls = true;
+          self.isPlaying = true;
+          // count viewing time
+          if (!self.playInterval) {
+            self.playInterval = setInterval(function() {
+              self.playedTime += 1;
+              self.playerSettings.ads.forEach(function(ad) {
+                const time = new Date(Date.parse(ad.time));
+                const adTime =
+                  time.getHours() * 60 * 60 +
+                  time.getMinutes() * 60 +
+                  time.getSeconds();
+                if (adTime === self.playedTime) {
+                  self.overlayProduct = self.randomProduct;
+                  setTimeout(() => {
+                    self.overlayProduct = null;
+                  }, ad.duration * 1000);
+                }
+              });
+            }, 1000);
+          }
+        });
+        player.on("pause", function() {
+          // self.showControls = false;
+          self.isPlaying = false;
+        });
+      });
     },
     play() {
       this.player.play();
@@ -307,7 +315,10 @@ export default {
       // } else {
       //   return this.$parent.id + " .uiza-ext-player";
       // }
-      return ('#' + (this.id || this.$parent.id) + ".uiza-ext-player").replace('##', '#');
+      return ("#" + (this.id || this.$parent.id) + ".uiza-ext-player").replace(
+        "##",
+        "#"
+      );
     },
     products() {
       return this.jsonData.products;
@@ -375,16 +386,16 @@ button {
     border: none !important;
     padding: 0 !important;
     button {
-        background: transparent !important;
-        border: none !important;
-        padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
     }
     .bp-dropdown__icon {
-        display: none !important;
+      display: none !important;
     }
   }
   &__body {
-    background-color: rgba(0, 0, 0, .6) !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
     .el-button {
       display: block;
       margin: 0 !important;
@@ -393,12 +404,13 @@ button {
 }
 .uiza-center-play-btn {
   position: absolute;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   margin-top: -30px;
   margin-left: -30px;
   cursor: pointer;
   svg {
-    color: rgba(255, 255, 255, .5);
+    color: rgba(255, 255, 255, 0.5);
     width: 60px !important;
     height: 60px !important;
   }
@@ -418,14 +430,16 @@ button {
   }
   &-ended {
     position: absolute;
-    left: 0; right: 0;
-    top: 0; bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    background: #FFF !important;
-    border: #CCC 1px solid;
+    background: #fff !important;
+    border: #ccc 1px solid;
     &-exit {
       position: absolute;
       left: 5px;
@@ -440,7 +454,7 @@ button {
       color: #ff0010;
       font-size: 24px;
       font-weight: 600;
-      text-shadow: #CCC 1px 1px 1px;
+      text-shadow: #ccc 1px 1px 1px;
       margin: 0 !important;
       &:first-child {
         margin-top: 30px;
@@ -584,7 +598,8 @@ button {
       border: #ddd 1px solid;
     }
   }
-  &-shopping-emotion, &-shopping-share {
+  &-shopping-emotion,
+  &-shopping-share {
     margin-right: 0 !important;
     &-popup {
       position: absolute;
@@ -594,7 +609,7 @@ button {
       padding: 5px 15px;
       border-radius: 40px;
       width: 130px;
-    }  
+    }
     > img {
       width: 36px !important;
       cursor: pointer;
@@ -638,7 +653,7 @@ button {
 }
 .uiza-product-list {
   position: absolute;
-  height: 110px;
+  height: auto !important;
   bottom: 50px;
   left: 0;
   right: 0;
@@ -678,6 +693,7 @@ button {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
   border-radius: 10px;
+  box-sizing: border-box !important;
   img {
     height: 70px;
     width: 50px;
@@ -688,7 +704,7 @@ button {
   }
   h4 {
     font-size: 12px;
-    line-height: 15px;
+    line-height: 15px !important;
     margin: 0 0 5px 0 !important;
     text-overflow: ellipsis;
     max-width: 100%;
@@ -704,13 +720,14 @@ button {
     font-weight: 500 !important;
   }
   button.uiza-product-view {
-    font-size: 11px !important;
+    font-size: 12px !important;
     padding: 2px 6px !important;
     font-weight: 500 !important;
     color: #fff !important;
     cursor: pointer;
     background: linear-gradient(90deg, #b9081d, #f21a4c);
     margin: 0 !important;
+    margin-top: 5px !important;
     border: 0 !important;
     //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
     border-radius: 6px;

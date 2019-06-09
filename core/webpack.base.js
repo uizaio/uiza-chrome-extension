@@ -15,9 +15,7 @@ module.exports = {
     popup: resolve('./popup'),
     options: resolve('./options'),
     content: resolve('./content'),
-    devtools: resolve('./devtools'),
     background: resolve('./backend'),
-    panel: resolve('./devtools/panel'),
     inject: resolve('./content/inject'),
   },
   output: {
@@ -101,8 +99,6 @@ module.exports = {
   plugins: [
     htmlPage('home', 'app', ['manifest', 'vendor', 'tab']),
     htmlPage('popup', 'popup', ['manifest', 'vendor', 'popup']),
-    htmlPage('panel', 'panel', ['manifest', 'vendor', 'panel']),
-    htmlPage('devtools', 'devtools', ['manifest', 'vendor', 'devtools']),
     htmlPage('options', 'options', ['manifest', 'vendor', 'options']),
     htmlPage('background', 'background', ['manifest', 'vendor', 'background']),
     new CopyWebpackPlugin([{

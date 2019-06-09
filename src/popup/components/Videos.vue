@@ -66,7 +66,7 @@ export default {
       this.$router.push({
         name: "play",
         params: {
-          type: 'vod',
+          type: "vod",
           id: item.id
         }
       });
@@ -79,11 +79,12 @@ export default {
           appId: settings.app_id,
           playerVersion: 4,
           entityId: item.id,
-          width: '685px',
-          height: '385px',
+          width: "685px",
+          height: "385px",
           controls: false
         },
-        playerSettings: this.playerSettings
+        playerSettings: this.playerSettings,
+        chromeUrl: chrome.runtime.getURL("pages/popup.html")
       };
       event.dataTransfer.setData("text/plain", JSON.stringify(data));
       event.dataTransfer.dropEffect = "copy";

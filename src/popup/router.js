@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Router from "vue-router"
+import Player from './components/Player.vue';
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
+    // mode: 'hash',
     routes: [{
         path: '/',
         name: 'home',
@@ -13,9 +15,17 @@ export default new Router({
         name: 'test',
         component: require('./components/Test.vue').default
     }, {
-        path: 'play/:type/:id',
+        path: '/play/:type/:id',
         name: 'play',
-        component: require('./components/Player.vue').default
+        component: Player
     }]
     // eslint-disable-next-line eol-last
-})
+});
+
+router.beforeEach((to, from, next) => {
+    console.log('lala', to, from)
+    next();
+});
+
+// eslint-disable-next-line eol-last
+export default router;

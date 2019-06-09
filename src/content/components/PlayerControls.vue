@@ -57,8 +57,8 @@
 
 <script>
 import VueSlider from "vue-slider-component";
-import Dropdown from 'bp-vuejs-dropdown';
-import EventBus from '../EventBus';
+import Dropdown from "bp-vuejs-dropdown";
+import EventBus from "../EventBus";
 
 export default {
   props: ["player", "isLive", "settings"],
@@ -119,9 +119,12 @@ export default {
       this.player.currentTime(this.player.currentTime() - change);
     },
     forward() {
-      const change = Math.min(Math.abs(this.player.duration() - this.player.currentTime()), 10);
+      const change = Math.min(
+        Math.abs(this.player.duration() - this.player.currentTime()),
+        10
+      );
       if (change > 0) {
-       this.player.currentTime(this.player.currentTime() + change);
+        this.player.currentTime(this.player.currentTime() + change);
       }
     },
     mute() {
@@ -131,9 +134,12 @@ export default {
       this.player.volume(1);
     },
     transitVolumeHide() {
-      this.transitVolumeTimeout = setTimeout(function() {
-        this.isVolumeShown = false;
-      }.bind(this), 1000);
+      this.transitVolumeTimeout = setTimeout(
+        function() {
+          this.isVolumeShown = false;
+        }.bind(this),
+        1000
+      );
     },
     transitVolumeShow(e) {
       e.stopPropagation();
@@ -162,12 +168,12 @@ export default {
     },
     requestPIP() {
       this.isPiP = true;
-      EventBus.$emit('onTogglePIP')
+      EventBus.$emit("onTogglePIP", true);
     },
     exitPIP() {
       this.isPiP = false;
-      EventBus.$emit('onTogglePIP')
-    }  
+      EventBus.$emit("onTogglePIP", false);
+    }
   },
   computed: {
     formattedCurrentPos() {
@@ -200,26 +206,29 @@ export default {
 
 @font-face {
   font-family: "uiza";
-  src:url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.eot");
-  src:url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.eot?#iefix") format("embedded-opentype"),
-    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.woff") format("woff"),
-    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.ttf") format("truetype"),
-    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.svg#videojs-uiza-fonts-15") format("svg");
+  src: url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.eot");
+  src: url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.woff")
+      format("woff"),
+    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.ttf")
+      format("truetype"),
+    url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.svg#videojs-uiza-fonts-15")
+      format("svg");
   font-weight: normal;
   font-style: normal;
-
 }
 .fas2 {
   &:before {
     font-style: normal !important;
     font-family: "uiza";
-    content: "\e009"!important;
+    content: "\e009" !important;
     color: #eee;
     font-size: 1.3em !important;
   }
-  
+
   &.fa-play:before {
-    content: "\e009"!important;
+    content: "\e009" !important;
   }
   &.fa-pause:before {
     content: "\e00a" !important;
@@ -284,7 +293,7 @@ export default {
     &-slider {
       position: absolute;
       top: -76px;
-      left: 14px;
+      left: 7px;
     }
   }
   &-spacer {
@@ -293,7 +302,8 @@ export default {
   &-progress {
     position: absolute;
     top: 0;
-    left: 0; right: 0;
+    left: 0;
+    right: 0;
     margin: 0;
   }
   &-duration {
@@ -322,13 +332,13 @@ export default {
       margin-left: 5px;
       font-size: 11px;
       font-weight: 500;
-      color: #EEE;
+      color: #eee;
       background: red;
       padding: 1px 5px;
       border-radius: 4px;
       cursor: pointer;
       &.inactive {
-        background: #CCC;
+        background: #ccc;
       }
     }
   }

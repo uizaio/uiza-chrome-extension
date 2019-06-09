@@ -7,7 +7,9 @@ div(class="uiza-scroll-wrapper")
           div(class='item-thumbnail')
               img(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
           div(class='item-content')
-              h4 {{ item.name }}
+              h4
+                | {{ item.name }}
+                span(class="live" v-if="item.lastProcess === 'start'") Live
               p.date {{ item.createdAt }}
       Player(v-if="playing" :entityId="playing.id")
   div(v-else)
@@ -33,6 +35,18 @@ div(class="uiza-scroll-wrapper")
       padding-left: 10px;
       h4 {
         margin-top: 0;
+        .live {
+          background: #ff0000;
+          color: #fff;
+          border-radius: 4px;
+          display: inline-block;
+          margin-left: 10px;
+          padding: 2px 10px;
+        }
+      }
+
+      p {
+        margin: 0 !important;
       }
     }
   }
@@ -86,7 +100,8 @@ export default {
           height: "385px",
           controls: false
         },
-        playerSettings: this.playerSettings
+        playerSettings: this.playerSettings,
+        chromeUrl: chrome.runtime.getURL("pages/popup.html")
       };
       event.dataTransfer.setData("text/plain", JSON.stringify(data));
       event.dataTransfer.dropEffect = "copy";

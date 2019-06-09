@@ -1,4 +1,7 @@
-import { getField, updateField } from 'vuex-map-fields';
+import {
+  getField,
+  updateField
+} from 'vuex-map-fields';
 
 const state = {
   settings: {
@@ -12,12 +15,11 @@ const state = {
     brand_logo: "https://lavima.vn/wp-content/uploads/2018/08/logo-tiki.png",
     brand_url: "https://tiki.vn",
     cart_url: "https://tiki.vn/checkout/cart",
-    ads: [
-      {
-        time: new Date(2017, 12, 12, 0, 0, 10, 0),
-        duration: 10
-      }
-    ]
+    ads: [{
+      time: new Date(2017, 12, 12, 0, 0, 10, 0),
+      duration: 10
+    }],
+    buy_now_url: "https://tiki.vn/checkout/cart"
   }
 };
 
@@ -30,4 +32,5 @@ export default {
   mutations: {
     updateField
   }
+  // eslint-disable-next-line eol-last
 }

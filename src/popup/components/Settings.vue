@@ -8,7 +8,7 @@ div
     el-form-item
       el-button(:loading="isValidating" type='primary' @click='submitForm') Save
       el-button(@click='resetForm') Reset
-  el-form(:disabled='false' size='small' label-position='left' label-width="110px" :model='playerSettings' :rules='playerRules' ref='playerForm')
+  el-form(:disabled='false' size='small' label-position='left' label-width="120px" :model='playerSettings' :rules='playerRules' ref='playerForm')
     //- el-form-item(label='Player size')
     //-   el-col(:span='11')
     //-     el-input(v-model='playerSettings.width')
@@ -24,6 +24,8 @@ div
       el-input(v-model='playerSettings.brand_url')
     el-form-item(label='Cart url', prop='cart_url')
       el-input(v-model='playerSettings.cart_url')
+    el-form-item(label='Buy url', prop='buy_now_url')
+      el-input(v-model='playerSettings.buy_now_url')
     el-form-item(label='Product overlay', prop='brand_url')
       el-row(:gutter="5" v-for="(item, index) in playerSettings.ads" v-bind:key="index")
         el-col(:span="15")
@@ -42,7 +44,7 @@ div
 import { mapFields } from "vuex-map-fields";
 import storage from "../../ext/storage";
 import constants from "../constants";
-import _ from 'lodash';
+import _ from "lodash";
 import uiza from "../services/uiza";
 
 export default {
@@ -51,7 +53,7 @@ export default {
     if (settings) {
       this.settings = settings;
     } else {
-      const draft = {...storage.get(constants.SETTINGS_DRAFT_KEY)};
+      const draft = { ...storage.get(constants.SETTINGS_DRAFT_KEY) };
       console.log(draft);
       this.settings = _.merge(this.settings, draft);
     }
@@ -123,7 +125,8 @@ export default {
         ],
         brand_logo: [],
         brand_url: [],
-        cart_url: []
+        cart_url: [],
+        buy_now_url: []
       }
     };
   },
@@ -132,7 +135,7 @@ export default {
   },
   methods: {
     saveDraft() {
-      console.log('on change')
+      console.log("on change");
       storage.set(constants.SETTINGS_DRAFT_KEY, {
         api_key: this.settings.api_key,
         app_id: this.settings.app_id
@@ -156,7 +159,8 @@ export default {
       this.$refs.settingsForm.validate(valid => {
         if (valid) {
           this.isValidating = true;
-          uiza.checkCredentials(this.settings.app_id, this.settings.api_key)
+          uiza
+            .checkCredentials(this.settings.app_id, this.settings.api_key)
             .then(() => {
               storage.set(constants.SETTINGS_KEY, this.settings);
               this.disabled = true;
@@ -170,14 +174,14 @@ export default {
             .catch(err => {
               console.log(err);
               this.$notify({
-                title: 'Invalid credentials',
-                message: 'Invalid credentials. Please check again',
-                type: 'error'
-              })
+                title: "Invalid credentials",
+                message: "Invalid credentials. Please check again",
+                type: "error"
+              });
             })
             .finally(() => {
               this.isValidating = false;
-            })
+            });
         } else {
           this.$notify({
             title: "Error",

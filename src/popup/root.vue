@@ -5,7 +5,7 @@
 <style lang="scss">
 .root {
   min-width: 400px;
-  min-height: 500px;
+  min-height: 520px;
 }
 </style>
 

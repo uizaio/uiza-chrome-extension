@@ -1,6 +1,6 @@
 <template lang="pug">
 .uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
-  UizaEgg
+  UizaEgg(v-if="!isLive && showEgg")
   a.uiza-logo(v-if="playerSettings" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
   a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
@@ -244,6 +244,7 @@ export default {
         player.on("play", function() {
           // self.showControls = true;
           self.isPlaying = true;
+          self.showEgg = true;
           // count viewing time
           if (!self.playInterval) {
             self.playInterval = setInterval(function() {
@@ -364,7 +365,8 @@ export default {
       currentSticker: null,
       playInterval: null,
       playedTime: 0,
-      isMinimized: false
+      isMinimized: false,
+      showEgg: false
     };
   }
 };

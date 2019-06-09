@@ -5,6 +5,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import "@fortawesome/fontawesome-free/js/all.js";
 import locale from 'element-ui/lib/locale/lang/en'
+import VueAnime from "vue-animejs";
 import router from './router'
 import store from './stores/index'
 
@@ -13,6 +14,7 @@ Vue.use(Vuex)
 Vue.use(ElementUI, {
   locale
 })
+Vue.use(VueAnime)
 Vue.use(require('vue-moment'))
 
 /* eslint-disable no-new */

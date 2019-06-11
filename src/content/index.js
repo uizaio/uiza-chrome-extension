@@ -6,6 +6,8 @@ import "@fortawesome/fontawesome-free/js/all.js";
 import "vue-slider-component/theme/default.css";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+// import 'csshake/dist/csshake.css';
+import 'animate.css';
 import VueAnime from "vue-animejs";
 import Dropdown from 'bp-vuejs-dropdown';
 // eslint-disable-next-line no-unused-vars

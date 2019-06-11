@@ -1,11 +1,15 @@
 <template lang="pug">
 .uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
+  .uiza-error(v-if="isErrored") Live stream is ended
+    
   UizaEgg(v-if="isLive && showEgg && !noControls" :url="playerSettings.buy_now_url")
   UizaOrderCount(v-if="isLive" :count="300")
-  a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
-    img(:src="playerSettings.brand_logo")
+  GiftBox(v-if="isLive" :url="playerSettings.buy_now_url")
   a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
     i.fas.fa-play-circle
+  a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
+    img(:src="playerSettings.brand_logo")
+  
   .uiza-chat-messages(ref="chatScroller" v-if="isLive && !noControls")
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
@@ -28,19 +32,25 @@
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
       a(@click="showProducts = !showProducts")
-        i.fas.fa-shopping-bag
+        //- i.fas.fa-shopping-bag
+        img(src="https://i.imgur.com/8G4LmPN.png")
     .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
       a(@click="goToCart")
-        i.fas.fa-shopping-cart
+        //- i.fas.fa-shopping-cart
+        img(src="https://i.imgur.com/kQBJVp2.png")
     .uiza-controls-shopping-share
       a(@click="isSharing = !isSharing")
-        i.fas.fa-share-alt
+        //- i.fas.fa-share-alt
+        img(src="https://i.imgur.com/DBTPd3q.png")
       div.uiza-controls-shopping-share-popup(v-if="isSharing")
         vue-goodshare-facebook(@onClick="isSharing = false" title_social="" has_icon)
         vue-goodshare-twitter(@onClick="isSharing = false" title_social="" has_counter has_icon)
-    .uiza-controls-shopping-emotion
-      img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
+    .uiza-controls-egg
+      a(@click="")
+        img(src="https://i.imgur.com/8CqjDmQ.png" width="30")
+    //- .uiza-controls-shopping-emotion
+    //-   img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
   .uiza-product-list(v-if="showProducts && showControls && !noControls")
     .uiza-product-list-background
@@ -83,6 +93,7 @@
 <script>
 import UizaEgg from "./Egg";
 import UizaOrderCount from "./OrderCount";
+import GiftBox from "./GiftBox";
 import PopupProduct from "./Product";
 import PlayerControls from "./PlayerControls";
 import Congras from "./Congras";
@@ -100,6 +111,7 @@ export default {
   components: {
     UizaEgg,
     UizaOrderCount,
+    GiftBox,
     PopupProduct,
     PlayerControls,
     Congras,
@@ -248,6 +260,11 @@ export default {
         });
         self.player.on("ended", function() {
           EventBus.$emit("onTogglePIP", false);
+          alert("ended");
+        });
+        self.player.on("error", function() {
+          alert("error");
+          self.isErrored = true;
         });
         player.on("play", function() {
           // self.showControls = true;
@@ -378,6 +395,7 @@ export default {
       playedTime: 0,
       isMinimized: false,
       isLiked: false,
+      isErrored: false,
       showEgg: false
     };
   }
@@ -661,6 +679,7 @@ button {
   bottom: 55px;
   left: 0;
   right: 0;
+  margin-right: 15px !important;
   display: flex;
   align-content: center;
   justify-items: center;
@@ -705,7 +724,8 @@ button {
     &-popup {
       position: absolute;
       top: -60px;
-      left: -50px;
+      right: 0 !important;
+      left: auto !important;
       background: #fff !important;
       padding: 5px 10px !important;
       border-radius: 3px !important;

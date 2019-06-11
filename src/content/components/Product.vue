@@ -44,6 +44,9 @@ export default {
     selectColor(color) {
       this.selectedColor = color;
     },
+    selectSize(size) {
+      this.selectedSize = size;
+    },
     addToCart() {
       this.$emit("cartChanged");
       let productsInCart = [];

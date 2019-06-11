@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import root from './root.vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+// import 'csshake/dist/csshake.css';
+import 'animate.css';
 import "@fortawesome/fontawesome-free/js/all.js";
 import locale from 'element-ui/lib/locale/lang/en'
 import VueAnime from "vue-animejs";

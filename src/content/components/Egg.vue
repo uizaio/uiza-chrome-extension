@@ -3,11 +3,12 @@ div(class="uiza-egg" ref="main")
     div(v-if="showVoucher" class="uiza-egg-voucher" ref="voucher")
         div.uiza-egg-voucher-banner(v-if="showBanner")
             h4 Only for you
-            button Buy now
+            button(@click="buyNow") Buy now
         img(ref="image" :src="image" @load="onImageLoaded")
 </template>
 <script>
 export default {
+  props: ["url"],
   mounted() {
     this.init();
   },
@@ -23,7 +24,7 @@ export default {
         .timeline()
         .add({
           targets,
-          translateX: (self.width - 70) / 2,
+          translateX: self.width - 70,
           easing: "easeInOutSine",
           duration: 2000,
           endDelay: 1000,
@@ -37,13 +38,13 @@ export default {
         })
         .add({
           targets,
-          translateY: self.height - 160,
+          translateY: self.height - 200,
           easing: "easeOutExpo",
           duration: 2000
         })
         .add({
           targets,
-          translateX: 30,
+          translateX: self.width - 110,
           rotate: 0,
           easing: "easeOutExpo",
           duration: 500
@@ -71,6 +72,10 @@ export default {
       //     }.bind(this),
       //     1600
       //   );
+    },
+    buyNow() {
+      var win = window.open(this.url, "_blank");
+      win.focus();
     }
   },
   data() {
@@ -96,13 +101,14 @@ export default {
     display: inline-block;
     &-banner {
       position: absolute;
-      right: -140px;
+      left: -110px;
       top: -30px;
       background: #fff;
       border-radius: 10px;
-      padding: 5px 10px 5px 40px !important;
-      text-align: right !important;
+      padding: 5px 40px 5px 10px !important;
+      text-align: left !important;
       button {
+        cursor: pointer;
         margin-left: 0;
         border-radius: 3px;
         border-color: transparent;

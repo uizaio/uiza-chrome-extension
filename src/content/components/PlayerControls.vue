@@ -2,9 +2,9 @@
 .uiza-player-controls
   //- Progress bar
   .uiza-player-controls-progress
-    VueSlider(v-model="currentPos" :dot-size="3" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
-      template(v-slot:process="{ start, end, style }")
-        div(class="vue-slider-process custom-class" :style="[style]")
+    VueSlider(v-model="currentPos" :dot-size="10" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
+      //- template(v-slot:process="{ start, end, style }")
+      //-   div(class="vue-slider-process custom-class" :style="[style]")
   //-  Play button
   button.uiza-player-controls-play(v-show="!isPlaying" @click="play" :style="{ color: settings.color }")
     i.fas2.fa-play
@@ -301,7 +301,7 @@ export default {
   }
   &-progress {
     position: absolute;
-    top: 0;
+    top: -5px;
     left: 0;
     right: 0;
     margin: 0;

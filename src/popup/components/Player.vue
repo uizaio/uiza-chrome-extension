@@ -2,7 +2,8 @@
 div
   el-menu(mode="horizontal" class="header")
     el-menu-item
-      img(class="logo" :src="playerSettings.brand_logo")
+      a(:href="playerSettings.brand_url")
+        img(class="logo" :src="playerSettings.brand_logo")
   el-row(type="flex")
     el-col(:span="4")
       el-menu(mode="vertical")
@@ -26,10 +27,12 @@ div
       span Recommended for you
     carousel(:paginationEnabled="false" :perPage="10")
       slide(v-for="item in recommendedItems" v-bind:key="item.id")
+        div(class="item-play")
+          div(class="item-play-btn")
+            i.fas.fa-play-circle
         img(:src='item.image || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
         .desc
           h4 {{ item.name }}
-          button() View
   div(style="height: 1000px !important") hello
 </template>
 <style lang='scss'>
@@ -40,6 +43,9 @@ html {
 }
 .el-menu {
   border: none !important;
+  &-item {
+    line-height: 56px !important;
+  }
 }
 .header {
   z-index: 10;
@@ -77,11 +83,27 @@ html {
 .VueCarousel-slide {
   margin: 5px;
   width: 150px;
-  height: 200px;
+  position: relative;
   img {
     object-fit: cover;
     max-width: 100%;
     max-height: 100%;
+  }
+  .item-play {
+    position: absolute;
+    cursor: pointer;
+    &-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -20px;
+      margin-left: -20px;
+      svg {
+        color: rgba(255, 255, 255, 0.5);
+        width: 40px !important;
+        height: 40px !important;
+      }
+    }
   }
 }
 </style>

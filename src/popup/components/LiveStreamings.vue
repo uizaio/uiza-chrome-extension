@@ -78,13 +78,16 @@ export default {
       }
     },
     playItem(item) {
-      this.$router.push({
-        name: "play",
-        params: {
-          type: "live",
-          id: item.id
-        }
-      });
+      // eslint-disable-next-line no-constant-condition
+      if (false) {
+        this.$router.push({
+          name: "play",
+          params: {
+            type: "live",
+            id: item.id
+          }
+        });
+      }
     },
     onDragStart(event, item) {
       const settings = storage.get(constants.SETTINGS_KEY);

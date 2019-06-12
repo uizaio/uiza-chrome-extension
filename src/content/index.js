@@ -39,11 +39,11 @@ var jq162 = window.jQuery.noConflict(true);
       playerParams: {
         api: "dWFwLWZiOTA2NTIwMmVkNjQxMTFiNmYyZTU0NGEwYzExM2E5LThjYjYzODg0",
         appId: "fb9065202ed64111b6f2e544a0c113a9",
-        controls: true,
+        controls: false,
         entityId: "7631a97a-47f6-4786-a22f-ddf6d9fe22c3",
-        height: "100%",
+        height: "375px",
         playerVersion: 4,
-        width: "100%"
+        width: "575px"
       },
       playerSettings: {
         width: "500px",
@@ -56,13 +56,13 @@ var jq162 = window.jQuery.noConflict(true);
       }
     };
     // live
-    eventData = _.merge({
-      playerParams: {
-        feedId: 'afef9b62-3fb2-4c7f-9c06-470c9f3d357f',
-        entityId: '4adbe50e-b3c2-46cc-999a-a94a13b744a3',
-        streamName: 'fd87567a-caa9-41af-ac96-d54a8126118d'
-      }
-    }, eventData);
+    // eventData = _.merge({
+    //   playerParams: {
+    //     feedId: 'afef9b62-3fb2-4c7f-9c06-470c9f3d357f',
+    //     entityId: '4adbe50e-b3c2-46cc-999a-a94a13b744a3',
+    //     streamName: 'fd87567a-caa9-41af-ac96-d54a8126118d'
+    //   }
+    // }, eventData);
     var increasedId = "test";
     var playerId = "#uiza-ext-player" + increasedId;
     var div = $("<div id='uiza-ext-player" + increasedId + "'></div>")

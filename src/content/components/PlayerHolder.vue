@@ -4,7 +4,7 @@ div.uiza-ext-player-holder(ref="mainWrapper")
         img(src="https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif" alt="View live stream")
         span.uiza-ext-player-holder-text {{ thumbText }}
     div(v-else :class="{ 'uiza-ext-player-minimized-disabled': isPip }")
-        Player(:params="playerParams" :settings="playerSettings" :json="jsonData" :id="rawId")
+        Player(:params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" :id="rawId")
     //- el-dialog(:visible.sync="isDialogShown" :width="playerParams.width" :append-to-body="true" :lock-scroll="false" :id="rawId")
     div(ref="fixedPlayer" v-show="isDialogShown" id="uiza-ext-player-fixed" class="uiza-ext-player-fixed" :class="{ 'uiza-ext-player-fixed-minimized-disabled': isPip }")
         button.uiza-ext-player-fixed-close(@click="closePopup")
@@ -60,7 +60,6 @@ export default {
         const type = this.playerParams.feedId ? "live" : "vod";
         const url =
           this.chromeUrl + "#/play/" + type + "/" + this.playerParams.entityId;
-        console.log("fasfaf", url);
         var win = window.open(url, "_blank");
         win.focus();
       } else {

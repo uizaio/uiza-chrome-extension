@@ -28,7 +28,7 @@
       VueSlider(direction="btt" :height="50" :dotSize="8" v-model="currentVolume" :max="100" @change="onVolumeChanged" :processStyle="{ background: settings.color }")
   //- Live button
   div(v-if="isLive" @click="seekToLive" class="uiza-player-controls-live")
-    span(:class="{ 'inactive': isLive && isSeeked }") Live
+    span(:class="{ 'inactive': (isLive && isSeeked) || !isPlaying }") Live
   //- Duration
   div(v-if="!isLive" class="uiza-player-controls-duration")
     span {{ formattedCurrentPos }}

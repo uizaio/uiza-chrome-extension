@@ -10,6 +10,8 @@ div(class="uiza-scroll-wrapper")
               h4 {{ item.name }}
               p.date {{ item.createdAt }}
               el-checkbox(v-model="item.noControls") Hide player's controls
+              el-checkbox(v-model="item.isAutoplay") Autoplay?
+              el-checkbox(v-model="item.isPortrait") Portrait mode
   div(v-else)
     | Not configured
 </template>
@@ -88,7 +90,10 @@ export default {
           width: "685px",
           height: "385px",
           controls: false,
-          noControls: item.noControls
+          noControls: item.noControls,
+          isAutoplay: item.isAutoplay,
+          isPortrait: item.isPortrait,
+          relatedVideos: this.vods.filter(x => x.id !== item.id)
         },
         playerSettings: this.playerSettings,
         chromeUrl: chrome.runtime.getURL("pages/popup.html")

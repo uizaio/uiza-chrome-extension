@@ -1,54 +1,41 @@
 <template lang="pug">
-.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
+.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
   .uiza-error(v-if="isErrored") Live stream is ended
     
-  UizaEgg(v-if="isLive && showEgg && !noControls" :url="playerSettings.buy_now_url")
+  //- UizaEgg(v-if="isLive && showEgg && !noControls" :url="playerSettings.buy_now_url")
   UizaOrderCount(v-if="isLive" :count="300")
   GiftBox(v-if="isLive" :url="playerSettings.buy_now_url")
   a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
-    i.fas.fa-play-circle
+    img(src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
   a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
-  
-  .uiza-chat-messages(ref="chatScroller" v-if="isLive && !noControls")
-    .uiza-chat-messages-wrapper
-      div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
-        div.uiza-chat-messages-item-photo
-          img(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsHFOl5w6A4z7ot5suqTPa0OM4AggTKkfvdfdjrLy4KBelSAbyDw")
-        div.uiza-chat-messages-item-info
-          strong {{ message.sender.userId }} 
-          span.time {{ message.createdAt | moment("from", "now") }}
-          div.message {{ message.message }}
-  .uiza-chat-input(v-if="isLive")
-      input(v-model="chatMessage" type='text' placeholder='Enter your message' v-on:keyup.enter="sendMessage")
-      .uiza-chat-input-buttons
-        button(@click="isLiked = !isLiked")
-          i.uiza-chat-input-buttons-love(:class="{ animate: isLiked }" )
-        //-   i.far.fa-heart
-        //- button(v-if="isLiked" @click="isLiked = false")
-        //-   i.fas.fa-heart
-        button(@click="sendMessage") ENTER
+  Chat(v-if="isLive && !noControls")
   .uiza-controls(v-if="showControls && !noControls")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
-      a(@click="showProducts = !showProducts")
+      a.uiza-controls-icon.green(@click="showProducts = !showProducts")
         //- i.fas.fa-shopping-bag
-        img(src="https://i.imgur.com/8G4LmPN.png")
+        img(src="https://www.upsieutoc.com/images/2019/06/12/badge.png")
     .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
-      a(@click="goToCart")
+      a.uiza-controls-icon.red(@click="goToCart")
         //- i.fas.fa-shopping-cart
-        img(src="https://i.imgur.com/kQBJVp2.png")
+        img(src="https://www.upsieutoc.com/images/2019/06/12/cart.png")
     .uiza-controls-shopping-share
-      a(@click="isSharing = !isSharing")
+      a.uiza-controls-icon.blue(@click="isSharing = !isSharing")
         //- i.fas.fa-share-alt
-        img(src="https://i.imgur.com/DBTPd3q.png")
+        img(src="https://www.upsieutoc.com/images/2019/06/12/share.png")
       div.uiza-controls-shopping-share-popup(v-if="isSharing")
         vue-goodshare-facebook(@onClick="isSharing = false" title_social="" has_icon)
         vue-goodshare-twitter(@onClick="isSharing = false" title_social="" has_counter has_icon)
-    .uiza-controls-egg
-      a(@click="")
-        img(src="https://i.imgur.com/8CqjDmQ.png" width="30")
+    .uiza-controls-egg.animated.heartBeat.infinite(ref="eggContainer" v-if="hasEgg && isLive")
+      div.uiza-controls-egg-wrapper(@click="animateEgg")
+        div.uiza-controls-egg-draggable(ref="eggDraggable")
+          div.uiza-controls-egg-wrapper-label Only for you
+          div.uiza-controls-egg-wrapper-gift(v-if="eggGiftShown")
+            button(@click="buyNow") Click me
+            div Gift will be disappear in {{ eggGiftCountdown }}s
+          img(src="https://i.imgur.com/gKmLziK.png" width="50" ref="eggImage")
     //- .uiza-controls-shopping-emotion
     //-   img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
    
@@ -64,7 +51,7 @@
           //- .price {{ product.price }}
           button.uiza-product-view(@click="selectedProduct = product") View product
 
-  .uiza-product-overlay(v-if="products.length && showControls && playerSettings && overlayProduct && !noControls")
+  .uiza-product-overlay(v-if="false && products.length && showControls && playerSettings && overlayProduct && !noControls")
     //- div(v-for="(item, index) in playerSettings.ads" v-bind:key="index")
     div
       .uiza-product-overlay-image
@@ -77,28 +64,23 @@
   PlayerControls(class="controls" v-if="player && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
 
   PopupProduct(v-if="selectedProduct && showControls && !noControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
-
-  div(class="uiza-ext-player-ended" v-if="playerSettings && isEnded && !noControls")
-    .uiza-ext-player-ended-exit(@click="isEnded = false")
-      i.fas.fa-arrow-circle-left
-      | Back
-    h4 Thank you for watching!
-    h4 Don't forget to check out your cart for payment
-    a(@click="goToCart")
-      img(src="https://cdn0.iconfinder.com/data/icons/webshop-essentials/100/shopping-cart-512.png")
+  RelatedVideos(v-if="playerSettings && playerParams && !isLive && isEnded && !noControls"
+    @close="isEnded = false"
+    :settings="playerSettings" :params="playerParams" :chromeUrl="chromeUrl")
 
   Congras(v-if="currentSticker && !noControls" :data="currentSticker")
 </template>
 
 <script>
+import Chat from "./Chat";
 import UizaEgg from "./Egg";
 import UizaOrderCount from "./OrderCount";
 import GiftBox from "./GiftBox";
+import RelatedVideos from "./RelatedVideos";
 import PopupProduct from "./Product";
 import PlayerControls from "./PlayerControls";
 import Congras from "./Congras";
 import { Carousel, Slide } from "vue-carousel";
-import SendBird from "sendbird";
 import Dropdown from "bp-vuejs-dropdown";
 import VueGoodshare from "vue-goodshare";
 import VueGoodshareFacebook from "vue-goodshare/src/providers/Facebook.vue";
@@ -109,9 +91,11 @@ const UIZA_EXT_CART = "UIZA_EXT_CART";
 
 export default {
   components: {
+    Chat,
     UizaEgg,
     UizaOrderCount,
     GiftBox,
+    RelatedVideos,
     PopupProduct,
     PlayerControls,
     Congras,
@@ -122,7 +106,7 @@ export default {
     VueGoodshareFacebook,
     VueGoodshareTwitter
   },
-  props: ["params", "settings", "json", "id"],
+  props: ["params", "settings", "chromeUrl", "json", "id"],
   created() {
     EventBus.$on(
       "onTogglePIP",
@@ -149,7 +133,6 @@ export default {
         this.setupOverlay();
       }.bind(this)
     );
-    this.connectSendBird();
     this.getItemsInCart();
     this.initPlayer();
   },
@@ -162,6 +145,10 @@ export default {
       var win = window.open(this.playerSettings.cart_url, "_blank");
       win.focus();
     },
+    buyNow() {
+      var win = window.open(this.playerSettings.buy_now_url, "_blank");
+      win.focus();
+    },
     preventParentClick(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -169,98 +156,26 @@ export default {
     setupOverlay() {
       this.playerSettings.ads.forEach(ad => {});
     },
-    scrollChat() {
-      if (this.isLive) {
-        setTimeout(
-          function() {
-            this.$refs.chatScroller.scrollTop = this.$refs.chatScroller.scrollHeight;
-          }.bind(this),
-          100
-        );
-      }
-    },
-    connectSendBird() {
-      const self = this;
-      self.chatUser = "uiza" + Math.floor(Math.random() * 10);
-      self.sb = new SendBird({ appId: "A8D50190-B214-48B6-8A67-65EDE27CCED2" });
-
-      self.sb.connect(self.chatUser, function(user, error) {
-        if (error) {
-          console.log(error);
-        }
-        self.sb.OpenChannel.getChannel(
-          "sendbird_open_channel_52007_e6db2c6ea7a038725de10a8a0984078e07ffcdcf",
-          function(openChannel, error) {
-            if (error) {
-              console.log("failed to send gettt", error);
-              return;
-            }
-            self.currentChannel = openChannel;
-            self.currentChannel.enter(function(response, error) {
-              if (error) {
-                console.log("failed to enter room", error);
-                return;
-              }
-              var messageListQuery = self.currentChannel.createPreviousMessageListQuery();
-              messageListQuery.limit = 30;
-              messageListQuery.reverse = true;
-
-              messageListQuery.load(function(messageList, error) {
-                if (error) {
-                  return;
-                }
-                self.chatMessages = messageList.reverse();
-                self.scrollChat();
-              });
-
-              var ChannelHandler = new self.sb.ChannelHandler();
-
-              ChannelHandler.onMessageReceived = function(channel, message) {
-                console.log(channel, message);
-                self.chatMessages.push(message);
-              };
-              self.sb.addChannelHandler("UNIQUE_HANDLER_ID", ChannelHandler);
-            });
-            // self.currentChannel.onMessageReceived(function(channel, message) {
-            //   console.log('new message', message);
-            // });
-          }
-        );
-      });
-    },
-    sendMessage() {
-      const self = this;
-      if (this.chatMessage.trim().length) {
-        var params = new self.sb.UserMessageParams();
-        params.message = this.chatMessage;
-        this.currentChannel.sendUserMessage(params, function(message, error) {
-          if (error) {
-            console.log("failed to send message", error);
-            alert("Failed to send message, please try again");
-            return;
-          }
-          self.chatMessages.push(message);
-          self.chatMessage = "";
-          self.scrollChat();
-        });
-      }
-    },
     initPlayer() {
       const self = this;
-      console.log(self.playerParams);
+      if (self.isPortrait) {
+        self.playerParams.width = "375px";
+        self.playerParams.height = "670px";
+      }
       window.UZ.Player.init(self.playerId, self.playerParams, function(player) {
         self.player = player;
+        if (self.isAutoplay) {
+          player.muted(true);
+          player.autoplay(true);
+        }
         self.player.on("timeupdate", val => {
-          if (
-            !self.isLive &&
-            self.player.currentTime() >= self.player.duration()
-          ) {
-            self.isEnded = true;
+          if (self.isLive) {
+            console.log("tickkkkk");
           }
         });
         self.player.on("ended", function() {
+          self.isEnded = true;
           EventBus.$emit("onTogglePIP", false);
-          alert("ended");
         });
         self.player.on("error", function() {
           alert("error");
@@ -274,6 +189,9 @@ export default {
           if (!self.playInterval) {
             self.playInterval = setInterval(function() {
               self.playedTime += 1;
+              if (self.playedTime === 5) {
+                self.hasEgg = true;
+              }
               self.playerSettings.ads.forEach(function(ad) {
                 const time = new Date(Date.parse(ad.time));
                 const adTime =
@@ -320,6 +238,55 @@ export default {
       setTimeout(() => {
         this.currentSticker = null;
       }, 3000);
+    },
+    animateEgg() {
+      const self = this;
+      const width = this.$refs.playerContainer.clientWidth;
+      const height = this.$refs.playerContainer.clientHeight;
+      const imageWidth = Math.min(200, width / 3);
+      // const imageHeight = Math.min(200, height / 3);
+      const x = (width + 50) / 2;
+      const y = height / 2; // 90 is the relative position from bottom
+
+      this.$refs.eggContainer.classList.remove("animated");
+      this.$anime
+        .timeline()
+        .add({
+          targets: this.$refs.eggImage,
+          width: imageWidth * 0.75,
+          class: "animated shake infinite",
+          easing: "easeOutExpo"
+        })
+        .add({
+          targets: this.$refs.eggDraggable,
+          left: -x,
+          top: -y,
+          width: imageWidth
+        })
+        .add({
+          targets: this.$refs.eggImage,
+          width: imageWidth,
+          easing: "easeOutExpo",
+          complete: function() {
+            self.$refs.eggImage.src = "https://i.imgur.com/IbWEzMI.gif";
+            // self.$refs.eggImage.classList = "";
+            self.$refs.eggImage.onload = function() {
+              self.$refs.eggImage.width = imageWidth;
+              setTimeout(function() {
+                self.eggGiftShown = true;
+                var interval = setInterval(function() {
+                  self.eggGiftCountdown -= 1;
+                  if (self.eggGiftCountdown <= 0) {
+                    self.eggGiftShown = false;
+                    self.eggGiftCountdown = 5;
+                    self.hasEgg = false;
+                    clearInterval(interval);
+                  }
+                }, 1000);
+              }, 4500);
+            };
+          }
+        });
     }
   },
   computed: {
@@ -336,11 +303,6 @@ export default {
       return this.$parent.jsonData || this.json;
     },
     playerId() {
-      // if (this.isLive) {
-      //   return '#' + this.id + '.uiza-ext-player';
-      // } else {
-      //   return this.$parent.id + " .uiza-ext-player";
-      // }
       return ("#" + (this.id || this.$parent.id) + ".uiza-ext-player").replace(
         "##",
         "#"
@@ -356,6 +318,12 @@ export default {
     },
     noControls() {
       return this.playerParams && this.playerParams.noControls;
+    },
+    isPortrait() {
+      return this.playerParams && this.playerParams.isPortrait;
+    },
+    isAutoplay() {
+      return this.playerParams && this.playerParams.isAutoplay;
     }
   },
   data() {
@@ -369,14 +337,12 @@ export default {
       showProducts: false,
       selectedProduct: null,
       itemsInCart: 0,
-      sb: null,
-      chatUser: "",
-      currentChannel: null,
-      chatMessages: [],
-      chatMessage: "",
       overlayTimeouts: [],
       overlayProduct: null,
       isSharing: false,
+      hasEgg: false,
+      eggGiftShown: false,
+      eggGiftCountdown: 5,
       stickers: [
         {
           icon:
@@ -394,7 +360,6 @@ export default {
       playInterval: null,
       playedTime: 0,
       isMinimized: false,
-      isLiked: false,
       isErrored: false,
       showEgg: false
     };
@@ -411,36 +376,16 @@ button {
   height: auto !important;
   margin: 0 !important;
 }
-.bp-dropdown {
-  margin-top: -4px;
-  &__btn {
-    background-color: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    button {
-      background: transparent !important;
-      border: none !important;
-      padding: 0 !important;
-    }
-    .bp-dropdown__icon {
-      display: none !important;
-    }
-  }
-  &__body {
-    background-color: rgba(0, 0, 0, 0.6) !important;
-    .el-button {
-      display: block;
-      margin: 0 !important;
-    }
-  }
-}
 .uiza-center-play-btn {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -30px;
-  margin-left: -30px;
+  margin-top: -50px;
+  margin-left: -50px;
   cursor: pointer;
+  img {
+    width: 100px !important;
+  }
   svg {
     color: rgba(255, 255, 255, 0.5);
     width: 60px !important;
@@ -455,10 +400,14 @@ button {
   position: relative;
   z-index: 2147483646;
   font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
   iframe {
     min-width: 100% !important;
     min-height: 100% !important;
     max-width: 100%;
+  }
+  &.uiza-portrait {
+    max-width: 375px !important;
   }
   .uiza-egg {
     position: absolute;
@@ -466,42 +415,6 @@ button {
     right: 0;
     top: 0;
     bottom: 0;
-  }
-  &-ended {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    background: #fff !important;
-    border: #ccc 1px solid;
-    &-exit {
-      position: absolute;
-      left: 5px;
-      top: 10px;
-      color: #000;
-      cursor: pointer;
-      svg {
-        margin-right: 10px;
-      }
-    }
-    h4 {
-      color: #ff0010;
-      font-size: 24px;
-      font-weight: 600;
-      text-shadow: #ccc 1px 1px 1px;
-      margin: 0 !important;
-      &:first-child {
-        margin-top: 30px;
-      }
-    }
-    img {
-      width: 100px;
-    }
   }
 }
 .uiza-logo {
@@ -512,121 +425,6 @@ button {
   cursor: pointer;
   img {
     max-width: 80px;
-  }
-}
-.uiza-chat-input {
-  position: absolute;
-  bottom: 90px;
-  left: 10px;
-  width: 300px;
-  display: flex;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 20px;
-  input {
-    flex: 1;
-    padding: 15px 20px;
-    border: none !important;
-    outline: none !important;
-    color: #fff !important;
-    font-size: 12px !important;
-    background: transparent !important;
-    &::placeholder {
-      color: #eee !important;
-    }
-  }
-  &-buttons {
-    flex: 0 0 auto;
-    display: flex;
-    margin-right: 10px !important;
-    button {
-      padding: 0 !important;
-      border: 0 !important;
-      outline: none !important;
-      background: transparent !important;
-      color: #ddd !important;
-      font-size: 13px;
-      cursor: pointer;
-      svg {
-        width: 20px !important;
-        height: 20px !important;
-      }
-    }
-    &-love {
-      display: block;
-      background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/66955/web_heart_animation.png");
-      background-repeat: no-repeat;
-      background-size: 2900%;
-      background-position: left;
-      height: 50px;
-      width: 50px;
-      margin: 0 auto;
-      cursor: pointer;
-    }
-  }
-}
-.animate {
-  animation: heart-burst 0.8s steps(28) forwards;
-}
-
-@keyframes heart-burst {
-  0% {
-    background-position: left;
-  }
-  100% {
-    background-position: right;
-  }
-}
-.uiza-chat-messages {
-  position: absolute;
-  top: 100px;
-  bottom: 150px;
-  left: 0;
-  width: 300px;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  .uiza-chat-messages-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    pointer-events: none;
-  }
-  &-item {
-    padding: 3px 10px 3px 10px;
-    font-size: 14px;
-    background: rgba(99, 111, 131, 0.7);
-    color: #eee;
-    margin: 5px 0 5px 10px;
-    border-radius: 20px;
-    overflow: hidden;
-    flex: 1 1 auto;
-    align-self: flex-start;
-    min-width: 150px;
-    &-photo {
-      float: left;
-      img {
-        width: 44px;
-        height: 44px;
-        border-radius: 100%;
-      }
-    }
-    &-info {
-      padding-left: 54px;
-      padding-top: 5px;
-      strong {
-        font-weight: 400;
-      }
-      .time {
-        font-size: 11px;
-        margin-left: 10px;
-      }
-      .message {
-        color: #ccc;
-        font-size: 12px !important;
-        margin: 5px 0 !important;
-      }
-    }
   }
 }
 .uiza-product-overlay {
@@ -700,6 +498,26 @@ button {
       }
     }
   }
+  &-icon {
+    user-select: none;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    display: block;
+    text-align: center;
+    background: linear-gradient(180deg, #5ef59e 0%, #098e41 100%);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    &.red {
+      background: linear-gradient(180deg, #fa9191 0%, #c11212 100%);
+    }
+    &.blue {
+      background: linear-gradient(180deg, #84c6ec 0%, #0b75b1 100%);
+    }
+    img {
+      width: 16px;
+      margin-top: 6px;
+    }
+  }
   &-shopping-cart {
     &-qty {
       position: absolute;
@@ -723,14 +541,14 @@ button {
     margin-right: 0 !important;
     &-popup {
       position: absolute;
-      top: -60px;
+      top: -90px;
       right: 0 !important;
       left: auto !important;
-      background: #fff !important;
-      padding: 5px 10px !important;
+      padding: 0;
       border-radius: 3px !important;
-      white-space: nowrap;
-      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+      white-space: pre-line; // 5px 10px !important;
+      // box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+      // background: #fff !important;
       .button-social {
         border-radius: 100% !important;
         border: none !important;
@@ -739,8 +557,10 @@ button {
         box-sizing: border-box;
         text-align: center;
         padding-left: 5px !important;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         &:first-child {
-          margin-right: 5px !important;
+          margin-right: 0 !important;
+          margin-bottom: 10px;
         }
         i {
           font-size: 14px;
@@ -751,32 +571,62 @@ button {
       width: 36px !important;
       cursor: pointer;
     }
-    .bp-dropdown {
-      &__btn {
-        background-color: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        margin: 12px 0 0 10px !important;
-        svg {
-          margin-top: 3px !important;
-          line-height: 30px;
-          font-size: 20px;
+  }
+  &-egg {
+    &-draggable {
+      position: absolute;
+      top: -20px;
+      left: calc(-50% - 10px);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    &-wrapper {
+      position: relative;
+      width: 30px;
+      height: 40px;
+
+      &-label {
+        display: inline-block;
+        white-space: nowrap;
+        padding: 5px 10px;
+        box-sizing: border-box;
+        background: orange;
+        color: #fff;
+        border-radius: 5px;
+        width: auto;
+      }
+      &-gift {
+        position: absolute;
+        top: 40px;
+        background: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 10px;
+        button {
+          border: 0 !important;
+          padding: 10px;
+          background: red;
           color: #fff;
+          font-size: 14px;
+          border-radius: 3px;
+          margin-bottom: 10px !important;
+          cursor: pointer;
         }
       }
-      &__body {
-        border-radius: 60px;
-        padding: 0 !important;
+      img {
+        margin-top: 5px;
+        cursor: pointer;
+        // position: absolute;
+        // bottom: 0;
+        // right: 0;
       }
     }
   }
 }
 .uiza-controls-shopping-spacer {
   flex: 1 !important;
-}
-.uiza-controls-shopping-chat-input {
-  flex: 0 0 50%;
-  display: flex;
 }
 .uiza-product-list {
   position: absolute;

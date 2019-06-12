@@ -14,7 +14,7 @@ div
     el-col.player(:span="16")
       div.player-wrapper(ref="mainWrapper")
         //- div(id="player")
-        UizaPlayer(v-if="vod || live" :params="playerParams" :settings="playerSettings" :json="jsonData" id="player")
+        UizaPlayer(v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
     el-col(:span="4")
       div.banner
         img(src="https://salt.tikicdn.com/ts/banner/ac/b5/94/f32bbde9a2da851aad01c62f4134d06c.png")
@@ -28,7 +28,7 @@ div
     carousel(:paginationEnabled="false" :perPage="10")
       slide(v-for="item in recommendedItems" v-bind:key="item.id")
         div(class="item-play")
-          div(class="item-play-btn")
+          div(class="item-play-btn" @click="view(item)")
             i.fas.fa-play-circle
         img(:src='item.image || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
         .desc
@@ -89,15 +89,25 @@ html {
     max-width: 100%;
     max-height: 100%;
   }
+  .desc {
+    padding: 0 10px;
+  }
   .item-play {
     position: absolute;
-    cursor: pointer;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    &:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
     &-btn {
       position: absolute;
       top: 50%;
       left: 50%;
       margin-top: -20px;
       margin-left: -20px;
+      cursor: pointer;
       svg {
         color: rgba(255, 255, 255, 0.5);
         width: 40px !important;
@@ -217,6 +227,12 @@ export default {
           );
         });
       }
+    },
+    view(item) {
+      const type = item.feedId ? "live" : "vod";
+      const url = this.chromeUrl + "#/play/" + type + "/" + item.id;
+      var win = window.open(url, "_blank");
+      win.focus();
     }
   },
   computed: {
@@ -237,6 +253,9 @@ export default {
         params.feedId = this.live.lastFeedId;
       }
       return params;
+    },
+    chromeUrl() {
+      return chrome.runtime.getURL("pages/popup.html");
     }
   },
   data() {

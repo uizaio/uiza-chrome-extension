@@ -1,8 +1,8 @@
 <template lang="pug">
 .uiza-giftbox(v-if="notTaken")
-  div(v-if="!isClockShown")
+  .uiza-giftbox-image(v-if="!isClockShown")
     img(src="https://media.giphy.com/media/QWcxHrF7LCb7yBf4kO/giphy.gif" @click="showClock")
-    div(v-if="codeAvailable" class="uiza-giftbox-countdown") {{ formattedCodeAvailableCountdown }}
+    div(v-if="codeAvailable" class="uiza-giftbox-image-countdown") {{ formattedCodeAvailableCountdown }}
   div.uiza-giftbox-wrapper.animated.infinite-no.shake(v-else)
     button.uiza-giftbox-wrapper-close(@click="isClockShown = false")
       i.far.fa-times-circle
@@ -106,15 +106,27 @@ export default {
 .uiza-giftbox {
   position: absolute;
   right: 10px;
-  bottom: 100px;
-  img {
-    width: 100px;
-    cursor: pointer;
-  }
-  &-countdown {
-    text-align: center;
-    color: #fff;
-    text-shadow: #000 1px 1px;
+  bottom: 160px;
+  &-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background: linear-gradient(180deg, #84c6ec 0%, #0b75b1 100%);
+    img {
+      position: absolute;
+      top: -20px;
+      left: -15px;
+      width: 80px;
+      cursor: pointer;
+    }
+    &-countdown {
+      text-align: center;
+      color: #fff;
+      text-shadow: #000 1px 1px;
+      position: relative;
+      padding-top: 20px;
+      pointer-events: none !important;
+    }
   }
   &-wrapper {
     background: #fff;

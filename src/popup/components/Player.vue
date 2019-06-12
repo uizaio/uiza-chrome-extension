@@ -22,10 +22,10 @@ div
         img(src="https://salt.tikicdn.com/ts/banner/a2/7d/90/8bdf0769796158a0f87bae170e41f698.png")
       div.banner
         img(src="https://salt.tikicdn.com/ts/banner/da/47/93/23a0ac53f7ea350585d7383817257c6a.png")
-  el-card
+  el-card.recommendation
     div(slot="header")
       span Recommended for you
-    carousel(:paginationEnabled="false" :perPage="10")
+    carousel(:paginationEnabled="false"  :navigationEnabled="true" navigationNextLabel="<i class='fas fa-chevron-right'></i>" navigationPrevLabel="<i class='fas fa-chevron-left'></i>" :perPage="7")
       slide(v-for="item in recommendedItems" v-bind:key="item.id")
         div(class="item-play")
           div(class="item-play-btn" @click="view(item)")
@@ -80,38 +80,48 @@ html {
     max-width: 100%;
   }
 }
-.VueCarousel-slide {
-  margin: 5px;
-  width: 150px;
-  position: relative;
-  img {
-    object-fit: cover;
-    max-width: 100%;
-    max-height: 100%;
+.recommendation {
+  .el-card__body {
+    padding: 0 60px !important;
   }
-  .desc {
-    padding: 0 10px;
-  }
-  .item-play {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    &:hover {
-      background: rgba(0, 0, 0, 0.4);
+  .VueCarousel-navigation {
+    svg {
+      font-size: 30px;
     }
-    &-btn {
+  }
+  .VueCarousel-slide {
+    margin: 5px;
+    width: 300px;
+    position: relative;
+    img {
+      object-fit: cover;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .desc {
+      padding: 0 10px;
+    }
+    .item-play {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-top: -20px;
-      margin-left: -20px;
-      cursor: pointer;
-      svg {
-        color: rgba(255, 255, 255, 0.5);
-        width: 40px !important;
-        height: 40px !important;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      &:hover {
+        background: rgba(0, 0, 0, 0.4);
+      }
+      &-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        margin-left: -20px;
+        cursor: pointer;
+        svg {
+          color: rgba(255, 255, 255, 0.5);
+          width: 40px !important;
+          height: 40px !important;
+        }
       }
     }
   }

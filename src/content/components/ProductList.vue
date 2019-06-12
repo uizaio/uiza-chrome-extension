@@ -102,12 +102,14 @@ export default {
       text-align: center;
       background: linear-gradient(
         to top,
-        rgba(0, 0, 0, 0.85) 0%,
-        rgba(0, 0, 0, 0) 100%
+        rgba(0, 0, 0, 0.404) 0%,
+        rgba(0, 0, 0, 0.302) 26.69%,
+        rgba(0, 0, 0, 0) 96.7%
       );
       &-title {
         font-size: 12px;
         color: #fff !important;
+        text-shadow: rgba(0, 0, 0, 0.5) 1px 1px;
         line-height: 15px !important;
         margin: 0 0 5px 0 !important;
         font-weight: 500 !important;
@@ -120,10 +122,11 @@ export default {
         font-weight: 500 !important;
         color: #fff !important;
         cursor: pointer;
-        background: transparent !important;
-        border: #fff 1px solid;
+        background: #50e3c2;
+        border: 0 !important;
         margin: 0 !important;
         margin-top: 5px !important;
+        text-transform: uppercase;
         border-radius: 6px;
       }
     }

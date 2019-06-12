@@ -1,17 +1,111 @@
 {
     "data": {
         "products": [{
-            "id": 36698125,
-            "image": [
-                "https://media3.scdn.vn/img3/2019/5_10/DnCkQv_simg_ab1f47_350x350_maxb.jpg"
-            ],
-            "url_key": "https://www.sendo.vn/xa-kho-giay-the-thao-nam-giay-the-thao-nam-18035781.html",
-            "name": "[ XẢ KHO ] GIày thể thao nam - giày thể thao nam",
-            "price": 478000,
-            "promotion_price": 370000,
-            "description": "Thí product "
-            "colours": ["#FF0000", "#FFFFFF"],
-            "sizes": ["XS", "XL", "XXL"]
-        }]
+                "id": 36698127,
+                "image": [
+                    "https://salt.tikicdn.com/cache/200x200/ts/product/74/f6/c4/ddf8595a46b6c7593c55e9cbb85932ac.jpg"
+                ],
+                "url_key": "https://tiki.vn/dien-thoai-iphone-xs-max-64gb-nhap-khau-chinh-hang-p4538661.html?src=category-page-1789.1795&2hi=1&_lc=Vk4wMzkwMDYwMDg%3D",
+                "name": "Điện Thoại iPhone XS Max 64GB",
+                "price": 26990000,
+                "promotion_price": 26490000,
+                "description": "Thiết kế được nâng cấp nhiều về phần cứng bên trong Điện Thoại iPhone XS Max",
+                "colours": [
+                    "#FFCC00",
+                    "#CCCCCC",
+                    "#666666"
+                ],
+                "sizes": []
+            },
+            {
+                "id": 36698128,
+                "image": [
+                    "https://salt.tikicdn.com/cache/200x200/ts/product/57/13/e6/b5a05cdd0ecd71cacef49f738c230124.jpg"
+                ],
+                "url_key": "https://tiki.vn/ao-thun-nam-thoat-nhiet-nhat-ban-gold-rhino-atnamtrondodo-do-do-p819798.html?src=category-page-914.915&2hi=1&_lc=Vk4wMzkwMDYwMDg%3D",
+                "name": "Áo Thun Nam Thoát Nhiệt Nhật Bản Gold Rhino ATNAMTRONDODO - Đỏ Đô",
+                "price": 159000,
+                "promotion_price": 149000,
+                "description": "Áo Thun Nam Thoát Nhiệt Nhật Bản Gold Rhino ATNAMTRONDODO - Đỏ Đô được làm từ chất liệu cotton co giãn với bề mặt vải",
+                "colours": [
+                    "#660000"
+                ],
+                "sizes": [
+                    "L",
+                    "M",
+                    "S",
+                    "XS"
+                ]
+            },
+            {
+                "id": 36698129,
+                "image": [
+                    "https://salt.tikicdn.com/cache/200x200/ts/product/a1/07/1f/016758ad081c836808e2f430851a175d.jpg"
+                ],
+                "url_key": "https://tiki.vn/dam-suong-dai-hoa-la-haint-boutique-da143-p11198460.html?src=category-page-914.931.8349.941&2hi=0&_lc=Vk4wMzkwMDYwMDg%3D",
+                "name": "Đầm suông dài hoa lá Haint Boutique",
+                "price": 399000,
+                "promotion_price": 199000,
+                "description": "Đầm suông dài hoa lá Haint Boutique thích hợp đi biển,đi chơi,đi làm, dự tiệc, dã ngoại",
+                "colours": [],
+                "sizes": [
+                    "L",
+                    "M",
+                    "S",
+                    "XS"
+                ]
+            },
+            {
+                "id": 36698130,
+                "image": [
+                    "https://salt.tikicdn.com/cache/200x200/ts/product/26/2b/8d/e448fc6e36b31b862f3acbad3bf0c7bc.jpg"
+                ],
+                "url_key": "https://tiki.vn/dam-om-du-tiec-dep-kieu-dam-om-soc-xeo-xe-ta-cot-eo-sc376-p7936560.html?src=category-page-914.931.8349.941&2hi=0&_lc=Vk4wMzkwMDYwMDg%3D",
+                "name": "Đầm ôm dự tiệc đẹp kiểu đầm ôm sọc xéo xẻ tà cột eo",
+                "price": 990000,
+                "promotion_price": 761000,
+                "description": "Thiết kế dáng ôm cột eo, dây kéo bên hông, phần lưng cách điệu ren hình tam giác đẹp, cổ tròn rộng rất dễ mặc và tôn dáng, dây eo liền, có thể cột phía trước hoặc phía sau cũng rất đẹp",
+                "colours": [],
+                "sizes": [
+                    "L",
+                    "M",
+                    "S",
+                    "XS"
+                ]
+            },
+            {
+                "id": 36698131,
+                "image": [
+                    "https://salt.tikicdn.com/cache/200x200/ts/product/e1/3f/fa/d02aea253d63d0f4321b62ecf3e3348b.jpg"
+                ],
+                "url_key": "https://tiki.vn/giay-sneakers-nu-converse-650052c-xanh-nhat-p1588705.html?src=category-page-914.931.1703.4674&2hi=1&_lc=Vk4wMzkwMDYwMDg%3D",
+                "name": "Giày Sneakers Nữ Converse - Xanh Nhạt",
+                "price": 1200000,
+                "promotion_price": 700000,
+                "description": "Đế giày chống trơn trượt  Giày Sneakers Nữ Converse - Xanh Nhạt với đế giày làm bằng chất liệu cao su tổng hợp",
+                "colours": [],
+                "sizes": [
+                    "4.5",
+                    "5"
+                ]
+            },
+            {
+                "id": 36698132,
+                "image": [
+                    "https://salt.tikicdn.com/cache/200x200/ts/product/be/b2/dc/d93a26cf76f2f841a1b9d41881154c22.jpg"
+                ],
+                "url_key": "https://tiki.vn/non-vai-chong-nang-du-lich-ke-soc-nhat-ban-hqc6003-p19702652.html?src=category-page-914.931.975.5401&2hi=0&_lc=Vk4wMzkwMDYwMDg%3D",
+                "name": "GNón vải chống nắng du lịch kẻ sọc Nhật Bản",
+                "price": 150000,
+                "promotion_price": 120000,
+                "description": "Nón vải chống nắng du lịch kẻ sọc Nhật Bản",
+                "colours": [
+                    "#FF66FF",
+                    "#CCCCCC",
+                    "#0000CC"
+                ],
+                "sizes": []
+            }
+        ]
     }
 }

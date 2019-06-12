@@ -73,8 +73,9 @@ export default {
           function() {
             this.codeAvailableCountdown -= 1;
             if (this.codeAvailableCountdown <= 0) {
-              clearInterval(this.codeAvailableInterval);
+              this.codeAvailable = false;
               this.codeAvailableCountdown = 900;
+              clearInterval(this.codeAvailableInterval);
             }
           }.bind(this),
           1000
@@ -84,8 +85,10 @@ export default {
     buyNow() {
       clearInterval(this.codeAvailableInterval);
       Object.assign(this.$data, initialData());
-      var win = window.open(this.url, "_blank");
-      win.focus();
+      localStorage.setItem("UIZA_GIFT_CODE", "DECEMBERISCOMING");
+      this.$emit("used");
+      // var win = window.open(this.url, "_blank");
+      // win.focus();
     }
   },
   computed: {

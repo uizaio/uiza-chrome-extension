@@ -3,19 +3,17 @@ import Vue from "vue";
 import Player from "./components/Player.vue";
 import PlayerHolder from './components/PlayerHolder.vue';
 import "@fortawesome/fontawesome-free/js/all.js";
-import "vue-slider-component/theme/default.css";
+import 'vue-slider-component/theme/antd.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 // import 'csshake/dist/csshake.css';
 import 'animate.css';
 import VueAnime from "vue-animejs";
-import Dropdown from 'bp-vuejs-dropdown';
 // eslint-disable-next-line no-unused-vars
 import _ from 'lodash';
 
 Vue.use(ElementUI);
 Vue.use(VueAnime);
-Vue.use(Dropdown);
 Vue.use(require('vue-moment'));
 
 // eslint-disable-next-line import/no-webpack-loader-syntax

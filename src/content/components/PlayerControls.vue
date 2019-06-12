@@ -37,14 +37,11 @@
   //- Spacer
   div.uiza-player-controls-spacer
   //- Qualities
-  dropdown(class="uiza-player-controls-levels" align="top" v-if="qualities.length && qualities.length > 1" :close-on-click="true")
-    template(slot="btn")
-      button()
-        i.fas2.fa-cogs
-    template(slot="body")
-      el-button(@click="onChangeQuality(item)" size="mini" v-for="item in qualities" v-bind:key="item.label" :disabled="selectedQuality && selectedQuality.label === item.label")
+  button.uiza-player-controls-levels(v-if="qualities.length && qualities.length > 1" @click="isQualitiesShown = !isQualitiesShown" :style="{ color: settings.color }")
+    i.fas2.fa-cogs
+    .uiza-player-controls-levels-popup(v-if="isQualitiesShown")
+      el-button(v-on:click.stop="onChangeQuality(item)" size="mini" v-for="item in qualities" v-bind:key="item.label" :disabled="selectedQuality && selectedQuality.label === item.label")
         | {{ item.label }}
-
   //- PIP
   button(v-if="!isPiP" @click="requestPIP")
     i.fas2.fa-pip
@@ -57,14 +54,12 @@
 
 <script>
 import VueSlider from "vue-slider-component";
-import Dropdown from "bp-vuejs-dropdown";
 import EventBus from "../EventBus";
 
 export default {
   props: ["player", "isLive", "settings"],
   components: {
-    VueSlider,
-    Dropdown
+    VueSlider
   },
   mounted() {
     const self = this;
@@ -77,15 +72,16 @@ export default {
     });
     this.player.on("durationchange", val => {
       // get duration in miliseconds
-      self.duration = self.player.duration()
-        ? self.player.duration() * 1000
-        : 0;
+      self.duration = Math.floor(
+        self.player.duration() ? self.player.duration() * 1000 : 0
+      );
     });
     this.player.on("volumechange", () => {
       self.currentVolume = self.player.volume() * 100;
     });
     this.player.on("timeupdate", val => {
-      self.currentPos = self.player.currentTime() * 1000;
+      console.log(self.player.currentTime(), self.player.duration());
+      self.currentPos = Math.floor(self.player.currentTime() * 1000);
     });
     this.player.on("qualitieschange", () => {
       self.qualities = self.player.qualities();
@@ -162,6 +158,7 @@ export default {
       this.isSeeked = false;
     },
     onChangeQuality(item) {
+      this.isQualitiesShown = false;
       this.selectedQuality = item;
       const index = this.qualities.indexOf(item);
       this.player.currentLevel(index);
@@ -193,6 +190,7 @@ export default {
       isVolumeShown: false,
       transitVolumeTimeout: null,
       qualities: [],
+      isQualitiesShown: false,
       selectedQuality: null,
       isPiP: false
     };
@@ -318,29 +316,18 @@ export default {
     font-size: 12px;
   }
   &-levels {
-    margin: 0 5px;
-    .bp-dropdown {
-      &__btn {
-        background-color: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        button {
-          margin: 0 !important;
-          background: transparent !important;
-          border: none !important;
-          padding: 0 !important;
-        }
-        .bp-dropdown__icon {
-          display: none !important;
-        }
-      }
-      &__body {
-        background-color: rgba(0, 0, 0, 0.6) !important;
-        button {
-          padding: 4px 0 !important;
-          display: block;
-          margin: 0 !important;
-        }
+    position: relative;
+    &-popup {
+      position: absolute;
+      bottom: 43px;
+      left: -15px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+      padding: 10px 3px;
+      .el-button {
+        display: block;
+        margin: 0 !important;
+        padding: 3px !important;
       }
     }
   }

@@ -4,9 +4,10 @@
     
   //- UizaEgg(v-if="isLive && showEgg && !noControls" :url="playerSettings.buy_now_url")
   UizaOrderCount(v-if="isLive" :count="300")
-  GiftBox(v-if="isLive" :url="playerSettings.buy_now_url")
-  a.uiza-center-play-btn(v-if="!isPlaying" @click="play")
-    img(src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
+  GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true")
+  a.uiza-center-play-btn(v-if="!isPlaying && player" @click="play")
+    img(v-if="!isEnded" src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
+    i.fas.fa-undo(v-else)
   a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
   Chat(v-if="isLive && !noControls")
@@ -70,7 +71,6 @@ import PopupProduct from "./Product";
 import ProductList from "./ProductList";
 import PlayerControls from "./PlayerControls";
 import Congras from "./Congras";
-import Dropdown from "bp-vuejs-dropdown";
 import VueGoodshare from "vue-goodshare";
 import VueGoodshareFacebook from "vue-goodshare/src/providers/Facebook.vue";
 import VueGoodshareTwitter from "vue-goodshare/src/providers/Twitter.vue";
@@ -89,7 +89,6 @@ export default {
     ProductList,
     PlayerControls,
     Congras,
-    Dropdown,
     VueGoodshare,
     VueGoodshareFacebook,
     VueGoodshareTwitter

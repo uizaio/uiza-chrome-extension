@@ -197,27 +197,4 @@ export default {
     padding: 0 !important;
   }
 }
-.bp-dropdown {
-  margin-top: -4px;
-  &__btn {
-    background-color: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    button {
-      background: transparent !important;
-      border: none !important;
-      padding: 0 !important;
-    }
-    .bp-dropdown__icon {
-      display: none !important;
-    }
-  }
-  &__body {
-    background-color: rgba(0, 0, 0, 0.6) !important;
-    .el-button {
-      display: block;
-      margin: 0 !important;
-    }
-  }
-}
 </style>

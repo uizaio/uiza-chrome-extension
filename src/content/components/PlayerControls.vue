@@ -271,7 +271,13 @@ export default {
   padding: 20px 10px 10px 10px;
   flex-direction: row;
   color: #fff;
-  background: rgba(0, 0, 0, 0.3);
+  height: 50px !important;
+  box-sizing: border-box !important;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.749) 0%,
+    rgba(0, 0, 0, 0.749) 96.7%
+  );
   > * {
     flex: 0 0 auto;
   }
@@ -312,14 +318,30 @@ export default {
     font-size: 12px;
   }
   &-levels {
-    margin-top: -2px;
-    .bp-dropdown__body {
-      button {
-        margin: 4px 0 !important;
+    margin: 0 5px;
+    .bp-dropdown {
+      &__btn {
+        background-color: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        button {
+          margin: 0 !important;
+          background: transparent !important;
+          border: none !important;
+          padding: 0 !important;
+        }
+        .bp-dropdown__icon {
+          display: none !important;
+        }
       }
-    }
-    svg {
-      display: none !important;
+      &__body {
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        button {
+          padding: 4px 0 !important;
+          display: block;
+          margin: 0 !important;
+        }
+      }
     }
   }
   &-live {

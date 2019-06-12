@@ -51,20 +51,7 @@ export default {
                 console.log("failed to enter room", error);
                 return;
               }
-              var messageListQuery = self.currentChannel.createPreviousMessageListQuery();
-              messageListQuery.limit = 30;
-              messageListQuery.reverse = true;
-
-              messageListQuery.load(function(messageList, error) {
-                if (error) {
-                  return;
-                }
-                self.chatMessages = messageList.reverse();
-                self.scrollChat();
-              });
-
               var ChannelHandler = new self.sb.ChannelHandler();
-
               ChannelHandler.onMessageReceived = function(channel, message) {
                 console.log(channel, message);
                 self.chatMessages.push(message);
@@ -73,6 +60,19 @@ export default {
             });
           }
         );
+      });
+    },
+    loadMessages() {
+      var messageListQuery = self.currentChannel.createPreviousMessageListQuery();
+      messageListQuery.limit = 30;
+      messageListQuery.reverse = true;
+
+      messageListQuery.load(function(messageList, error) {
+        if (error) {
+          return;
+        }
+        self.chatMessages = messageList.reverse();
+        self.scrollChat();
       });
     },
     scrollChat() {
@@ -210,6 +210,8 @@ export default {
     flex: 1;
     padding: 0 0 20px 10px !important;
     overflow: auto;
+    display: flex;
+    align-items: flex-end;
     &::-webkit-scrollbar {
       display: none;
     }

@@ -3,7 +3,6 @@ import Vue from "vue";
 import Player from "./components/Player.vue";
 import PlayerHolder from './components/PlayerHolder.vue';
 import "@fortawesome/fontawesome-free/js/all.js";
-import 'vue-slider-component/theme/antd.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 // import 'csshake/dist/csshake.css';

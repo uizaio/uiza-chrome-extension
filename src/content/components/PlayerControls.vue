@@ -1,10 +1,12 @@
 <template lang="pug">
 .uiza-player-controls
   //- Progress bar
-  .uiza-player-controls-progress
+  .uiza-player-controls-progress(@mousemove="progressHovering" @mouseleave="isSeekerShown = false" ref="progressBar")
+    .uiza-player-controls-progress-seeker(v-if="isSeekerShown" :style="{ left: seekerCoord }") {{ seekerText }}
+    //- :processStyle="{ background: settings.color }"
     VueSlider(v-model="currentPos" :dot-size="10" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
-      //- template(v-slot:process="{ start, end, style }")
-      //-   div(class="vue-slider-process custom-class" :style="[style]")
+      template(v-slot:process="{ start, end, style }")
+        div(class="vue-slider-process" :style="[style]")
   //-  Play button
   button.uiza-player-controls-play(v-show="!isPlaying" @click="play" :style="{ color: settings.color }")
     i.fas2.fa-play
@@ -25,7 +27,8 @@
       i.fas2.fa-volume-mute
     //- Volume slider
     div(class="uiza-player-controls-volume-slider" @mouseover.stop="transitVolumeShow" @mouseleave.stop="isVolumeShown = false" v-if="isVolumeShown")
-      VueSlider(direction="btt" :height="50" :dotSize="8" v-model="currentVolume" :max="100" @change="onVolumeChanged" :processStyle="{ background: settings.color }")
+      //-  :processStyle="{ background: settings.color }"
+      VueSlider(direction="btt" :height="50" :dotSize="8" v-model="currentVolume" :max="100" @change="onVolumeChanged")
   //- Live button
   div(v-if="isLive" @click="seekToLive" class="uiza-player-controls-live")
     span(:class="{ 'inactive': (isLive && isSeeked) || !isPlaying }") Live
@@ -91,6 +94,22 @@ export default {
     });
   },
   methods: {
+    progressHovering(event) {
+      if (this.duration > 0) {
+        const x = event.offsetX;
+        const width = this.$refs.progressBar.offsetWidth;
+        if (width > 0) {
+          const percentage = x / width;
+          const mousePoint = this.millisToMinutesAndSeconds(
+            percentage * this.duration
+          );
+          this.seekerText = mousePoint;
+          this.seekerCoord = x + "px";
+          this.isSeekerShown = true;
+        }
+      }
+      console.log("hover", event.offsetY, event.offsetX, event);
+    },
     millisToMinutesAndSeconds(millis) {
       var minutes = Math.floor(millis / 60000);
       var seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -183,6 +202,9 @@ export default {
   data() {
     return {
       isPlaying: false,
+      isSeekerShown: false,
+      seekerText: "",
+      seekerCoord: 0,
       isSeeked: false,
       currentPos: 0,
       duration: 0,
@@ -201,7 +223,7 @@ export default {
 <style lang="scss">
 // Uiza theme
 @charset "UTF-8";
-
+@import "~vue-slider-component/lib/theme/default.scss";
 @font-face {
   font-family: "uiza";
   src: url("https://sdk.uiza.io/v4/assets/uzplayer-fonts-15/fonts/videojs-uiza-fonts-15.eot");
@@ -309,6 +331,36 @@ export default {
     left: 0;
     right: 0;
     margin: 0;
+    &-seeker {
+      position: absolute;
+      bottom: 15px;
+      font-size: 14px;
+      white-space: nowrap;
+      padding: 6px 8px;
+      min-width: 60px;
+      box-sizing: border-box;
+      text-align: center;
+      color: #fff;
+      border-radius: 5px;
+      border-color: rgba(0, 0, 0, 0.75);
+      background-color: rgba(0, 0, 0, 0.75);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transform: scale(0.9) translateX(-30px);
+      transition: transform 0.3s;
+      &:after {
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        height: 0;
+        width: 0;
+        border-color: transparent;
+        border-style: solid;
+        border-width: 5px;
+        border-top-color: inherit;
+        content: "";
+        position: absolute;
+      }
+    }
   }
   &-duration {
     margin-top: 1px;

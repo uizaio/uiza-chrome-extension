@@ -1,10 +1,12 @@
 chrome.webRequest.onHeadersReceived.addListener(details => {
-    for (var i = 0; i < details.responseHeaders.length; i++) {
-        var header = details.responseHeaders[i];
-        if (['x-content-security-policy', 'content-security-policy', 'x-webkit-csp'].indexOf(header.name.toLowerCase()) > -1) {
-            header.value = "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
-        }
-    };
+    if (details.responseHeaders.filter(x => x.name.toLowerCase() === 'x-fb-debug').length < 0) {
+        for (var i = 0; i < details.responseHeaders.length; i++) {
+            var header = details.responseHeaders[i];
+            if (['x-content-security-policy', 'content-security-policy', 'x-webkit-csp'].indexOf(header.name.toLowerCase()) > -1) {
+                header.value = "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
+            }
+        };
+    }
 
     return {
         responseHeaders: details.responseHeaders

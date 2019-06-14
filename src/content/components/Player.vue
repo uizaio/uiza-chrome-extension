@@ -1,42 +1,46 @@
 <template lang="pug">
-.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
+.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-theme-flat': isFlat, 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
   .uiza-error(v-if="isErrored") Live stream is ended
     
-  //- UizaEgg(v-if="isLive && showEgg && !noControls" :url="playerSettings.buy_now_url")
+  EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true")
   UizaOrderCount(v-if="isLive" :count="300")
   GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true")
   a.uiza-center-play-btn(v-if="!isPlaying && player" @click="play")
-    img(v-if="!isEnded" src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
-    i.fas.fa-undo(v-else)
+    img(v-show="!isEnded && !isFlat" src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
+    i.fas.fa-play(v-hide="isEnded && !isFlat")
+    i.fas.fa-undo(v-show="isEnded")
   a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
-  Chat(v-if="isLive && !noControls")
+  Chat(v-if="!isFlat && isLive && !noControls")
+  ChatFlat(v-if="isFlat && isLive && !noControls")
+  PlayerControls(class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
+  PlayerControlsLive(class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
   .uiza-controls(v-if="showControls && !noControls")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
-      a.uiza-controls-icon.green(@click="showProducts = !showProducts")
-        //- i.fas.fa-shopping-bag
-        img(src="https://www.upsieutoc.com/images/2019/06/12/cart.png")
+      a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
+        img(v-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/badge.png")
+        img(v-else src="https://www.upsieutoc.com/images/2019/06/12/cart.png")
     .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
-      a.uiza-controls-icon.red(@click="goToCart")
-        //- i.fas.fa-shopping-cart
-        img(src="https://www.upsieutoc.com/images/2019/06/12/badge.png")
+      a.uiza-controls-icon(:class="{ red: !isFlat }" @click="goToCart")
+        img(v-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/cart.png")
+        img(v-else src="https://www.upsieutoc.com/images/2019/06/12/badge.png")
     .uiza-controls-shopping-share
-      a.uiza-controls-icon.blue(@click="isSharing = !isSharing")
-        //- i.fas.fa-share-alt
-        img(src="https://www.upsieutoc.com/images/2019/06/12/share.png")
+      a.uiza-controls-icon(:class="{ blue: !isFlat }" @click="isSharing = !isSharing")
+        img(v-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/share.png")
+        img(v-else src="https://www.upsieutoc.com/images/2019/06/12/share.png")
       div.uiza-controls-shopping-share-popup(v-if="isSharing")
         vue-goodshare-facebook(@onClick="isSharing = false" title_social="" has_icon)
         vue-goodshare-twitter(@onClick="isSharing = false" title_social="" has_counter has_icon)
-    .uiza-controls-egg.animated.heartBeat.infinite(ref="eggContainer" v-if="hasEgg && isLive")
-      div.uiza-controls-egg-wrapper(@click="animateEgg")
-        div.uiza-controls-egg-draggable(ref="eggDraggable")
-          div.uiza-controls-egg-wrapper-label Only for you
-          div.uiza-controls-egg-wrapper-gift(v-if="eggGiftShown")
-            button(@click="buyNow") Click me
-            div Gift will be disappear in {{ eggGiftCountdown }}s
-          img(src="https://i.imgur.com/gKmLziK.png" width="50" ref="eggImage")
+    //- .uiza-controls-egg.animated.heartBeat.infinite(ref="eggContainer" v-if="hasEgg && isLive")
+    //-   div.uiza-controls-egg-wrapper(@click="animateEgg")
+    //-     div.uiza-controls-egg-draggable(ref="eggDraggable")
+    //-       div.uiza-controls-egg-wrapper-label Only for you
+    //-       div.uiza-controls-egg-wrapper-gift(v-if="eggGiftShown")
+    //-         button(@click="buyNow") Click me
+    //-         div Gift will disappear in {{ eggGiftCountdown }}s
+    //-       img(src="https://i.imgur.com/gKmLziK.png" width="50" ref="eggImage")
     //- .uiza-controls-shopping-emotion
     //-   img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
   ProductList(v-if="showProducts && showControls && !noControls" :products="products" @view="selectedProduct = $event" @close="showProducts = false")
@@ -51,8 +55,6 @@
         div
           a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") View Product
 
-  PlayerControls(class="controls" v-if="player && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
-
   PopupProduct(v-if="selectedProduct && showControls && !noControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
   RelatedVideos(v-if="playerSettings && playerParams && !isLive && isEnded && !noControls"
     @close="isEnded = false"
@@ -63,13 +65,16 @@
 
 <script>
 import Chat from "./Chat";
+import ChatFlat from "./ChatFlat";
 import UizaEgg from "./Egg";
+import EggFlat from "./EggFlat";
 import UizaOrderCount from "./OrderCount";
 import GiftBox from "./GiftBox";
 import RelatedVideos from "./RelatedVideos";
 import PopupProduct from "./Product";
 import ProductList from "./ProductList";
 import PlayerControls from "./PlayerControls";
+import PlayerControlsLive from "./PlayerControlsLive";
 import Congras from "./Congras";
 import VueGoodshare from "vue-goodshare";
 import VueGoodshareFacebook from "vue-goodshare/src/providers/Facebook.vue";
@@ -81,13 +86,16 @@ const UIZA_EXT_CART = "UIZA_EXT_CART";
 export default {
   components: {
     Chat,
+    ChatFlat,
     UizaEgg,
+    EggFlat,
     UizaOrderCount,
     GiftBox,
     RelatedVideos,
     PopupProduct,
     ProductList,
     PlayerControls,
+    PlayerControlsLive,
     Congras,
     VueGoodshare,
     VueGoodshareFacebook,
@@ -171,12 +179,11 @@ export default {
         player.on("play", function() {
           // self.showControls = true;
           self.isPlaying = true;
-          self.showEgg = true;
           // count viewing time
           if (!self.playInterval) {
             self.playInterval = setInterval(function() {
               self.playedTime += 1;
-              if (self.playedTime === 5) {
+              if (self.playedTime === 20) {
                 self.hasEgg = true;
               }
               self.playerSettings.ads.forEach(function(ad) {
@@ -348,7 +355,7 @@ export default {
       playedTime: 0,
       isMinimized: false,
       isErrored: false,
-      showEgg: false
+      isFlat: true
     };
   }
 };
@@ -395,13 +402,6 @@ button {
   }
   &.uiza-portrait {
     max-width: 375px !important;
-  }
-  .uiza-egg {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
   }
 }
 .uiza-logo {
@@ -461,7 +461,7 @@ button {
 }
 .uiza-controls {
   position: absolute;
-  bottom: 55px;
+  bottom: 70px;
   left: 0;
   right: 0;
   margin-right: 15px !important;
@@ -469,10 +469,14 @@ button {
   align-content: center;
   justify-items: center;
   align-items: center;
+  &-shopping-bag {
+    margin: 0 !important;
+  }
   > div {
     flex: 0 0 auto;
     margin: 0 10px;
     position: relative;
+
     > a {
       cursor: pointer;
       > svg {
@@ -492,16 +496,21 @@ button {
     height: 30px;
     display: block;
     text-align: center;
-    background: linear-gradient(180deg, #5ef59e 0%, #098e41 100%);
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    &.green {
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      background: linear-gradient(180deg, #5ef59e 0%, #098e41 100%);
+    }
     &.red {
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
       background: linear-gradient(180deg, #fa9191 0%, #c11212 100%);
     }
     &.blue {
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
       background: linear-gradient(180deg, #84c6ec 0%, #0b75b1 100%);
     }
     img {
-      width: 16px;
+      width: 24px;
+      height: 24px;
       margin-top: 6px;
     }
   }
@@ -532,25 +541,32 @@ button {
       right: 0 !important;
       left: auto !important;
       padding: 0;
+      height: 60px;
+      width: 120px;
+      background: #fff;
       border-radius: 3px !important;
+      text-align: center;
       white-space: pre-line; // 5px 10px !important;
       // box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       // background: #fff !important;
       .button-social {
         border-radius: 100% !important;
         border: none !important;
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
+        margin: 10px !important;
         box-sizing: border-box;
         text-align: center;
         padding-left: 5px !important;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         &:first-child {
-          margin-right: 0 !important;
-          margin-bottom: 10px;
+          margin-right: 5px !important;
+          // margin-bottom: 10px;
+          background: #1877f2 !important;
         }
         i {
-          font-size: 14px;
+          font-size: 18px;
+          margin-top: 2px !important;
         }
       }
     }

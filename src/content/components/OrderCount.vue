@@ -1,6 +1,6 @@
 <template lang="pug">
-div.uiza-order(v-show="shown")
-  img(src="https://www.upsieutoc.com/images/2019/06/12/satelite.png" width="70")
+div.uiza-order(v-show="shown" :class="{ 'uiza-theme-flat': isFlat }")
+  img(v-if="!isFlat" src="https://www.upsieutoc.com/images/2019/06/12/satelite.png" width="70")
   .uiza-order-text {{ orders }} orders completed in last 15 minutes
   button.uiza-order-close(@click="close")
       i.fas.fa-times-circle
@@ -56,13 +56,21 @@ export default {
     return {
       count: 0,
       orders: 7,
-      shown: false
+      shown: false,
+      isFlat: true
     };
   }
 };
 </script>
 <style lang="scss">
 .uiza-order {
+  &.uiza-theme-flat {
+    background: rgba(29, 53, 87, 0.75) !important;
+    margin: 0 !important;
+    .uiza-order-text {
+      margin-right: 20px;
+    }
+  }
   position: absolute;
   top: 20px;
   // left: calc(50% - 130px);
@@ -75,6 +83,7 @@ export default {
     rgba(255, 156, 173, 0.75) 0%,
     rgba(255, 57, 92, 0.75) 100%
   );
+
   border-radius: 40px;
   img {
     position: absolute;
@@ -86,7 +95,7 @@ export default {
     text-align: center;
   }
   &-close {
-    display: none;
+    // display: none;
     position: absolute;
     top: 6px;
     right: 6px;

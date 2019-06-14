@@ -48,4 +48,7 @@ if (location.host.indexOf('facebook.com') < 0) {
     })
   });
   // eslint-disable-next-line eol-last
+} else {
+  // alert('facebook');
+  // eslint-disable-next-line eol-last
 }

@@ -118,6 +118,8 @@ export default {
       let total = this.quantity * this.product.promotion_price;
       if (this.promotionCode === "DECEMBERISCOMING") {
         total = Math.floor(0.85 * total);
+      } else if (this.promotionCode === "FASHIONISTA") {
+        total = Math.floor(0.75 * total);
       }
       return total;
     }

@@ -1,7 +1,7 @@
 <template lang="pug">
 .uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-theme-flat': isFlat, 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
   .uiza-error(v-if="isErrored") Live stream is ended
-    
+  ShopInfo
   EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true")
   UizaOrderCount(v-if="isLive" :count="300")
   GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true")
@@ -9,7 +9,7 @@
     img(v-show="!isEnded && !isFlat" src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
     i.fas.fa-play(v-hide="isEnded && !isFlat")
     i.fas.fa-undo(v-show="isEnded")
-  a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
+  //- a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
   Chat(v-if="!isFlat && isLive && !noControls")
   ChatFlat(v-if="isFlat && isLive && !noControls")
@@ -33,19 +33,9 @@
       div.uiza-controls-shopping-share-popup(v-if="isSharing")
         vue-goodshare-facebook(@onClick="isSharing = false" title_social="" has_icon)
         vue-goodshare-twitter(@onClick="isSharing = false" title_social="" has_counter has_icon)
-    //- .uiza-controls-egg.animated.heartBeat.infinite(ref="eggContainer" v-if="hasEgg && isLive")
-    //-   div.uiza-controls-egg-wrapper(@click="animateEgg")
-    //-     div.uiza-controls-egg-draggable(ref="eggDraggable")
-    //-       div.uiza-controls-egg-wrapper-label Only for you
-    //-       div.uiza-controls-egg-wrapper-gift(v-if="eggGiftShown")
-    //-         button(@click="buyNow") Click me
-    //-         div Gift will disappear in {{ eggGiftCountdown }}s
-    //-       img(src="https://i.imgur.com/gKmLziK.png" width="50" ref="eggImage")
-    //- .uiza-controls-shopping-emotion
-    //-   img(v-for="item in stickers" v-bind:key="item.icon" @click="stickerClicked(item)" :src="item.icon" width="64")
   ProductList(v-if="showProducts && showControls && !noControls" :products="products" @view="selectedProduct = $event" @close="showProducts = false")
 
-  .uiza-product-overlay(v-if="false && products.length && showControls && playerSettings && overlayProduct && !noControls")
+  .uiza-product-overlay(v-if="products.length && showControls && playerSettings && overlayProduct && !noControls")
     //- div(v-for="(item, index) in playerSettings.ads" v-bind:key="index")
     div
       .uiza-product-overlay-image
@@ -69,6 +59,7 @@ import ChatFlat from "./ChatFlat";
 import UizaEgg from "./Egg";
 import EggFlat from "./EggFlat";
 import UizaOrderCount from "./OrderCount";
+import ShopInfo from "./ShopInfo";
 import GiftBox from "./GiftBox";
 import RelatedVideos from "./RelatedVideos";
 import PopupProduct from "./Product";
@@ -90,6 +81,7 @@ export default {
     UizaEgg,
     EggFlat,
     UizaOrderCount,
+    ShopInfo,
     GiftBox,
     RelatedVideos,
     PopupProduct,
@@ -183,7 +175,7 @@ export default {
           if (!self.playInterval) {
             self.playInterval = setInterval(function() {
               self.playedTime += 1;
-              if (self.playedTime === 20) {
+              if (self.playedTime === 300) {
                 self.hasEgg = true;
               }
               self.playerSettings.ads.forEach(function(ad) {

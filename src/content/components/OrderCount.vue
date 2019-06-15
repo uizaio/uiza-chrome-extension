@@ -10,44 +10,41 @@ div.uiza-order(v-show="shown" :class="{ 'uiza-theme-flat': isFlat }")
 <script>
 export default {
   mounted() {
-    const self = this;
-    setInterval(function() {
-      self.count += 1;
-      if (!self.shown) {
-        if (self.count === 20 || self.count % 60 === 0) {
-          self.count = 0;
-          self.orders += Math.floor(Math.random() * 10);
-          self.shown = true;
-          self.$anime
-            .timeline()
-            .add({
-              targets: self.$el,
-              left: "calc(50% - 130px)",
-              easing: "easeInOutSine",
-              duration: 2000,
-              endDelay: 1000,
-              direction: "alternate"
-            })
-            .add({
-              targets: self.$el,
-              translateX: 50,
-              direction: "alternate",
-              easing: "easeInOutSine"
-            })
-            .add({
-              targets: self.$el,
-              left: "-1000px",
-              duration: 1000,
-              easing: "easeInOutSine",
-              complete: function() {
-                self.shown = false;
-              }
-            });
-        }
-      }
-    }, 1000);
+    this.init();
   },
   methods: {
+    init() {
+      const self = this;
+      setInterval(function() {
+        self.count += 1;
+        if (!self.shown) {
+          if (self.count === 20 || self.count % 60 === 0) {
+            self.count = 0;
+            self.orders += Math.floor(Math.random() * 10);
+            self.shown = true;
+            self.$anime
+              .timeline()
+              .add({
+                targets: self.$el,
+                left: "calc(50% - 150px)",
+                easing: "easeInOutSine",
+                duration: 2000,
+                endDelay: 1000,
+                direction: "alternate"
+              })
+              .add({
+                targets: self.$el,
+                left: "-1000px",
+                duration: 1000,
+                easing: "easeInOutSine",
+                complete: function() {
+                  self.shown = false;
+                }
+              });
+          }
+        }
+      }, 1000);
+    },
     close() {
       this.shown = false;
     }

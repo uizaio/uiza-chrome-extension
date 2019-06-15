@@ -96,6 +96,28 @@ var jq162 = window.jQuery.noConflict(true);
       position: relative;
     }
     .uiza-player-holder {}
+    div#live-status {
+      top: 10px;
+      right: 0;
+    }
+    div#live-status > div:nth-child(1) {
+      display: none;
+    }
+    div#live-status > div:nth-child(2) {
+      padding: 3px 10px !important;
+      border-radius: 30px !important;
+    }
+    div#live-status > div:nth-child(2) > span:nth-child(1) {
+      display: inline-block;
+      margin-top: 2px;
+    }
+    div#live-status > div:nth-child(2) > span:nth-child(2) {
+      margin-left: 10px !important;
+    }
+    div#live-status > div:nth-child(2) > span:nth-child(2):after {
+      content: 'views';
+      margin-left: 5px;
+    }
     `;
   };
 

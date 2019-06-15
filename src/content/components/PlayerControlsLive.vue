@@ -4,7 +4,7 @@
   .uiza-player-controls-progress(@mousemove="progressHovering" @mouseleave="isSeekerShown = false" ref="progressBar")
     .uiza-player-controls-progress-seeker(v-if="isSeekerShown" :style="{ left: seekerCoord }") {{ seekerText }}
     //- :processStyle="{ background: settings.color }"
-    VueSlider(v-model="currentPos" :dot-size="10" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
+    VueSlider(v-model="currentPos" :dot-size="8" :height="2" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
       template(v-slot:process="{ start, end, style }")
         div(class="vue-slider-process" :style="[style]")
   //-  Play button
@@ -211,8 +211,8 @@ export default {
       seekerText: "",
       seekerCoord: 0,
       isSeeked: false,
-      currentPos: 0,
-      duration: 0,
+      currentPos: 10,
+      duration: 100,
       currentVolume: 100,
       isVolumeShown: false,
       transitVolumeTimeout: null,
@@ -293,7 +293,7 @@ export default {
   left: 0;
   right: 0;
   display: flex;
-  padding: 20px 10px 10px 10px;
+  padding: 18px 10px 10px 10px;
   flex-direction: row;
   color: #fff;
   height: 50px !important;
@@ -337,6 +337,29 @@ export default {
     left: 0;
     right: 0;
     margin: 0;
+    .vue-slider-dot-handle {
+      &:before,
+      &:after {
+        content: "";
+        position: absolute;
+        border-radius: 100%;
+        z-index: -1;
+      }
+      &:before {
+        top: -7px;
+        left: -7px;
+        background: rgba(230, 57, 70, 0.2);
+        width: 22px;
+        height: 22px;
+      }
+      &:after {
+        top: -3px;
+        left: -3px;
+        background: rgba(230, 57, 70, 0.5);
+        width: 14px;
+        height: 14px;
+      }
+    }
     &-seeker {
       position: absolute;
       bottom: 15px;

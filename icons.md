@@ -28,3 +28,5 @@ https://www.upsieutoc.com/images/2019/06/14/heat-black.png
 
 https://www.upsieutoc.com/images/2019/06/14/egg-static.png
 https://www.upsieutoc.com/images/2019/06/14/egg-animate.gif
+
+https://www.upsieutoc.com/images/2019/06/15/shop-logo.png

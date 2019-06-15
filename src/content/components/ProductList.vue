@@ -122,12 +122,13 @@ export default {
         font-weight: 500 !important;
         color: #fff !important;
         cursor: pointer;
-        background: #50e3c2;
-        border: 0 !important;
+        // background: #50e3c2;
+        background: transparent !important;
+        border: #fff 1px solid !important;
         margin: 0 !important;
         margin-top: 5px !important;
         text-transform: uppercase;
-        border-radius: 6px;
+        border-radius: 2px;
       }
     }
     .price {

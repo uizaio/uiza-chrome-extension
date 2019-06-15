@@ -16,8 +16,8 @@ div
     //-     | x 
     //-   el-col(:span='11')
     //-     el-input(v-model='playerSettings.height')
-    el-form-item(label='Player color')
-      el-color-picker(v-model="playerSettings.color")
+    //- el-form-item(label='Player color')
+    //-   el-color-picker(v-model="playerSettings.color")
     el-form-item(label='Brand logo', prop='brand_logo')
       el-input(v-model='playerSettings.brand_logo')
     el-form-item(label='Brand url', prop='brand_url')

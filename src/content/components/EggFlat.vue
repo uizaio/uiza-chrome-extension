@@ -10,7 +10,7 @@ div(class="uiza-egg" ref="main")
         div.uiza-egg-voucher-banner(v-if="showBanner")
             .uiza-egg-voucher-banner--only 
               .uiza-egg-voucher-banner--only-content Only for you
-            button(v-if="!showAnimate" @click="clickMe") Click me
+            button(v-if="!showAnimate" @click="clickMe") Click me ({{ appearCountdown }})
         img(v-if="!showAnimate" ref="image" :src="image" @load="onImageLoaded" @click="clickMe")
         img(v-if="showAnimate" :src="image_animate" style="transform: scale(2)")
 </template>
@@ -52,10 +52,12 @@ export default {
           complete: function(anim) {
             self.showBanner = true;
             // self.showAnimate = true;
-            setTimeout(function() {
-              // self.showBanner = false;
-              // self.showVoucher = false;
-            }, 10000);
+            self.appearInterval = setInterval(function() {
+              self.appearCountdown -= 1;
+              if (self.appearCountdown <= 0) {
+                self.showVoucher = false;
+              }
+            }, 1000);
           }
         });
     },
@@ -93,7 +95,9 @@ export default {
       width: 0,
       height: 0,
       showBanner: false,
-      isCodeShown: false
+      isCodeShown: false,
+      appearInterval: null,
+      appearCountdown: 10
     };
   }
 };

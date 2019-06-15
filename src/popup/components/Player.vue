@@ -128,6 +128,7 @@ html {
 }
 </style>
 <script>
+import _ from "lodash";
 import { Carousel, Slide } from "vue-carousel";
 import { mapFields } from "vuex-map-fields";
 import storage from "../../ext/storage";
@@ -155,6 +156,10 @@ export default {
   },
   mounted() {
     const self = this;
+    const playerSettings = storage.get(constants.PLAYER_SETTINGS_KEY);
+    if (playerSettings) {
+      this.playerSettings = _.merge(this.playerSettings, playerSettings);
+    }
     if (this.$route.params.type === "vod") {
       uiza.getSingleVOD(this.$route.params.id).then(resp => {
         this.vod = resp.data;

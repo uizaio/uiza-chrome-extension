@@ -87,7 +87,7 @@ export default {
           appId: settings.app_id,
           playerVersion: 4,
           entityId: item.id,
-          width: "685px",
+          width: "655px",
           height: "385px",
           controls: false,
           noControls: item.noControls,

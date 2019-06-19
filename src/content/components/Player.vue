@@ -1,21 +1,21 @@
 <template lang="pug">
 .uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-theme-flat': isFlat, 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
   .uiza-error(v-if="isErrored") Live stream is ended
-  ShopInfo
+  ShopInfo(v-if="isLive")
   EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true")
   UizaOrderCount(v-if="isLive" :count="300")
   GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true")
-  a.uiza-center-play-btn(v-if="!isPlaying && player" @click="play")
+  a.uiza-center-play-btn(v-if="!isPlaying && player && !isAutoplay" @click="play")
     img(v-show="!isEnded && !isFlat" src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
-    i.fas.fa-play(v-hide="isEnded && !isFlat")
+    i.fas.fa-play(v-show="!isEnded && isFlat")
     i.fas.fa-undo(v-show="isEnded")
-  //- a.uiza-logo(v-if="playerSettings && !noControls" @click="openBrandUrl")
+  a.uiza-logo(v-if="playerSettings && isLive && !noControls" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
   Chat(v-if="!isFlat && isLive && !noControls")
   ChatFlat(v-if="isFlat && isLive && !noControls")
   PlayerControls(class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
   PlayerControlsLive(class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
-  .uiza-controls(v-if="showControls && !noControls")
+  .uiza-controls(v-if="showControls && isLive && !noControls")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
       a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
@@ -31,11 +31,11 @@
         img(v-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/share.png")
         img(v-else src="https://www.upsieutoc.com/images/2019/06/12/share.png")
       div.uiza-controls-shopping-share-popup(v-if="isSharing")
-        vue-goodshare-facebook(@onClick="isSharing = false" title_social="" has_icon)
-        vue-goodshare-twitter(@onClick="isSharing = false" title_social="" has_counter has_icon)
+        vue-goodshare-facebook(@onClick="isSharing = false" :page_url="brandUrl" title_social="" has_icon)
+        vue-goodshare-twitter(@onClick="isSharing = false" :page_url="brandUrl" title_social="" has_counter has_icon)
   ProductList(v-if="showProducts && showControls && !noControls" :products="products" @view="selectedProduct = $event" @close="showProducts = false")
 
-  .uiza-product-overlay(v-if="products.length && showControls && playerSettings && overlayProduct && !noControls")
+  .uiza-product-overlay(v-if="products.length && isLive && showControls && playerSettings && overlayProduct && !noControls")
     //- div(v-for="(item, index) in playerSettings.ads" v-bind:key="index")
     div
       .uiza-product-overlay-image
@@ -43,9 +43,9 @@
       .uiza-product-overlay-wrapper
         .uiza-product-overlay-name {{ overlayProduct.name }}
         div
-          a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") View Product
+          a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") Add to cart
 
-  PopupProduct(v-if="selectedProduct && showControls && !noControls" :product="selectedProduct" :settings="playerSettings" @close="close" @cartChanged="onCartChanged")
+  PopupProduct(v-if="selectedProduct && showControls && !noControls" :product="selectedProduct" :settings="playerSettings" @close="close" @eggUsed="hasEgg = false" @cartChanged="onCartChanged")
   RelatedVideos(v-if="playerSettings && playerParams && !isLive && isEnded && !noControls"
     @close="isEnded = false"
     :settings="playerSettings" :params="playerParams" :chromeUrl="chromeUrl")
@@ -156,13 +156,17 @@ export default {
           player.autoplay(true);
         }
         self.player.on("timeupdate", val => {
-          if (self.isLive) {
-            console.log("tickkkkk");
-          }
+          // if (self.isLive) {
+          //   console.log("tickkkkk");
+          // }
         });
         self.player.on("ended", function() {
-          self.isEnded = true;
-          EventBus.$emit("onTogglePIP", false);
+          if (self.isAutoplay) {
+            self.player.play();
+          } else {
+            self.isEnded = true;
+            EventBus.$emit("onTogglePIP", false);
+          }
         });
         self.player.on("error", function() {
           alert("error");
@@ -302,6 +306,9 @@ export default {
         ? this.products[Math.floor(Math.random() * this.products.length)]
         : null;
     },
+    brandUrl() {
+      return this.playerSettings.brand_url;
+    },
     noControls() {
       return this.playerParams && this.playerParams.noControls;
     },
@@ -398,11 +405,12 @@ button {
 }
 .uiza-logo {
   position: absolute;
-  top: 10px;
+  top: 20px;
   right: 10px;
   display: block;
   cursor: pointer;
   img {
+    width: 80px;
     max-width: 80px;
   }
 }
@@ -410,7 +418,7 @@ button {
   //Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
   transform: scale(1);
   position: absolute;
-  top: 30px;
+  top: 80px;
   right: 30px;
   width: 240px;
   padding: 10px;

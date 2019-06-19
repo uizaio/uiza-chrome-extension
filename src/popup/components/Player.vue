@@ -17,11 +17,11 @@ div
         UizaPlayer(v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
     el-col(:span="4")
       div.banner
-        img(src="https://salt.tikicdn.com/ts/banner/ac/b5/94/f32bbde9a2da851aad01c62f4134d06c.png")
+        img(src="https://i.imgur.com/VTobv83.png")
       div.banner
-        img(src="https://salt.tikicdn.com/ts/banner/a2/7d/90/8bdf0769796158a0f87bae170e41f698.png")
+        img(src="https://i.imgur.com/hWlLgFh.png")
       div.banner
-        img(src="https://salt.tikicdn.com/ts/banner/da/47/93/23a0ac53f7ea350585d7383817257c6a.png")
+        img(src="https://i.imgur.com/lJ1zJCf.png")
   el-card.recommendation
     div(slot="header")
       span Recommended for you
@@ -33,7 +33,7 @@ div
         img(:src='item.image || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
         .desc
           h4 {{ item.name }}
-  div(style="height: 1000px !important") hello
+  div(style="height: 1000px !important")
 </template>
 <style lang='scss'>
 body,
@@ -76,6 +76,8 @@ html {
   }
 }
 .banner {
+  max-width: 100%;
+  margin: 10px 5px 0 5px;
   img {
     max-width: 100%;
   }
@@ -195,8 +197,8 @@ export default {
             function(frames) {
               for (var frame of frames) {
                 if (frame.url.indexOf("https://sdk.uiza.io/") > -1) {
+                  console.log("enable pip in iframe" + frame.frameId);
                   self.frameId = frame.frameId;
-                  // enablePiP(frame.frameId);
                   chrome.runtime.sendMessage(
                     {
                       UIZA_EXT_REQUEST_PIP: true,
@@ -215,6 +217,7 @@ export default {
       } else {
         // customEvent.initEvent("uiza-ext-exit-pip");
         // document.dispatchEvent(customEvent);
+        console.log("disable pip in iframe" + self.frameId);
         chrome.runtime.sendMessage(
           {
             UIZA_EXT_REQUEST_PIP: false,

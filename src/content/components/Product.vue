@@ -74,6 +74,9 @@ export default {
       localStorage.setItem("UIZA_GIFT_CODE", "");
     },
     addToCart() {
+      if (this.promotionCode === "FASHIONISTA") {
+        this.$emit("eggUsed");
+      }
       this.clearGiftCode();
       this.$emit("cartChanged");
       let productsInCart = [];
@@ -98,6 +101,9 @@ export default {
       localStorage.setItem(UIZA_EXT_CART, JSON.stringify(productsInCart));
     },
     goToCart() {
+      if (this.promotionCode === "FASHIONISTA") {
+        this.$emit("eggUsed");
+      }
       this.clearGiftCode();
       var win = window.open(this.settings.cart_url, "_blank");
       win.focus();

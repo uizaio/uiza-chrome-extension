@@ -16,9 +16,17 @@
         //- i.uiza-chat-input-buttons-love(:class="{ animate: isLiked }" )
         img(v-if="!isLiked" src="https://www.upsieutoc.com/images/2019/06/14/heart.png")
         img(v-else src="https://www.upsieutoc.com/images/2019/06/14/heat-black.png")
-      //-   i.far.fa-heart
-      //- button(v-if="isLiked" @click="isLiked = false")
-      //-   i.fas.fa-heart
+        ul(class="uiza-hearts flying2" :class="{ flying: isLiked }")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+      
       button(@click="sendMessage")
         | ENTER
         //- img(src="https://www.upsieutoc.com/images/2019/06/12/chat-icon.png")
@@ -178,6 +186,7 @@ export default {
       display: flex;
       margin-right: 16px !important;
       button {
+        position: relative;
         padding: 0 !important;
         border: 0 !important;
         outline: none !important;
@@ -273,6 +282,109 @@ export default {
   }
   100% {
     background-position: right;
+  }
+}
+.uiza-hearts {
+  position: absolute;
+  bottom: 24px;
+  left: -8px;
+  display: none;
+  .heart {
+    position: absolute;
+    left: 0;
+    list-style: none;
+    width: 16px;
+    height: 18px;
+    margin: 4px;
+    box-sizing: border-box;
+    &:before,
+    &:after {
+      position: absolute;
+      content: "";
+      left: 12px;
+      top: 0;
+      width: 12px;
+      height: 18px;
+      background: red;
+      border-radius: 16px 16px 0 0;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+    &:after {
+      left: 0;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
+  }
+  &.flying {
+    display: block !important;
+    .heart:nth-child(even) {
+      animation: 2.8s flyingEven linear; // infinite
+    }
+    > .heart:nth-child(odd) {
+      animation: 2.8s flyingOdd linear; // infinite
+    }
+    > .heart:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+    > .heart:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+    > .heart:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+    > .heart:nth-child(4) {
+      animation-delay: 1.5s;
+    }
+    > .heart:nth-child(5) {
+      animation-delay: 2.2s;
+    }
+    > .heart:nth-child(6) {
+      animation-delay: 2.9s;
+    }
+    > .heart:nth-child(7) {
+      animation-delay: 3.2s;
+    }
+    > .heart:nth-child(8) {
+      animation-delay: 3.5s;
+    }
+    > .heart:nth-child(9) {
+      animation-delay: 3.8s;
+    }
+    > .heart:nth-child(10) {
+      animation-delay: 4.1s;
+    }
+    > .heart:nth-child(11) {
+      animation-delay: 4.5s;
+    }
+    > .heart:nth-child(12) {
+      animation-delay: 5s;
+    }
+  }
+}
+
+@keyframes flyingEven {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    transform: translate(100px, -480px) scale(3);
+    opacity: 0;
+    filter: blur(10px);
+  }
+}
+@keyframes flyingOdd {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    transform: translate(-100px, -480px) scale(3);
+    opacity: 0;
+    filter: blur(10px);
   }
 }
 </style>

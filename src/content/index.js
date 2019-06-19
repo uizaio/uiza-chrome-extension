@@ -97,8 +97,8 @@ var jq162 = window.jQuery.noConflict(true);
     }
     .uiza-player-holder {}
     div#live-status {
-      top: 10px;
-      right: 0;
+      top: 20px;
+      right: 80px;
     }
     div#live-status > div:nth-child(1) {
       display: none;
@@ -154,7 +154,6 @@ var jq162 = window.jQuery.noConflict(true);
             </div>
           </div>`
         );
-        // console.log("Drag Over", event.target);
       }
       isDragging = false;
     });
@@ -168,20 +167,26 @@ var jq162 = window.jQuery.noConflict(true);
       var eventData = JSON.parse(
         event.originalEvent.dataTransfer.getData("text/plain")
       );
+      eventData.playerSettings.width = '100%';
+      eventData.playerParams.width = '100%';
       $(".reserved-drop-marker").removeClass("reserved-drop-marker");
       $(".reserved-drop-target").removeClass("reserved-drop-target");
 
       var playerId = "#uiza-ext-player" + increasedId;
       // eslint-disable-next-line no-constant-condition
       if (eventData.playerParams.feedId || true) {
-        $(playerId).parent().parent().replaceWith("<div id='uiza-ext-player" + increasedId + "'></div>");
+        // var height = $(playerId).parent().parent().parent()[0].style.height;
+        var height = $(playerId).parent().parent().parent().css('height');
+        if (height && height.replace('px', '') > 0) {
+          eventData.playerParams.height = height + 'px';
+        }
+        $(playerId).parent().parent().replaceWith("<div style='max-height: 100%; flex: 1' id='uiza-ext-player" + increasedId + "'></div>");
         $(playerId).append("<uiza-ext-player-holder></uiza-ext-player-holder>");
       } else {
         $(playerId).append("<uiza-ext-player></uiza-ext-player>");
       }
       console.log('event data', eventData);
-      eventData.playerSettings.width = '100%';
-      eventData.playerParams.width = '100%';
+
       // eventData.playerParams.controls = true;
       new Vue({
         el: playerId + ", .el-dialog__wrapper",

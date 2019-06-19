@@ -14,7 +14,6 @@ import axios from "axios";
 export default {
   props: ["params", "api", "chromeUrl"],
   mounted() {
-    console.log(this.params, this.chromeUrl, "fasfasf");
     axios
       .get(
         "https://ap-southeast-1-api.uiza.co/api/public/v4/media/entity?appId=" +

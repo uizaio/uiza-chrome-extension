@@ -3,7 +3,7 @@ div.uiza-ext-player-holder(ref="mainWrapper")
     div.uiza-ext-player-holder-img(v-if="isLive" v-on:click.stop="showPlayer")
         img(src="https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif" alt="View live stream")
         span.uiza-ext-player-holder-text {{ thumbText }}
-    div(v-else :class="{ 'uiza-ext-player-minimized-disabled': isPip }")
+    div(style="max-height: 100%" v-else :class="{ 'uiza-ext-player-minimized-disabled': isPip }")
         Player(:params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" :id="rawId")
     //- el-dialog(:visible.sync="isDialogShown" :width="playerParams.width" :append-to-body="true" :lock-scroll="false" :id="rawId")
     div(ref="fixedPlayer" v-show="isDialogShown" id="uiza-ext-player-fixed" class="uiza-ext-player-fixed" :class="{ 'uiza-ext-player-fixed-minimized-disabled': isPip }")
@@ -163,14 +163,15 @@ export default {
 }
 .uiza-ext-player-holder {
   width: 100%;
-  height: 90%;
+  // height: 90%;
+  max-height: 100%;
   position: relative;
   &-img {
     text-align: center;
     cursor: pointer;
     img {
       max-width: 100%;
-      max-height: 90%;
+      // max-height: 90%;
       object-fit: cover;
     }
   }

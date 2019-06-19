@@ -83,7 +83,6 @@ export default {
       self.currentVolume = self.player.volume() * 100;
     });
     this.player.on("timeupdate", val => {
-      console.log(self.player.currentTime(), self.player.duration());
       self.currentPos = Math.floor(self.player.currentTime() * 1000);
     });
     this.player.on("qualitieschange", () => {
@@ -108,7 +107,6 @@ export default {
           this.isSeekerShown = true;
         }
       }
-      console.log("hover", event.offsetY, event.offsetX, event);
     },
     millisToMinutesAndSeconds(millis) {
       var minutes = Math.floor(millis / 60000);

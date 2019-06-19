@@ -1,5 +1,15 @@
 <template lang="pug">
 div(class="uiza-egg" ref="main")
+    div.uiza-egg-voucher-pinned(v-if="isPinnedVoucherShown" ref="pinnedVoucher")
+      img(:src="image" @click="showPinnedVoucher")
+      .uiza-egg-voucher-pinned-click(@click="showPinnedVoucher")
+        | Click me
+      div.uiza-egg-code(v-if="isPinnedVoucherCodeShown")
+          button.uiza-egg-code-close(@click="close")
+            i.far.fa-times-circle
+          p Mã giảm giá của bạn (off 25%)
+          input(readonly="readonly" value="FASHIONISTA")
+          button.uiza-egg-code-use(@click="use") Use now
     div(v-if="showVoucher" class="uiza-egg-voucher" ref="voucher")
         div.uiza-egg-code(v-if="isCodeShown")
           button.uiza-egg-code-close(@click="close")
@@ -78,11 +88,23 @@ export default {
     },
     close() {
       this.showVoucher = false;
+      this.isPinnedVoucherCodeShown = false;
     },
     use() {
       this.showVoucher = false;
+      this.isPinnedVoucherShown = true;
+      setTimeout(
+        function() {
+          this.$refs.pinnedVoucher.removeAttribute("style");
+        }.bind(this),
+        100
+      );
+
       localStorage.setItem("UIZA_GIFT_CODE", "FASHIONISTA");
       this.$emit("used");
+    },
+    showPinnedVoucher() {
+      this.isPinnedVoucherCodeShown = true;
     }
   },
   data() {
@@ -97,7 +119,9 @@ export default {
       showBanner: false,
       isCodeShown: false,
       appearInterval: null,
-      appearCountdown: 10
+      appearCountdown: 10,
+      isPinnedVoucherShown: false,
+      isPinnedVoucherCodeShown: false
     };
   }
 };
@@ -107,7 +131,35 @@ export default {
   bottom: 0;
   right: -20px;
   position: absolute;
-
+  &-voucher-pinned {
+    position: absolute;
+    right: 20px;
+    bottom: 230px;
+    img {
+      width: 70px;
+      cursor: pointer;
+    }
+    &-click {
+      position: absolute;
+      bottom: 20px;
+      left: 7px;
+      border-radius: 10px;
+      transition: all 300ms ease;
+      font-weight: 600;
+      font-size: 12px !important;
+      color: #fff !important;
+      background: #6249fc !important;
+      animation: blinker 1s linear infinite;
+      padding: 2px 5px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .uiza-egg-code {
+      left: auto !important;
+      right: 10px !important;
+      top: -40px !important;
+    }
+  }
   &-code {
     margin-left: -50px;
     background: #fff;

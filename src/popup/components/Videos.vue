@@ -12,6 +12,7 @@ div(class="uiza-scroll-wrapper")
               el-checkbox(v-model="item.noControls") Hide player's controls
               el-checkbox(v-model="item.isAutoplay") Autoplay?
               el-checkbox(v-model="item.isPortrait") Portrait mode
+              el-checkbox(v-model="item.isZoomable") Zoom on mousemove
   div(v-else)
     | Not configured
 </template>
@@ -93,6 +94,7 @@ export default {
           noControls: item.noControls,
           isAutoplay: item.isAutoplay,
           isPortrait: item.isPortrait,
+          isZoomable: item.isZoomable,
           relatedVideos: this.vods.filter(x => x.id !== item.id)
         },
         playerSettings: this.playerSettings,

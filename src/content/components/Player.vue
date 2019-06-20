@@ -1,5 +1,6 @@
 <template lang="pug">
-.uiza-ext-player(@click.stop="preventParentClick" :id="id" :class="{ 'uiza-theme-flat': isFlat, 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
+.uiza-ext-player(@click.stop="preventParentClick" v-on:mousemove.stop.prevent="onZoom" @mouseleave="onRestoreZoom"  :id="id" :class="{ 'uiza-theme-flat': isFlat, 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
+  .uiza-ext-player-overlay(ref="playerOverlay" @click="onOverlayClicked")
   .uiza-error(v-if="isErrored") Live stream is ended
   ShopInfo(v-if="isLive")
   EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true")
@@ -13,9 +14,10 @@
     img(:src="playerSettings.brand_logo")
   Chat(v-if="!isFlat && isLive && !noControls")
   ChatFlat(v-if="isFlat && isLive && !noControls")
-  PlayerControls(class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
-  PlayerControlsLive(class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
-  .uiza-controls(v-if="showControls && isLive && !noControls")
+  transition(name="fade")
+    PlayerControls(class="controls" v-if="player && !hideControlsBar && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
+    PlayerControlsLive(class="controls" v-if="player && !hideControlsBar && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
+  .uiza-controls(v-if="showControls && !isLive && !noControls")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
       a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
@@ -35,16 +37,7 @@
         vue-goodshare-twitter(@onClick="isSharing = false" :page_url="brandUrl" title_social="" has_counter has_icon)
   ProductList(v-if="showProducts && showControls && !noControls" :products="products" @view="selectedProduct = $event" @close="showProducts = false")
 
-  .uiza-product-overlay(v-if="products.length && isLive && showControls && playerSettings && overlayProduct && !noControls")
-    //- div(v-for="(item, index) in playerSettings.ads" v-bind:key="index")
-    div
-      .uiza-product-overlay-image
-        img(:src="overlayProduct.image")
-      .uiza-product-overlay-wrapper
-        .uiza-product-overlay-name {{ overlayProduct.name }}
-        div
-          a.uiza-product-overlay-cart.uiza-product-view(@click="selectedProduct = overlayProduct") Add to cart
-
+  ProductOverlay(v-if="products.length && isLive && showControls && playerSettings && overlayProduct && !noControls" :product="overlayProduct" @cartAdded="onCartChanged(); overlayProduct = null")
   PopupProduct(v-if="selectedProduct && showControls && !noControls" :product="selectedProduct" :settings="playerSettings" @close="close" @eggUsed="hasEgg = false" @cartChanged="onCartChanged")
   RelatedVideos(v-if="playerSettings && playerParams && !isLive && isEnded && !noControls"
     @close="isEnded = false"
@@ -63,6 +56,7 @@ import ShopInfo from "./ShopInfo";
 import GiftBox from "./GiftBox";
 import RelatedVideos from "./RelatedVideos";
 import PopupProduct from "./Product";
+import ProductOverlay from "./OverlayProduct";
 import ProductList from "./ProductList";
 import PlayerControls from "./PlayerControls";
 import PlayerControlsLive from "./PlayerControlsLive";
@@ -85,6 +79,7 @@ export default {
     GiftBox,
     RelatedVideos,
     PopupProduct,
+    ProductOverlay,
     ProductList,
     PlayerControls,
     PlayerControlsLive,
@@ -124,6 +119,45 @@ export default {
     this.initPlayer();
   },
   methods: {
+    onOverlayClicked() {
+      if (this.player) {
+        if (this.isPlaying) {
+          this.player.pause();
+        } else {
+          this.player.play();
+        }
+      }
+    },
+    onZoom(event) {
+      if (this.hideControlsBarTimeout !== null) {
+        clearTimeout(this.hideControlsBarTimeout);
+      }
+      this.hideControlsBar = false;
+      if (this.isZoomable && !this.isZooming) {
+        this.isZooming = true;
+        const x = event.offsetX;
+        const y = event.offsetY;
+        const width = this.$refs.playerContainer.offsetWidth;
+        const height = this.$refs.playerContainer.offsetHeight;
+        if (this.player) {
+          const transformX = (width / 2 - x) / 2;
+          const transformY = (height / 2 - y) / 2;
+          this.player.iframe.style.transform = `scale(2) translateX(${transformX}px) translateY(${transformY}px)`;
+        }
+        this.isZooming = false;
+      }
+    },
+    onRestoreZoom() {
+      // this.hideControlsBarTimeout = setTimeout(
+      //   function() {
+      //     this.hideControlsBar = true;
+      //   }.bind(this),
+      //   2000
+      // );
+      if (this.isZoomable && this.player) {
+        this.player.iframe.style.transform = "";
+      }
+    },
     openBrandUrl() {
       var win = window.open(this.playerSettings.brand_url, "_blank");
       win.focus();
@@ -317,11 +351,15 @@ export default {
     },
     isAutoplay() {
       return this.playerParams && this.playerParams.isAutoplay;
+    },
+    isZoomable() {
+      return this.playerParams && this.playerParams.isZoomable;
     }
   },
   data() {
     return {
       player: null,
+      isZooming: false,
       isPlaying: false,
       isEnded: false,
       playerParams: null,
@@ -354,7 +392,9 @@ export default {
       playedTime: 0,
       isMinimized: false,
       isErrored: false,
-      isFlat: true
+      isFlat: true,
+      hideControlsBar: true,
+      hideControlsBarTimeout: null
     };
   }
 };
@@ -398,9 +438,18 @@ button {
     min-width: 100% !important;
     min-height: 100% !important;
     max-width: 100%;
+    pointer-events: none !important;
   }
   &.uiza-portrait {
     max-width: 375px !important;
+  }
+  &-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background: transparent !important;
   }
 }
 .uiza-logo {
@@ -413,51 +462,6 @@ button {
     width: 80px;
     max-width: 80px;
   }
-}
-.uiza-product-overlay {
-  //Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
-  transform: scale(1);
-  position: absolute;
-  top: 80px;
-  right: 30px;
-  width: 240px;
-  padding: 10px;
-  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  overflow: hidden;
-}
-.uiza-product-overlay-image {
-  width: 50px;
-  height: 70px;
-  float: left;
-  img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-  }
-}
-.uiza-product-overlay-wrapper {
-  padding-left: 60px;
-}
-.uiza-product-overlay-name {
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-.uiza-product-overlay-cart {
-  background: orange;
-  color: #fff;
-  font-weight: 600;
-  font-size: 13px;
-  text-align: center;
-  cursor: pointer;
-  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
-  border-radius: 4px;
-  display: inline-block;
-  padding: 4px 10px;
-  text-decoration: none;
 }
 .uiza-controls {
   position: absolute;
@@ -630,5 +634,14 @@ button {
 }
 .uiza-controls-shopping-spacer {
   flex: 1 !important;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

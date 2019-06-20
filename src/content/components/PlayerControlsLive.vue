@@ -73,7 +73,6 @@ export default {
     const self = this;
     this.player.on("play", () => {
       self.isPlaying = true;
-      // self.qualities = self.player.qualities();
     });
     this.player.on("pause", () => {
       self.isPlaying = false;
@@ -403,6 +402,7 @@ export default {
       background: rgba(0, 0, 0, 0.5);
       border-radius: 6px;
       padding: 10px 3px;
+      z-index: 10;
       .el-button {
         display: block;
         margin: 0 !important;

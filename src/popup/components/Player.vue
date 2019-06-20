@@ -3,7 +3,8 @@ div
   el-menu(mode="horizontal" class="header")
     el-menu-item
       a(:href="playerSettings.brand_url")
-        img(class="logo" :src="playerSettings.brand_logo")
+        //- img(class="logo" :src="playerSettings.brand_logo")
+        img.logo(src="https://www.roadsidenow.com/images/your-logo-ehre.png")
   el-row(type="flex")
     el-col(:span="4")
       el-menu(mode="vertical")

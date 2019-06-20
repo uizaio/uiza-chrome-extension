@@ -176,11 +176,17 @@ var jq162 = window.jQuery.noConflict(true);
       // eslint-disable-next-line no-constant-condition
       if (eventData.playerParams.feedId || true) {
         // var height = $(playerId).parent().parent().parent()[0].style.height;
-        var height = $(playerId).parent().parent().parent().css('height');
+        var height = $(playerId).parent().parent().css('height');
         if (height && height.replace('px', '') > 0) {
           eventData.playerParams.height = height + 'px';
         }
-        $(playerId).parent().parent().replaceWith("<div style='max-height: 100%; flex: 1' id='uiza-ext-player" + increasedId + "'></div>");
+        // $(playerId).parent().parent().innerHTML = "";
+        var playerElement = "<div style='max-height: 100%; flex: 1' id='uiza-ext-player" + increasedId + "'></div>";
+        if ($(playerId).parent().parent().prop('tagName').toLowerCase() === 'div') {
+          $(playerId).parent().parent().html(playerElement);
+        } else {
+          $(playerId).parent().parent().replaceWith(playerElement);
+        }
         $(playerId).append("<uiza-ext-player-holder></uiza-ext-player-holder>");
       } else {
         $(playerId).append("<uiza-ext-player></uiza-ext-player>");

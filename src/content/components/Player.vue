@@ -15,9 +15,9 @@
   Chat(v-if="!isFlat && isLive && !noControls")
   ChatFlat(v-if="isFlat && isLive && !noControls")
   transition(name="fade")
-    PlayerControls(class="controls" v-if="player && !hideControlsBar && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
-    PlayerControlsLive(class="controls" v-if="player && !hideControlsBar && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
-  .uiza-controls(v-if="showControls && !isLive && !noControls")
+    PlayerControls(v-show="!hideControlsBar" class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
+    PlayerControlsLive(v-show="!hideControlsBar" class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
+  .uiza-controls(v-if="showControls && isLive && !noControls")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
       a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
@@ -148,12 +148,12 @@ export default {
       }
     },
     onRestoreZoom() {
-      // this.hideControlsBarTimeout = setTimeout(
-      //   function() {
-      //     this.hideControlsBar = true;
-      //   }.bind(this),
-      //   2000
-      // );
+      this.hideControlsBarTimeout = setTimeout(
+        function() {
+          this.hideControlsBar = true;
+        }.bind(this),
+        2000
+      );
       if (this.isZoomable && this.player) {
         this.player.iframe.style.transform = "";
       }

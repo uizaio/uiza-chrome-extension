@@ -4,36 +4,29 @@ div
     el-menu-item
       a(:href="playerSettings.brand_url")
         //- img(class="logo" :src="playerSettings.brand_logo")
-        img.logo(src="https://www.roadsidenow.com/images/your-logo-ehre.png")
+        img.logo(:src="settings.page_logo")
   el-row(type="flex")
     el-col(:span="4")
-      el-menu(mode="vertical")
-        el-menu-item Menu 1
-        el-menu-item Menu 2
-        el-menu-item Menu 3
-        el-menu-item Menu 4
+      div.banner(v-for="(banner, i) in settings.left_banners" v-bind:key="i")
+        img(:src="banner")
     el-col.player(:span="16")
       div.player-wrapper(ref="mainWrapper")
         //- div(id="player")
         UizaPlayer(v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
     el-col(:span="4")
-      div.banner
-        img(src="https://i.imgur.com/VTobv83.png")
-      div.banner
-        img(src="https://i.imgur.com/hWlLgFh.png")
-      div.banner
-        img(src="https://i.imgur.com/lJ1zJCf.png")
-  el-card.recommendation
-    div(slot="header")
-      span Recommended for you
-    carousel(:paginationEnabled="false"  :navigationEnabled="true" navigationNextLabel="<i class='fas fa-chevron-right'></i>" navigationPrevLabel="<i class='fas fa-chevron-left'></i>" :perPage="7")
-      slide(v-for="item in recommendedItems" v-bind:key="item.id")
-        div(class="item-play")
-          div(class="item-play-btn" @click="view(item)")
-            i.fas.fa-play-circle
-        img(:src='item.image || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
-        .desc
-          h4 {{ item.name }}
+      div.banner(v-for="(banner, i) in settings.right_banners" v-bind:key="i")
+        img(:src="banner")
+  div(style="margin: 0 10px")
+    h2 Recommended for you
+    el-card.recommendation
+      carousel(:paginationEnabled="false"  :navigationEnabled="true" navigationNextLabel="<i class='fas fa-chevron-right'></i>" navigationPrevLabel="<i class='fas fa-chevron-left'></i>" :perPage="7")
+        slide(v-for="item in recommendedItems" v-bind:key="item.id")
+          div(class="item-play")
+            div(class="item-play-btn" @click="view(item)")
+              i.fas.fa-play-circle
+          img(:src='item.image || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
+          .desc
+            h4 {{ item.name }}
   div(style="height: 1000px !important")
 </template>
 <style lang='scss'>
@@ -159,6 +152,11 @@ export default {
   },
   mounted() {
     const self = this;
+    const settings = storage.get(constants.SETTINGS_KEY);
+    if (settings) {
+      this.settings = _.merge(this.settings, settings);
+      this.settings = Object.assign({}, this.settings);
+    }
     const playerSettings = storage.get(constants.PLAYER_SETTINGS_KEY);
     if (playerSettings) {
       this.playerSettings = _.merge(this.playerSettings, playerSettings);

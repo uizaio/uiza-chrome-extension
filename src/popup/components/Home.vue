@@ -3,6 +3,8 @@
       el-tabs(v-model="activeTab")
         el-tab-pane(label="Settings" name="settings")
           Settings(@settingsSaved="onSettingsSaved")
+        el-tab-pane(label="Banners" name="banners")
+          Banners
         el-tab-pane(label="VODs" name="vods")
           Videos(v-if="activeTab === 'vods'")
         el-tab-pane(label="Livestreams" name="live")
@@ -12,15 +14,17 @@
 import Settings from "./Settings";
 import Videos from "./Videos";
 import LiveStreamings from "./LiveStreamings";
+import Banners from "./Banners";
 
 export default {
   components: {
     Settings,
     Videos,
-    LiveStreamings
+    LiveStreamings,
+    Banners
   },
   data: () => ({
-    activeTab: "settings"
+    activeTab: "banners"
   }),
   computed: {},
   created() {},

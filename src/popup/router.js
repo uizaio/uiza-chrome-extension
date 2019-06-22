@@ -11,6 +11,10 @@ var router = new Router({
         name: 'home',
         component: require('./components/Home.vue').default
     }, {
+        path: 'banners',
+        name: 'banners',
+        component: require('./components/Banners.vue').default
+    }, {
         path: '/test',
         name: 'test',
         component: require('./components/Test.vue').default

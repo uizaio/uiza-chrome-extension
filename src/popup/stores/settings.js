@@ -6,7 +6,18 @@ import {
 const state = {
   settings: {
     api_key: "",
-    app_id: ""
+    app_id: "",
+    page_logo: "https://www.roadsidenow.com/images/your-logo-ehre.png",
+    left_banners: [
+      'https://i.imgur.com/VTobv83.png',
+      'https://i.imgur.com/hWlLgFh.png',
+      'https://i.imgur.com/lJ1zJCf.png'
+    ],
+    right_banners: [
+      'https://i.imgur.com/VTobv83.png',
+      'https://i.imgur.com/hWlLgFh.png',
+      'https://i.imgur.com/lJ1zJCf.png'
+    ]
   },
   playerSettings: {
     width: '685px',

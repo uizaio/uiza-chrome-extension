@@ -1,7 +1,9 @@
 <template lang="pug">
 div.uiza-order(v-show="shown" :class="{ 'uiza-theme-flat': isFlat }")
   img(v-if="!isFlat" src="https://www.upsieutoc.com/images/2019/06/12/satelite.png" width="70")
-  .uiza-order-text {{ orders }} orders completed in last 15 minutes
+  .uiza-order-text 
+    span(ref="numberElement") {{ orders }} &nbsp;
+    | orders completed in last 15 minutes
   button.uiza-order-close(@click="close")
       i.fas.fa-times-circle
 
@@ -15,31 +17,71 @@ export default {
   methods: {
     init() {
       const self = this;
+      self.$anime.timeline().add({
+        targets: self.$el,
+        left: "calc(50% - 150px)",
+        easing: "easeInOutSine",
+        duration: 2000,
+        endDelay: 1000,
+        direction: "alternate"
+      });
       setInterval(function() {
         self.count += 1;
-        if (!self.shown) {
-          if (self.count === 1 || self.count % 60 === 0) {
-            self.count = 0;
-            self.orders += Math.floor(Math.random() * 10);
-            self.shown = true;
-            self.$anime.timeline().add({
+        self.orders += Math.floor(Math.random() * 10);
+        self.$anime
+          .timeline()
+          .add({
+            targets: self.$refs.numberElement,
+            scale: 2,
+            duration: 500,
+            direction: "alternate",
+            easing: "easeInOutSine"
+          })
+          .add({
+            targets: self.$refs.numberElement,
+            scale: 1,
+            duration: 2000,
+            direction: "alternate",
+            easing: "easeInOutSine"
+          });
+      }, 5000);
+    },
+    init2() {
+      const self = this;
+      setInterval(function() {
+        self.count += 1;
+        if (self.count % 5 === 0) {
+          self.shown = true;
+          self.orders += Math.floor(Math.random() * 10);
+          self.$anime
+            .timeline()
+            .add({
+              targets: self.$el,
+              left: "calc(100% + 300px)",
+              easing: "easeInOutSine",
+              duration: 2000,
+              endDelay: 1000,
+              direction: "alternate"
+            })
+            .add({
               targets: self.$el,
               left: "calc(50% - 150px)",
               easing: "easeInOutSine",
               duration: 2000,
               endDelay: 1000,
               direction: "alternate"
+            })
+            .add({
+              targets: self.$el,
+              left: "-1000px",
+              duration: 1000,
+              easing: "easeInOutSine",
+              complete: function() {
+                setTimeout(function() {
+                  self.shown = false;
+                }, 3000);
+              }
             });
-            // .add({
-            //   targets: self.$el,
-            //   left: "-1000px",
-            //   duration: 1000,
-            //   easing: "easeInOutSine",
-            //   complete: function() {
-            //     self.shown = false;
-            //   }
-            // });
-          }
         }
       }, 1000);
     },
@@ -51,7 +93,7 @@ export default {
     return {
       count: 0,
       orders: 7,
-      shown: false,
+      shown: true,
       isFlat: true
     };
   }
@@ -89,6 +131,9 @@ export default {
   &-text {
     color: #fff;
     text-align: center;
+    span {
+      display: inline-block;
+    }
   }
   &-close {
     // display: none;

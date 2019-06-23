@@ -91,6 +91,7 @@ export default {
           width: "655px",
           height: "385px",
           controls: false,
+          image: item.image,
           noControls: item.noControls,
           isAutoplay: item.isAutoplay,
           isPortrait: item.isPortrait,

@@ -28,6 +28,13 @@ var jq162 = window.jQuery.noConflict(true);
   var increasedId = 0;
   var isDragging = false;
 
+  document.addEventListener("uizaExtInitCss", function (e) {
+    console.log('ssss');
+    var css = e.detail;
+    var style = $("<style uiza-data-custom-styletag></style>").html(css);
+    $("head").append(style);
+  });
+
   var developmentMockup = function () {
     if (self !== top) return;
     // eslint-disable-next-line no-constant-condition
@@ -83,7 +90,6 @@ var jq162 = window.jQuery.noConflict(true);
   };
 
   $(document).ready(function () {
-    console.log("json", jsonData);
     developmentMockup();
   });
 
@@ -181,7 +187,7 @@ var jq162 = window.jQuery.noConflict(true);
           eventData.playerParams.height = height + 'px';
         }
         // $(playerId).parent().parent().innerHTML = "";
-        var playerElement = "<div style='max-height: 100%; flex: 1' id='uiza-ext-player" + increasedId + "'></div>";
+        var playerElement = "<div class='uiza-ext-area' style='max-height: 100%; flex: 1' id='uiza-ext-player" + increasedId + "'></div>";
         if ($(playerId).parent().parent().prop('tagName').toLowerCase() === 'div') {
           $(playerId).parent().parent().html(playerElement);
         } else {

@@ -1,7 +1,7 @@
 <template lang="pug">
 div.uiza-ext-player-holder(ref="mainWrapper")
     div.uiza-ext-player-holder-img(v-if="isLive" v-on:click.stop="showPlayer")
-        img(src="https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif" alt="View live stream")
+        img(:src="playerParams.thumbnail || 'https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif'" alt="View live stream")
         span.uiza-ext-player-holder-text {{ thumbText }}
     div(style="max-height: 100%" v-else :class="{ 'uiza-ext-player-minimized-disabled': isPip }")
         Player(:params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" :id="rawId")

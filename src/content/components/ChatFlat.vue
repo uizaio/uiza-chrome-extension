@@ -4,9 +4,10 @@
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
         div.uiza-chat-messages-item-photo
-          img(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsHFOl5w6A4z7ot5suqTPa0OM4AggTKkfvdfdjrLy4KBelSAbyDw")
+          img(:src="message.avatar")
         div.uiza-chat-messages-item-info
-          strong {{ message.sender.userId }} 
+          //- {{ message.sender.userId }}
+          strong {{ message.username }}
           span.time {{ message.createdAt | moment("from", "now") }}
           div.message {{ message.message }}
   .uiza-chat-input(:class="{ chatting: isChatting }")
@@ -33,16 +34,26 @@
 </template>
 <script>
 import SendBird from "sendbird";
+// eslint-disable-next-line no-unused-vars
+import faker from "faker";
+import { setInterval } from "timers";
+faker.locale = "vi";
 
 export default {
   props: [],
   mounted() {
-    this.connectSendBird();
+    // this.connectSendBird();
   },
   methods: {
+    randomName() {
+      return faker.name.findName();
+    },
+    randomAvatar() {
+      return faker.image.avatar();
+    },
     connectSendBird() {
       const self = this;
-      self.chatUser = "uiza" + Math.floor(Math.random() * 10);
+      self.chatUser = this.randomName(); // "uiza" + Math.floor(Math.random() * 10);
       self.sb = new SendBird({ appId: "A8D50190-B214-48B6-8A67-65EDE27CCED2" });
 
       self.sb.connect(self.chatUser, function(user, error) {
@@ -84,7 +95,11 @@ export default {
         if (error) {
           return;
         }
+        messageList.forEach(function(message) {
+          message.avatar = self.randomAvatar();
+        });
         self.chatMessages = messageList.reverse();
+        console.log(self.chatMessages);
         self.scrollChat();
       });
     },
@@ -96,7 +111,50 @@ export default {
         100
       );
     },
+    fakeMessage() {
+      const spamMessages = [
+        faker.phone.phoneNumber(),
+        faker.lorem.sentence(),
+        faker.address.streetAddress()
+      ];
+      const randomMessage =
+        spamMessages[Math.floor(Math.random() * spamMessages.length)];
+      this.chatMessages.push({
+        messageId: ++this.messageIndex,
+        username: this.randomName(),
+        avatar: this.randomAvatar(),
+        message: randomMessage,
+        createdAt: new Date()
+      });
+      // clearInterval(this.chatInterval);
+      // this.chatIntervalMs += 10;
+      // this.chatInterval = setInterval(
+      //   function() {
+      //     this.fakeMessage();
+      //   }.bind(this),
+      //   this.chatIntervalMs
+      // );
+    },
     sendMessage() {
+      this.chatMessages.push({
+        messageId: ++this.messageIndex,
+        username: "Uiza Seller",
+        avatar:
+          "https://d3co7cvuqq9u2k.cloudfront.net/public/image/logo/uiza_logo_color.png",
+        message: this.chatMessage,
+        createdAt: new Date()
+      });
+      this.chatMessage = "";
+      if (this.chatInterval === null) {
+        this.chatInterval = setInterval(
+          function() {
+            this.fakeMessage();
+          }.bind(this),
+          this.chatIntervalMs
+        );
+      }
+    },
+    sendMessage2() {
       const self = this;
       if (!self.isChatting) {
         self.isChatting = true;
@@ -123,12 +181,15 @@ export default {
   },
   data() {
     return {
+      messageIndex: 0,
       sb: null,
       chatUser: "",
       isChatting: true,
       currentChannel: null,
       chatMessages: [],
       chatMessage: "",
+      chatInterval: null,
+      chatIntervalMs: 400,
       isLiked: false
     };
   }

@@ -6,7 +6,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 // import 'csshake/dist/csshake.css';
 import 'animate.css';
 import "@fortawesome/fontawesome-free/js/all.js";
-import locale from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale/lang/en';
+import "prismjs";
+import "vue-prism-editor/dist/VuePrismEditor.css";
+import "prismjs/themes/prism.css";
 import VueAnime from "vue-animejs";
 import router from './router'
 import store from './stores/index'

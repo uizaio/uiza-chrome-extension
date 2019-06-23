@@ -101,7 +101,8 @@ export default {
           feedId: item.lastFeedId,
           width: "685px",
           height: "385px",
-          controls: false
+          controls: false,
+          thumbnail: item.thumbnail
         },
         playerSettings: this.playerSettings,
         chromeUrl: chrome.runtime.getURL("pages/popup.html")

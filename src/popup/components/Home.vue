@@ -5,6 +5,8 @@
           Settings(@settingsSaved="onSettingsSaved")
         el-tab-pane(label="Banners" name="banners")
           Banners
+        el-tab-pane(label="Custom Style" name="css")
+          CustomCss
         el-tab-pane(label="VODs" name="vods")
           Videos(v-if="activeTab === 'vods'")
         el-tab-pane(label="Livestreams" name="live")
@@ -15,16 +17,18 @@ import Settings from "./Settings";
 import Videos from "./Videos";
 import LiveStreamings from "./LiveStreamings";
 import Banners from "./Banners";
+import CustomCss from "./CustomCss";
 
 export default {
   components: {
     Settings,
     Videos,
     LiveStreamings,
-    Banners
+    Banners,
+    CustomCss
   },
   data: () => ({
-    activeTab: "banners"
+    activeTab: "css"
   }),
   computed: {},
   created() {},

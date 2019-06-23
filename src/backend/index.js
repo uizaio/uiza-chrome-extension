@@ -1,19 +1,25 @@
 chrome.webRequest.onHeadersReceived.addListener(details => {
-    // if (details.responseHeaders.filter(x => x.name.toLowerCase() === 'x-fb-debug').length < 0) {
+    console.log('ignore fb');
     for (var i = 0; i < details.responseHeaders.length; i++) {
         var header = details.responseHeaders[i];
         if (['x-content-security-policy', 'content-security-policy', 'x-webkit-csp'].indexOf(header.name.toLowerCase()) > -1) {
             header.value = "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
         }
     };
-    // }
 
     return {
         responseHeaders: details.responseHeaders
     };
 }, {
-    urls: ["*://*/*"]
+    urls: ["*://facebook.com/*", "*://*.atlassian.com/*"]
 }, ['blocking', 'responseHeaders']);
+
+chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.type === 'UIZA_GET_SETTINGS') {
+        var result = localStorage.getItem(message.key);
+        sendResponse(result);
+    }
+});
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendRespond) {

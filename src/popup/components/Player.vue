@@ -24,7 +24,7 @@ div
           div(class="item-play")
             div(class="item-play-btn" @click="view(item)")
               i.fas.fa-play-circle
-          img(:src='item.image || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
+          img(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
           .desc
             h4 {{ item.name }}
   div(style="height: 1000px !important")

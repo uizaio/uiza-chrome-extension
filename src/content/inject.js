@@ -1,3 +1,5 @@
+import constants from "../popup/constants";
+
 if (location.host.indexOf('facebook.com') < 0) {
   // inject Uiza Player SDKv
   var scriptUrl = 'https://sdk.uiza.io/uizaplayer.js';
@@ -14,12 +16,27 @@ if (location.host.indexOf('facebook.com') < 0) {
   document.body.appendChild(script2);
 
   script.onload = function () {
-    var url = chrome.runtime.getURL("icons/playerholder.png");
     var evt = document.createEvent("CustomEvent");
-    evt.initCustomEvent("uizaExtInitCss", true, true, url);
+    evt.initCustomEvent("uizaExtInitCss", true, true, '');
     document.dispatchEvent(evt);
-    // eslint-disable-next-line eol-last
   };
+
+  script2.onload = function () {
+    var evt = document.createEvent("CustomEvent");
+    chrome.extension.sendMessage({
+      type: 'UIZA_GET_SETTINGS',
+      key: constants.SETTINGS_KEY
+    }, function (result) {
+      var settings = JSON.parse(result);
+      if (settings && settings.custom_css) {
+        evt.initCustomEvent("uizaExtInitCss", true, true, settings.custom_css);
+        document.dispatchEvent(evt);
+        console.log('s1111');
+      } else {
+        console.log('not custom css');
+      }
+    });
+  }
 
   chrome.runtime.onMessage.addListener(
     function (request, sender, sendRespond) {

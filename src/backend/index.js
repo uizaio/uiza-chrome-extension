@@ -1,18 +1,35 @@
 chrome.webRequest.onHeadersReceived.addListener(details => {
-    console.log('ignore fb');
-    for (var i = 0; i < details.responseHeaders.length; i++) {
-        var header = details.responseHeaders[i];
-        if (['x-content-security-policy', 'content-security-policy', 'x-webkit-csp'].indexOf(header.name.toLowerCase()) > -1) {
-            header.value = "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
-        }
-    };
+    if (details.responseHeaders.filter(x => x.name === 'x-fb-debug').length <= 0) {
+        for (var i = 0; i < details.responseHeaders.length; i++) {
+            var header = details.responseHeaders[i];
+            if (['x-content-security-policy', 'content-security-policy', 'x-webkit-csp'].indexOf(header.name.toLowerCase()) > -1) {
+                header.value = "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
+            }
+        };
+    }
 
     return {
         responseHeaders: details.responseHeaders
     };
 }, {
-    urls: ["*://facebook.com/*", "*://*.atlassian.com/*"]
+    urls: ["*://*/*"]
+    // urls: ["*://facebook.com/*", "*://*.atlassian.com/*"]
 }, ['blocking', 'responseHeaders']);
+
+// Not used
+// chrome.webRequest.onBeforeRequest.addListener(
+//     function (details) {
+//         return {
+//             redirectUrl: chrome.runtime.getURL("uiza.iframe-api.js")
+//         };
+//     }, {
+//         urls: [
+//             "https://sdk.uiza.io/iframe_api.js"
+//         ],
+//         types: ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"]
+//     },
+//     ["blocking"]
+// );
 
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.type === 'UIZA_GET_SETTINGS') {

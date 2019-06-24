@@ -32,6 +32,7 @@ export default {
           .timeline()
           .add({
             targets: self.$refs.numberElement,
+            color: "#FFF",
             scale: 2,
             duration: 500,
             direction: "alternate",
@@ -39,6 +40,7 @@ export default {
           })
           .add({
             targets: self.$refs.numberElement,
+            color: "#94e389",
             scale: 1,
             duration: 2000,
             direction: "alternate",

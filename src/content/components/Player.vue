@@ -17,7 +17,7 @@
   transition(name="fade")
     PlayerControls(v-show="!hideControlsBar" class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
     PlayerControlsLive(v-show="!hideControlsBar" class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
-  .uiza-controls(v-if="showControls && isLive && !noControls")
+  .uiza-controls(:class="{ 'uiza-controls-hidden': hideControlsBar }" v-if="showControls && isLive && !noControls")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
       a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
@@ -473,6 +473,10 @@ button {
   align-content: center;
   justify-items: center;
   align-items: center;
+  transition: all 1s;
+  &-hidden {
+    bottom: 20px !important;
+  }
   &-shopping-bag {
     margin: 0 !important;
   }

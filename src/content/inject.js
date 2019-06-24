@@ -31,7 +31,6 @@ if (location.host.indexOf('facebook.com') < 0) {
       if (settings && settings.custom_css) {
         evt.initCustomEvent("uizaExtInitCss", true, true, settings.custom_css);
         document.dispatchEvent(evt);
-        console.log('s1111');
       } else {
         console.log('not custom css');
       }

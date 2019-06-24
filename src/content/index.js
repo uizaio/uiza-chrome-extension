@@ -32,7 +32,6 @@ var jq162 = window.jQuery.noConflict(true);
   var isDragging = false;
 
   document.addEventListener("uizaExtInitCss", function (e) {
-    console.log('ssss');
     var css = e.detail;
     var style = $("<style uiza-data-custom-styletag></style>").html(css);
     $("head").append(style);
@@ -191,10 +190,11 @@ var jq162 = window.jQuery.noConflict(true);
         // eslint-disable-next-line no-constant-condition
         if (eventData.playerParams.feedId || true) {
           // var height = $(playerId).parent().parent().parent()[0].style.height;
-          var height = $(playerId).parent().parent().css('height');
+          var height = $(playerId).parent().parent().css('height') || $(playerId).parent().parent().height();
           if (height && height.replace('px', '') > 0) {
             eventData.playerParams.height = height + 'px';
           }
+          console.log('height', height);
           // $(playerId).parent().parent().innerHTML = "";
           var playerElement = "<div class='uiza-ext-area' style='max-height: 100%; flex: 1' id='uiza-ext-player" + increasedId + "'></div>";
           if ($(playerId).parent().parent().prop('tagName').toLowerCase() === 'div') {

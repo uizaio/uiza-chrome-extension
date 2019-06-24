@@ -28,7 +28,7 @@ export default {
     CustomCss
   },
   data: () => ({
-    activeTab: "css"
+    activeTab: "banners"
   }),
   computed: {},
   created() {},

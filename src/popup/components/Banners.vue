@@ -7,6 +7,8 @@ el-form(size="small" label-position='left' label-width="120px")
       el-input(type="textarea" autosize v-model='leftBanners')
     el-form-item(label='Right banners', prop='rightBanners')
       el-input(type="textarea" autosize v-model='rightBanners')
+    el-form-item(label='Bottom banners', prop='bottomBanners')
+      el-input(type="textarea" autosize v-model='bottomBanners')
     el-form-item
       el-button(type='primary' @click='submit') Save
 </template>
@@ -62,6 +64,18 @@ export default {
       },
       set: function(val) {
         this.settings.right_banners = val.split("\n");
+      }
+    },
+    bottomBanners: {
+      get: function() {
+        if (this.settings && this.settings.bottom_banners) {
+          return this.settings.bottom_banners.join("\n");
+        } else {
+          return "";
+        }
+      },
+      set: function(val) {
+        this.settings.bottom_banners = val.split("\n");
       }
     }
   },

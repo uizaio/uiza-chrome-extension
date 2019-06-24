@@ -107,6 +107,9 @@ module.exports = {
       {
         from: path.join(__dirname, '..', 'src/manifest.json'),
         to: path.join(__dirname, '..', 'build/manifest.json')
+      }, {
+        from: path.join(__dirname, '..', 'src/uiza.iframe-api.js'),
+        to: path.join(__dirname, '..', 'build/uiza.iframe-api.js')
       }
     ]),
     new ChromeExtensionReloader({

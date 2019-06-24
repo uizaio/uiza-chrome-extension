@@ -17,7 +17,7 @@ div
       div.banner(v-for="(banner, i) in settings.right_banners" v-bind:key="i")
         img(:src="banner")
   div(style="margin: 0 10px")
-    h2 Recommended for you
+    h2 RECOMMENDED FOR YOU
     el-card.recommendation
       carousel(:paginationEnabled="false"  :navigationEnabled="true" navigationNextLabel="<i class='fas fa-chevron-right'></i>" navigationPrevLabel="<i class='fas fa-chevron-left'></i>" :perPage="7")
         slide(v-for="item in recommendedItems" v-bind:key="item.id")
@@ -27,102 +27,9 @@ div
           img(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
           .desc
             h4 {{ item.name }}
-  div(style="height: 1000px !important")
+  div.bottom-banners
+    img(v-for="(banner, i) in settings.bottom_banners" v-bind:key="i" :src="banner")
 </template>
-<style lang='scss'>
-body,
-html {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-.el-menu {
-  border: none !important;
-  &-item {
-    line-height: 56px !important;
-  }
-}
-.header {
-  z-index: 10;
-  box-shadow: 0px 2px 3px 2px rgba(0, 0, 0, 0.3);
-  .logo {
-    height: 100%;
-    max-height: 100%;
-  }
-}
-.player {
-  z-index: 9;
-  padding: 10px;
-  box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.23);
-  &-wrapper {
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-    // 16:9 aspect ratio
-    padding-top: 56.25%;
-
-    #player {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-  }
-}
-.banner {
-  max-width: 100%;
-  margin: 10px 5px 0 5px;
-  img {
-    max-width: 100%;
-  }
-}
-.recommendation {
-  .el-card__body {
-    padding: 0 60px !important;
-  }
-  .VueCarousel-navigation {
-    svg {
-      font-size: 30px;
-    }
-  }
-  .VueCarousel-slide {
-    margin: 5px;
-    width: 300px;
-    position: relative;
-    img {
-      object-fit: cover;
-      max-width: 100%;
-      max-height: 100%;
-    }
-    .desc {
-      padding: 0 10px;
-    }
-    .item-play {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      &:hover {
-        background: rgba(0, 0, 0, 0.4);
-      }
-      &-btn {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: -20px;
-        margin-left: -20px;
-        cursor: pointer;
-        svg {
-          color: rgba(255, 255, 255, 0.5);
-          width: 40px !important;
-          height: 40px !important;
-        }
-      }
-    }
-  }
-}
-</style>
 <script>
 import _ from "lodash";
 import { Carousel, Slide } from "vue-carousel";
@@ -186,7 +93,6 @@ export default {
   },
   watch: {
     isPiP: function(newVal, oldVal) {
-      // const customEvent = document.createEvent("Event");
       if (newVal) {
         chrome.tabs.getCurrent(function(tab) {
           chrome.webNavigation.getAllFrames(
@@ -287,3 +193,103 @@ export default {
   }
 };
 </script>
+<style lang='scss'>
+body,
+html {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.el-menu {
+  border: none !important;
+  &-item {
+    line-height: 56px !important;
+  }
+}
+.header {
+  z-index: 10;
+  box-shadow: 0px 2px 3px 2px rgba(0, 0, 0, 0.3);
+  .logo {
+    height: 100%;
+    max-height: 100%;
+  }
+}
+.player {
+  z-index: 9;
+  padding: 10px;
+  box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.23);
+  &-wrapper {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    // 16:9 aspect ratio
+    padding-top: 56.25%;
+
+    #player {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+}
+.banner {
+  max-width: 100%;
+  margin: 10px 5px 0 5px;
+  img {
+    max-width: 100%;
+  }
+}
+.recommendation {
+  .el-card__body {
+    padding: 0 60px !important;
+  }
+  .VueCarousel-navigation {
+    svg {
+      font-size: 30px;
+    }
+  }
+  .VueCarousel-slide {
+    margin: 5px;
+    width: 300px;
+    position: relative;
+    img {
+      object-fit: cover;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .desc {
+      padding: 0 10px;
+    }
+    .item-play {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      &:hover {
+        background: rgba(0, 0, 0, 0.4);
+      }
+      &-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        margin-left: -20px;
+        cursor: pointer;
+        svg {
+          color: rgba(255, 255, 255, 0.5);
+          width: 40px !important;
+          height: 40px !important;
+        }
+      }
+    }
+  }
+}
+.bottom-banners {
+  img {
+    width: 100% !important;
+    margin: 0 0 10px 0;
+  }
+}
+</style>

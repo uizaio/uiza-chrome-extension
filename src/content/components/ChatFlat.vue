@@ -179,6 +179,11 @@ export default {
       }
     }
   },
+  watch: {
+    chatMessages: function(val) {
+      this.scrollChat();
+    }
+  },
   data() {
     return {
       messageIndex: 0,
@@ -189,7 +194,7 @@ export default {
       chatMessages: [],
       chatMessage: "",
       chatInterval: null,
-      chatIntervalMs: 400,
+      chatIntervalMs: 1000,
       isLiked: false
     };
   }
@@ -284,14 +289,16 @@ export default {
     padding: 0 0 20px 10px !important;
     overflow: auto;
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
+    scroll-behavior: smooth;
     &::-webkit-scrollbar {
       display: none;
     }
     &-wrapper {
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      // Use this only for autoscroll
+      // justify-content: flex-end;
       pointer-events: none;
     }
     &-item {
@@ -301,7 +308,7 @@ export default {
       margin: 5px 0 5px 10px;
       overflow: hidden;
       flex: 1 1 auto;
-      align-self: flex-start;
+      // align-self: flex-start;
       min-width: 150px;
       background: rgba(29, 53, 87, 0.65);
       border-radius: 150px;

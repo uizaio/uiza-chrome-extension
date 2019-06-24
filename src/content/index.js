@@ -9,23 +9,26 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'animate.css';
 import VueAnime from "vue-animejs";
 // eslint-disable-next-line no-unused-vars
-import _ from 'lodash';
+window.lodash = require('lodash').noConflict();
 
 Vue.use(ElementUI);
 Vue.use(VueAnime);
 Vue.use(require('vue-moment'));
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
+// eslint-disable-next-line no-unused-vars
 const jsonData = require("./data.json");
 
 Vue.component('uiza-ext-player-holder', PlayerHolder);
 Vue.component("uiza-ext-player", Player);
 window.$ = window.jQuery = require("jquery");
 
+// eslint-disable-next-line no-unused-vars
 var jq162 = window.jQuery.noConflict(true);
 
 (function ($) {
   var increasedId = 0;
+  // eslint-disable-next-line no-unused-vars
   var isDragging = false;
 
   document.addEventListener("uizaExtInitCss", function (e) {
@@ -60,7 +63,7 @@ var jq162 = window.jQuery.noConflict(true);
       }
     };
     // live
-    // eventData = _.merge({
+    // eventData = lodash.merge({
     //   playerParams: {
     //     feedId: 'afef9b62-3fb2-4c7f-9c06-470c9f3d357f',
     //     entityId: '4adbe50e-b3c2-46cc-999a-a94a13b744a3',
@@ -143,6 +146,10 @@ var jq162 = window.jQuery.noConflict(true);
       event.stopPropagation();
     })
     .on("dragover", function (event) {
+      // var eventData = JSON.parse(
+      //   event.originalEvent.dataTransfer.getData("text/plain")
+      // );
+      // if (eventData && eventData.playerSettings) {
       event.preventDefault();
       event.stopPropagation();
       if (isDragging) {
@@ -156,59 +163,63 @@ var jq162 = window.jQuery.noConflict(true);
         $(event.target).addClass("reserved-drop-target");
         $(event.target).append(
           `<div class='reserved-drop-marker disabled-uiza-player-holder'>
-            <div id='uiza-ext-player${increasedId}'>
-            </div>
-          </div>`
+          <div id='uiza-ext-player${increasedId}'>
+          </div>
+        </div>`
         );
       }
       isDragging = false;
+      // }
     });
 
   $(document)
     .find("body,html")
     .on("drop", function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-
       var eventData = JSON.parse(
         event.originalEvent.dataTransfer.getData("text/plain")
       );
-      eventData.playerSettings.width = '100%';
-      eventData.playerParams.width = '100%';
-      $(".reserved-drop-marker").removeClass("reserved-drop-marker");
-      $(".reserved-drop-target").removeClass("reserved-drop-target");
+      if (eventData && eventData.playerParams) {
+        event.preventDefault();
+        event.stopPropagation();
 
-      var playerId = "#uiza-ext-player" + increasedId;
-      // eslint-disable-next-line no-constant-condition
-      if (eventData.playerParams.feedId || true) {
-        // var height = $(playerId).parent().parent().parent()[0].style.height;
-        var height = $(playerId).parent().parent().css('height');
-        if (height && height.replace('px', '') > 0) {
-          eventData.playerParams.height = height + 'px';
-        }
-        // $(playerId).parent().parent().innerHTML = "";
-        var playerElement = "<div class='uiza-ext-area' style='max-height: 100%; flex: 1' id='uiza-ext-player" + increasedId + "'></div>";
-        if ($(playerId).parent().parent().prop('tagName').toLowerCase() === 'div') {
-          $(playerId).parent().parent().html(playerElement);
+        eventData.playerSettings.width = '100%';
+        eventData.playerParams.width = '100%';
+        $(".reserved-drop-marker").removeClass("reserved-drop-marker");
+        $(".reserved-drop-target").removeClass("reserved-drop-target");
+
+        var playerId = "#uiza-ext-player" + increasedId;
+        // eslint-disable-next-line no-constant-condition
+        if (eventData.playerParams.feedId || true) {
+          // var height = $(playerId).parent().parent().parent()[0].style.height;
+          var height = $(playerId).parent().parent().css('height');
+          if (height && height.replace('px', '') > 0) {
+            eventData.playerParams.height = height + 'px';
+          }
+          // $(playerId).parent().parent().innerHTML = "";
+          var playerElement = "<div class='uiza-ext-area' style='max-height: 100%; flex: 1' id='uiza-ext-player" + increasedId + "'></div>";
+          if ($(playerId).parent().parent().prop('tagName').toLowerCase() === 'div') {
+            $(playerId).parent().parent().html(playerElement);
+          } else {
+            $(playerId).parent().parent().replaceWith(playerElement);
+          }
+          $(playerId).append("<uiza-ext-player-holder></uiza-ext-player-holder>");
         } else {
-          $(playerId).parent().parent().replaceWith(playerElement);
+          $(playerId).append("<uiza-ext-player></uiza-ext-player>");
         }
-        $(playerId).append("<uiza-ext-player-holder></uiza-ext-player-holder>");
-      } else {
-        $(playerId).append("<uiza-ext-player></uiza-ext-player>");
-      }
-      console.log('event data', eventData);
+        console.log('event data', eventData);
 
-      // eventData.playerParams.controls = true;
-      new Vue({
-        el: playerId + ", .el-dialog__wrapper",
-        data: {
-          id: playerId,
-          data: eventData,
-          jsonData: jsonData
-        }
-      });
-      increasedId += 1;
+        // eventData.playerParams.controls = true;
+        new Vue({
+          el: playerId + ", .el-dialog__wrapper",
+          data: {
+            id: playerId,
+            data: eventData,
+            jsonData: jsonData
+          }
+        });
+        increasedId += 1;
+      }
     });
+  // eslint-disable-next-line eol-last
   // eslint-disable-next-line eol-last
 })(jq162);

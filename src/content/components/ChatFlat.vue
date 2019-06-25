@@ -39,6 +39,21 @@ import faker from "faker";
 import { setInterval } from "timers";
 faker.locale = "vi";
 
+const randomMessages = [
+  "Chào shop",
+  "Chào cả nhà",
+  "Shop ơi, dễ thương quá",
+  "Đang nóng lòng đợi xem nay shop bán sản phẩm gì",
+  "Mình hay mua sản phẩm của bạn này",
+  "Shop ơi, cho mình làm quen với",
+  "Mình có ship hàng đi tỉnh không shop?",
+  "Đợt này có bán hàng cho nam không shop?",
+  "Nhà mình ở Bình Dương không biết khi nào nhận được hàng?",
+  "Các sản phẩm của mình được bảo hành thế nào?",
+  "Em đang cần mua son môi, không biết shop có bán không",
+  "Chị xinh quá"
+];
+
 export default {
   props: [],
   mounted() {
@@ -111,14 +126,18 @@ export default {
         100
       );
     },
-    fakeMessage() {
+    getRandomMessage() {
       const spamMessages = [
         faker.phone.phoneNumber(),
         faker.lorem.sentence(),
         faker.address.streetAddress()
       ];
+      return spamMessages[Math.floor(Math.random() * spamMessages.length)];
+    },
+    fakeMessage() {
       const randomMessage =
-        spamMessages[Math.floor(Math.random() * spamMessages.length)];
+        randomMessages[Math.floor(Math.random() * randomMessages.length)];
+
       this.chatMessages.push({
         messageId: ++this.messageIndex,
         username: this.randomName(),

@@ -24,7 +24,8 @@ div
           div(class="item-play")
             div(class="item-play-btn" @click="view(item)")
               i.fas.fa-play-circle
-          img(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
+            //- img(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
+            GifPlayer(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
           .desc
             h4 {{ item.name }}
   div.bottom-banners
@@ -38,6 +39,7 @@ import storage from "../../ext/storage";
 import constants from "../constants";
 import uiza from "../services/uiza";
 import UizaPlayer from "../../content/components/Player";
+import GifPlayer from "./GifPlayer";
 // eslint-disable-next-line no-unused-vars
 import { enablePiP, disablePiP } from "../../backend/functions";
 import EventBus from "../../content/EventBus";
@@ -47,7 +49,8 @@ export default {
   components: {
     Carousel,
     Slide,
-    UizaPlayer
+    UizaPlayer,
+    GifPlayer
   },
   created() {
     EventBus.$on(
@@ -262,11 +265,12 @@ html {
       padding: 0 10px;
     }
     .item-play {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      // position: absolute;
+      // top: 0;
+      // bottom: 0;
+      // left: 0;
+      // right: 0;
+      position: relative;
       &:hover {
         background: rgba(0, 0, 0, 0.4);
       }
@@ -282,6 +286,13 @@ html {
           width: 40px !important;
           height: 40px !important;
         }
+      }
+      .uiza-gif-player {
+        max-width: 100%;
+        width: 100%;
+      }
+      img {
+        width: 100%;
       }
     }
   }

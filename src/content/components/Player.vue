@@ -213,7 +213,7 @@ export default {
           if (!self.playInterval) {
             self.playInterval = setInterval(function() {
               self.playedTime += 1;
-              if (self.playedTime === 300) {
+              if (self.playedTime === 180) {
                 self.hasEgg = true;
               }
               self.playerSettings.ads.forEach(function(ad) {

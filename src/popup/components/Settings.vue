@@ -51,7 +51,7 @@ export default {
   mounted() {
     const settings = storage.get(constants.SETTINGS_KEY);
     if (settings) {
-      this.settings = _.merge(this.settings, settings);
+      this.settings = _.assign(this.settings, settings);
     } else {
       const draft = { ...storage.get(constants.SETTINGS_DRAFT_KEY) };
       console.log(draft);

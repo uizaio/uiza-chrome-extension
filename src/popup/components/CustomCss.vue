@@ -12,19 +12,12 @@ import PrismEditor from "vue-prism-editor";
 import { mapFields } from "vuex-map-fields";
 import storage from "../../ext/storage";
 import constants from "../constants";
-import _ from "lodash";
 
 export default {
   components: {
     PrismEditor
   },
-  mounted() {
-    const settings = storage.get(constants.SETTINGS_KEY);
-    if (settings) {
-      this.settings = _.merge(this.settings, settings);
-    }
-    console.log(settings);
-  },
+  mounted() {},
   methods: {
     submit() {
       storage.set(constants.SETTINGS_KEY, this.settings);

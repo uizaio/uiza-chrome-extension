@@ -22,14 +22,7 @@ import constants from "../constants";
 import _ from "lodash";
 
 export default {
-  mounted() {
-    const settings = storage.get(constants.SETTINGS_KEY);
-    if (settings) {
-      this.settings = _.merge(this.settings, settings);
-      this.settings = Object.assign({}, this.settings);
-    }
-    console.log(this.settings);
-  },
+  mounted() {},
   methods: {
     submit() {
       storage.set(constants.SETTINGS_KEY, this.settings);

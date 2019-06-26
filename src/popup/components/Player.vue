@@ -64,12 +64,11 @@ export default {
     const self = this;
     const settings = storage.get(constants.SETTINGS_KEY);
     if (settings) {
-      this.settings = _.merge(this.settings, settings);
-      this.settings = Object.assign({}, this.settings);
+      this.settings = _.assign(this.settings, settings);
     }
     const playerSettings = storage.get(constants.PLAYER_SETTINGS_KEY);
     if (playerSettings) {
-      this.playerSettings = _.merge(this.playerSettings, playerSettings);
+      this.playerSettings = _.assign(this.playerSettings, playerSettings);
     }
     if (this.$route.params.type === "vod") {
       uiza.getSingleVOD(this.$route.params.id).then(resp => {

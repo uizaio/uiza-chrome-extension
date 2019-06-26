@@ -5,6 +5,7 @@
   ShopInfo(v-if="isLive")
   EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true")
   UizaOrderCount(v-if="isLive" :count="300")
+  UizaViewCount(v-if="isLive")
   GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true")
   a.uiza-center-play-btn(v-if="!isPlaying && player && !isAutoplay" @click="play")
     img(v-show="!isEnded && !isFlat" src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
@@ -52,6 +53,7 @@ import ChatFlat from "./ChatFlat";
 import UizaEgg from "./Egg";
 import EggFlat from "./EggFlat";
 import UizaOrderCount from "./OrderCount";
+import UizaViewCount from "./ViewCount";
 import ShopInfo from "./ShopInfo";
 import GiftBox from "./GiftBox";
 import RelatedVideos from "./RelatedVideos";
@@ -75,6 +77,7 @@ export default {
     UizaEgg,
     EggFlat,
     UizaOrderCount,
+    UizaViewCount,
     ShopInfo,
     GiftBox,
     RelatedVideos,

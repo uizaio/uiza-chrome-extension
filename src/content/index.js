@@ -105,6 +105,7 @@ var jq162 = window.jQuery.noConflict(true);
     }
     .uiza-player-holder {}
     div#live-status {
+      display: none !important;
       top: 20px;
       right: 80px;
     }

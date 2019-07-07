@@ -1,0 +1,324 @@
+.uiza-theme-kute {
+  .uiza-player-controls {
+    background: rgba(247, 247, 239, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+
+    &-progress {
+      .vue-slider-rail {
+        background: #FAFAF4 !important;
+      }
+      .vue-slider-process {
+        background: linear-gradient(158.4deg, #E63946 0.35%, #FFE245 167.31%) !important;
+      }
+      .vue-slider-dot-handle {
+        background: linear-gradient(91.5deg, #E63946 0.35%, #FFE245 167.31%) !important;
+      }
+    }
+    &-volume-slider {
+      top: -105px !important;
+      left: -3px !important;
+      background: rgba(247, 247, 239, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 15px 8px;
+      .vue-slider-rail {
+        background: #FAFAF4 !important;
+      }
+      .vue-slider-process {
+        background: linear-gradient(158.4deg, #E63946 0.35%, #FFE245 167.31%) !important;
+      }
+      .vue-slider-dot-handle {
+        background: linear-gradient(91.5deg, #E63946 0.35%, #FFE245 167.31%) !important;
+      }
+    }
+  }
+  .uiza-controls {
+    left: auto !important;
+    top: 20px !important;
+    bottom: auto !important;
+    right: 5px !important;
+    flex-direction: column;
+    .uiza-controls-shopping-cart-qty {
+      top: 0;
+      right: -10px;
+    }
+    .uiza-controls-shopping-share {
+      margin: 0 !important;
+      
+      &-popup {
+        height: auto !important;
+        width: auto !important;
+        padding: 10px 6px !important;
+        border-radius: 15px !important;
+        top: 10px;
+        left: -50px !important;
+        right: auto !important;
+        a {
+          margin: 0 !important;
+          display: block;
+          width: 24px;
+          height: 24px;
+          padding: 4px 0 0 0 !important;
+          &:first-child {
+            margin-bottom: 10px !important;
+          }
+          i {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    &-icon {
+      background: #E63946;
+      width: 32px;
+      height: 32px;
+      margin-top: 10px;
+      img {
+        width: 20px;
+        height: 20px;
+      }
+      &:hover {
+        background: linear-gradient(91.5deg, #E63946 0.35%, #FFE245 167.31%);
+      }
+    }
+  }
+  .uiza-player-controls {
+    .fas2 {
+      &:before {
+        color: #000;
+      }
+    }
+    &-live {
+      span.unactive {
+        background: #909090;
+      }
+    }
+  }
+  .uiza-giftbox {
+    right: 30px;
+    h4 {
+      margin: 0;
+    }
+    &-image {
+      background: #FAFAF4;
+      box-shadow: 0px 4px 10px #E7E7E7;
+      width: 70px;
+      height: 70px;
+      img {
+        width: 60px !important;
+        left: 5px !important;
+      }
+      &-countdown {
+        padding-top: 50px;
+        color: #E63946;
+        text-shadow: none;
+        font-weight: 800;
+        font-size: 11px;
+        svg {
+          margin-right: 5px;
+        }
+      }
+    }
+    &-wrapper {
+      padding: 10px 10px 30px 10px !important;
+      border-radius: 15px;
+      &-close {
+        padding: 0 !important;
+        top: -10px;
+        right: -10px;
+        background: #E63946 !important;
+        border-radius: 100%;
+        width: 24px;
+        height: 24px !important;
+        svg {
+          color: #FFF;
+          font-size: 18px;
+        }
+      }
+      .countdown {
+        background: linear-gradient(95.1deg, #E63946 0.35%, #FFE245 167.31%);
+        border-radius: 20px;
+        color: #FFF;
+        padding: 5px 20px;
+        img {
+          width: 16px;
+        }
+        span {
+          color: #FFF;
+          vertical-align: top;
+          font-size: 16px;
+        }
+      }
+      .opened-gift {
+        margin-top: -50px;
+      }
+    }
+    &-code {
+      flex-direction: column;
+      div {
+        strong {
+          color: #EF4B4B;
+          font-size: 30px;
+        }
+      }
+      input {
+        background: #F1F1F1;
+        border: none !important;
+        text-align: center;
+        border-radius: 15px;
+        margin-top: 10px;
+      }
+    }
+    &-footer {
+      &-take {
+        background: #E63946 !important;
+        border-radius: 15px;
+        border: none !important;
+      }
+    }
+  }
+  .uiza-shop-info {
+    flex-direction: column;
+    &-name {
+      background: #E63946;
+      border-radius: 20px;
+      color: #FFF;
+      padding: 6px;
+      margin-top: 10px;
+      margin-left: none !important;
+      font-size: 12px !important;
+    }
+  }
+  .uiza-view-count {
+    top: 13px;
+    right: auto !important;
+    left: 160px !important;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0px 4px 15px rgba(196, 196, 196, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    svg {
+      font-size: 15px;
+      color: #E63946 !important;
+    }
+    span {
+      font-weight: 600;
+      color: #222 !important;
+    }
+  }
+  .uiza-order {
+    background: linear-gradient(106.32deg, #E63946 0.35%, #FFE245 167.31%) !important;
+    box-shadow: 0px 4px 15px rgba(230, 57, 70, 0.5) !important;
+    border-radius: 50px !important;
+
+    .uiza-order-text {
+      color: #FFF !important;
+    }
+
+    .uiza-order-close {
+      top: -11px;
+      right: 5px;
+      background: #E63946 !important;
+      border-radius: 100%;
+      width: 24px;
+      height: 24px !important;
+      padding: 3px !important;
+      text-align: center;
+
+      svg {
+        color: #FFF !important;
+        fill: #FFF !important;
+      }
+    }
+  }
+  .uiza-product-list {
+    left: 40px;
+    right: 40px;
+    bottom: 80px !important;
+    padding: 30px 0 30px 0 !important;
+    background: rgba(247, 247, 239, 0.6) !important;
+    backdrop-filter: blur(4px);
+    border-radius: 20px;
+    &-background {
+      display: none !important;
+    }
+    &-toggle {
+      top: -10px;
+      right: -10px;
+      background: #E63946 !important;
+      width: 32px;
+      height: 32px;
+      border-radius: 100% !important;
+      svg {
+        color: #FFF;
+        font-size: 24px;
+        padding: 4px;
+      }
+    }
+    &-item {
+      width: 240px !important;
+      min-width: 240px !important;
+      height: 160px !important;
+      &-backdrop {
+        background: linear-gradient(0deg, rgba(30, 54, 86, 0.6), rgba(30, 54, 86, 0.6));
+      }
+      &-desc-title {
+        display: none;
+      }
+      &:hover {
+        .uiza-product-list-item-backdrop {
+          display: block;
+        }
+        .uiza-product-list-item-desc-title {
+          display: block;
+        }
+      }
+      .uiza-product-view {
+        background: #E63946 !important;
+        border-radius: 10px;
+        border: none !important;
+        
+        &:hover {
+          background: linear-gradient(95.06deg, #E63946 0.35%, #FFE245 167.31%) !important;
+          transition: all 500ms;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+  .uiza-player-popup {
+    .product-popup-footer {
+      text-align: left;
+      &-btn {
+        
+        color: #FFF !important;
+        border-radius: 50px;
+        &.btn-add {
+          background: #1E3656;
+        }
+      }
+    }
+  }
+  .uiza-egg {
+    &-voucher-banner {
+      top: -20px !important;
+      button {
+        background: none !important;
+      }
+      .countdown {
+        background: #FFF;
+        color: #E63946;
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 10px;
+      }
+      &--only {
+        font-weight: 400;
+        font-size: 16px;
+        background: none;
+        color: #FFF;
+        display: block;
+      }
+    }
+  }
+}

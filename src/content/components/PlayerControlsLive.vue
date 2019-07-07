@@ -10,10 +10,12 @@
   //-  Play button
   button.uiza-player-controls-play(v-show="!isPlaying" @click="play" :style="{ color: settings.color }")
     //- i.fas2.fa-play
-    img(src="https://www.upsieutoc.com/images/2019/06/14/player-play.png")
+    img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/play.png")
+    img(v-else src="https://www.upsieutoc.com/images/2019/06/14/player-play.png")
   button.uiza-player-controls-play(v-show="isPlaying" @click="pause" :style="{ color: settings.color }")
     //- i.fas2.fa-pause
-    img(src="https://www.upsieutoc.com/images/2019/06/14/player-pause.png")
+    img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/pause.png")
+    img(v-else src="https://www.upsieutoc.com/images/2019/06/14/player-pause.png")
   
   //- Live button
   div(v-if="isLive" @click="seekToLive" class="uiza-player-controls-live")
@@ -31,33 +33,44 @@
   div.uiza-player-controls-volume(@mouseover="isVolumeShown = true" @mouseleave="transitVolumeHide")
     button(v-show="currentVolume === 100" @click="mute" :style="{ color: settings.color }")
       //- i.fas2.fa-volume-up
-      img(src="https://www.upsieutoc.com/images/2019/06/14/plyaer-volume.png")
+      img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/volume.png")
+      img(v-else src="https://www.upsieutoc.com/images/2019/06/14/plyaer-volume.png")
     button(v-show="currentVolume > 0 && currentVolume < 100" @click="mute" :style="{ color: settings.color }")
       //- i.fas2.fa-volume-middle
-      img(src="https://www.upsieutoc.com/images/2019/06/14/player-volume-middle.png")
+      img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/volume.png")
+      img(v-else src="https://www.upsieutoc.com/images/2019/06/14/player-volume-middle.png")
     button(v-show="currentVolume === 0" @click="unmute" :style="{ color: settings.color }")
       //- i.fas2.fa-volume-mute
-      img(src="https://www.upsieutoc.com/images/2019/06/14/player-volume-mute.png")
+      img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/mute.png")
+      img(v-else src="https://www.upsieutoc.com/images/2019/06/14/player-volume-mute.png")
     //- Volume slider
-    div(class="uiza-player-controls-volume-slider" @mouseover.stop="transitVolumeShow" @mouseleave.stop="isVolumeShown = false" v-if="isVolumeShown")
+    div(class="uiza-player-controls-volume-slider" @mouseover.stop="transitVolumeShow" @mouseleave.stop="transitVolumeHide" v-if="isVolumeShown")
       //-  :processStyle="{ background: settings.color }"
       VueSlider(direction="btt" :height="50" :dotSize="8" v-model="currentVolume" :max="100" @change="onVolumeChanged")
   //- Qualities
   button.uiza-player-controls-levels(v-if="qualities.length && qualities.length > 1" @click="isQualitiesShown = !isQualitiesShown" :style="{ color: settings.color }")
     //- i.fas2.fa-cogs
-    img(src="https://www.upsieutoc.com/images/2019/06/14/player-settings.png")
+    img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/settings.png")
+    img(v-else src="https://www.upsieutoc.com/images/2019/06/14/player-settings.png")
     .uiza-player-controls-levels-popup(v-if="isQualitiesShown")
       el-button(v-on:click.stop="onChangeQuality(item)" size="mini" v-for="item in qualities" v-bind:key="item.label" :disabled="selectedQuality && selectedQuality.label === item.label")
         | {{ item.label }}
   //- PIP
-  button(v-if="!isPiP" @click="requestPIP")
-    i.fas2.fa-pip
-  button(v-if="isPiP" @click="exitPIP")
-    i.fas2.fa-pip-off
+  template(v-if="theme === 'Kute'")
+      button(v-if="!isPiP" @click="requestPIP")
+        img(src="https://www.upsieutoc.com/images/2019/07/07/pip.png")
+      button(v-if="isPiP" @click="exitPIP")
+        img(src="https://www.upsieutoc.com/images/2019/07/07/pip.png")
+  template(v-else)
+    button(v-if="!isPiP" @click="requestPIP")
+      i.fas2.fa-pip
+    button(v-if="isPiP" @click="exitPIP")
+      i.fas2.fa-pip-off
   //- Fullscreen
   button.uiza-player-controls-fullscreen(@click="fullscreen" :style="{ color: settings.color }")
     //- i.fas2.fa-fullscreen
-    img(src="https://www.upsieutoc.com/images/2019/06/14/player-fullscreen.png")
+    img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/zoom-in.png")
+    img(v-else src="https://www.upsieutoc.com/images/2019/06/14/player-fullscreen.png")
 </template>
 
 <script>
@@ -65,7 +78,7 @@ import VueSlider from "vue-slider-component";
 import EventBus from "../EventBus";
 
 export default {
-  props: ["player", "isLive", "settings"],
+  props: ["player", "isLive", "settings", "theme"],
   components: {
     VueSlider
   },

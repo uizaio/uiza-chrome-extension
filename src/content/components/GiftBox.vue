@@ -1,17 +1,31 @@
 <template lang="pug">
 .uiza-giftbox(v-if="notTaken")
   .uiza-giftbox-image(v-if="!isClockShown")
-    img(src="https://media.giphy.com/media/QWcxHrF7LCb7yBf4kO/giphy.gif" @click="showClock")
-    div(v-if="codeAvailable" class="uiza-giftbox-image-countdown") {{ formattedCodeAvailableCountdown }}
+    img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/gift.png" @click="showClock")
+    img(v-else src="https://media.giphy.com/media/QWcxHrF7LCb7yBf4kO/giphy.gif" @click="showClock")
+    div(v-if="codeAvailable" class="uiza-giftbox-image-countdown")
+      i.far.fa-clock 
+      | {{ formattedCodeAvailableCountdown }}
   div.uiza-giftbox-wrapper.animated.infinite-no.shake(v-else)
     button.uiza-giftbox-wrapper-close(@click="isClockShown = false")
       i.far.fa-times-circle
     div(v-if="!codeAvailable")
+      img(src="https://www.upsieutoc.com/images/2019/07/07/info.png" width="30")
       div.label Gift opens in
       div.countdown
-        i.far.fa-clock
-        span(class="countdown animated-no infinite-no heartBeat") {{ countdown }}s
-    div(v-show="codeAvailable")
+        img(src="https://www.upsieutoc.com/images/2019/07/07/clock4e8ed0bbdfbd19df.png")
+        span(class="animated-no infinite-no heartBeat") {{ countdown }}s
+    div(v-if="theme === 'Kute'" v-show="codeAvailable")
+      img(class="opened-gift" src="https://www.upsieutoc.com/images/2019/07/07/gift-opened.png")
+      h4 You got a Super Code
+      div.uiza-giftbox-code
+        div 
+          strong 40%
+          div Discount
+        input(value="DECEMBERISCOMING")
+      div.uiza-giftbox-footer
+        button.uiza-giftbox-footer-take(@click="buyNow") Use Now
+    div(v-else v-show="codeAvailable")
       h4 You got a Super Code
       div.uiza-giftbox-code
         img(src="https://localcoinatm.com/wp-content/uploads/2018/09/300x300-Discount-Icon-01.png")
@@ -42,7 +56,7 @@ const initialData = function() {
 };
 
 export default {
-  props: ["url"],
+  props: ["url", "theme"],
   mounted() {},
   methods: {
     showClock() {

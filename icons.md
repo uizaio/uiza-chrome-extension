@@ -30,3 +30,31 @@ https://www.upsieutoc.com/images/2019/06/14/egg-static.png
 https://www.upsieutoc.com/images/2019/06/14/egg-animate.gif
 
 https://www.upsieutoc.com/images/2019/06/15/shop-logo.png
+
+// Kute theme
+
+https://www.upsieutoc.com/images/2019/07/07/annoucement.png
+https://www.upsieutoc.com/images/2019/07/07/avatar.png
+https://www.upsieutoc.com/images/2019/07/07/gift.png
+https://www.upsieutoc.com/images/2019/07/07/gift-opened.png
+https://www.upsieutoc.com/images/2019/07/07/badge.png
+https://www.upsieutoc.com/images/2019/07/07/cart.png
+https://www.upsieutoc.com/images/2019/07/07/close.png
+https://www.upsieutoc.com/images/2019/07/07/share.png
+https://www.upsieutoc.com/images/2019/07/07/clock.png
+https://www.upsieutoc.com/images/2019/07/07/clock4e8ed0bbdfbd19df.png
+https://www.upsieutoc.com/images/2019/07/07/info.png
+
+https://www.upsieutoc.com/images/2019/07/07/pause-button.png
+https://www.upsieutoc.com/images/2019/07/07/play-button.png
+
+https://www.upsieutoc.com/images/2019/07/07/mute.png
+https://www.upsieutoc.com/images/2019/07/07/pause.png
+https://www.upsieutoc.com/images/2019/07/07/play.png
+https://www.upsieutoc.com/images/2019/07/07/settings.png
+https://www.upsieutoc.com/images/2019/07/07/volume.png
+https://www.upsieutoc.com/images/2019/07/07/zoom-in.png
+https://www.upsieutoc.com/images/2019/07/07/zoom-out.png
+https://www.upsieutoc.com/images/2019/07/07/pip.png
+
+https://www.upsieutoc.com/images/2019/07/08/egg.png

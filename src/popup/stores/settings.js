@@ -8,6 +8,11 @@ const state = {
     api_key: "",
     app_id: "",
     custom_css: "",
+    themes: [
+      "Flat",
+      "Kute"
+    ],
+    current_theme: "Kute",
     page_logo: "https://www.roadsidenow.com/images/your-logo-ehre.png",
     left_banners: [
       'https://i.imgur.com/VTobv83.png',

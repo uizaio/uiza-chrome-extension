@@ -1,7 +1,7 @@
 <template lang="pug">
 .uiza-shop-info
-    img(src="https://www.upsieutoc.com/images/2019/06/15/shop-logo.png")
-    .uiza-shop-info-name Shop Name
+    img(src="https://www.upsieutoc.com/images/2019/07/07/avatar.png")
+    .uiza-shop-info-name ABC SHOP
 </template>
 <script>
 export default {};

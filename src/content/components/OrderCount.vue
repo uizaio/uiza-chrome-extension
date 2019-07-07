@@ -5,7 +5,7 @@ div.uiza-order(v-show="shown" :class="{ 'uiza-theme-flat': isFlat }")
     span(ref="numberElement") {{ orders }} &nbsp;
     | orders completed in last 15 minutes
   button.uiza-order-close(@click="close")
-      i.fas.fa-times-circle
+      i.far.fa-times-circle
 
 </template>
 
@@ -104,7 +104,7 @@ export default {
 <style lang="scss">
 .uiza-order {
   &.uiza-theme-flat {
-    background: rgba(29, 53, 87, 0.75) !important;
+    background: rgba(29, 53, 87, 0.75);
     margin: 0 !important;
     .uiza-order-text {
       margin-right: 20px;

@@ -5,14 +5,14 @@ div
       a(:href="playerSettings.brand_url")
         //- img(class="logo" :src="playerSettings.brand_logo")
         img.logo(:src="settings.page_logo")
-  el-row(type="flex")
+  el-row(type="flex" style="margin-top: 20px;")
     el-col(:span="4")
       div.banner(v-for="(banner, i) in settings.left_banners" v-bind:key="i")
         img(:src="banner")
     el-col.player(:span="16")
       div.player-wrapper(ref="mainWrapper")
         //- div(id="player")
-        UizaPlayer(v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
+        UizaPlayer(:theme="settings.current_theme" v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
     el-col(:span="4")
       div.banner(v-for="(banner, i) in settings.right_banners" v-bind:key="i")
         img(:src="banner")
@@ -209,6 +209,7 @@ html {
 }
 .header {
   z-index: 10;
+  background: #FAFAF4;
   box-shadow: 0px 2px 3px 2px rgba(0, 0, 0, 0.3);
   .logo {
     height: 100%;

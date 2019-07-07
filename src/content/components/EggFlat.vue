@@ -18,15 +18,20 @@ div(class="uiza-egg" ref="main")
           input(readonly="readonly" value="FASHIONISTA")
           button.uiza-egg-code-use(@click="use") Use now
         div.uiza-egg-voucher-banner(v-if="showBanner")
+            button(v-if="!showAnimate" @click="clickMe") Click me
             .uiza-egg-voucher-banner--only 
               .uiza-egg-voucher-banner--only-content Only for you
-            button(v-if="!showAnimate" @click="clickMe") Click me ({{ appearCountdown }})
+            .countdown 
+              i.far.fa-clock 
+              | {{ appearCountdownFormatted }}
         img(v-if="!showAnimate" ref="image" :src="image" @load="onImageLoaded" @click="clickMe")
         img(v-if="showAnimate" :src="image_animate" style="transform: scale(2)")
 </template>
 <script>
+import * as moment from "moment";
+
 export default {
-  props: ["url"],
+  props: ["url", "theme"],
   mounted() {
     this.init();
   },
@@ -107,12 +112,24 @@ export default {
       this.isPinnedVoucherCodeShown = true;
     }
   },
+  computed: {
+    image() {
+      return this.theme === 'Kute' ? 'https://www.upsieutoc.com/images/2019/07/08/egg.png' : "https://www.upsieutoc.com/images/2019/06/14/egg-static.png";
+    },
+    image_animate() {
+      return this.theme === 'Kute' ? 'https://www.upsieutoc.com/images/2019/07/08/egg.png' : "https://www.upsieutoc.com/images/2019/06/14/egg-animate.gif";
+    },
+    appearCountdownFormatted() {
+      const time = moment("2015-01-01")
+        .startOf("day")
+        .seconds(this.appearCountdown)
+        .format("mm:ss");
+      return time;
+    }
+  },
   data() {
     return {
       showVoucher: true,
-      image: "https://www.upsieutoc.com/images/2019/06/14/egg-static.png",
-      image_animate:
-        "https://www.upsieutoc.com/images/2019/06/14/egg-animate.gif",
       showAnimate: false,
       width: 0,
       height: 0,
@@ -206,6 +223,7 @@ export default {
       width: 140px;
       left: -40px;
       top: -60px;
+      z-index: 1000;
       // background: #fff;
       border-radius: 10px;
       padding: 5px 40px 5px 10px !important;
@@ -217,6 +235,11 @@ export default {
         color: #fff;
         padding: 4px 10px;
         border-radius: 2px;
+      }
+      .countdown {
+        svg {
+          margin-right: 5px;
+        }
       }
       button {
         cursor: pointer;

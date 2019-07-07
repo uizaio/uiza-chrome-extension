@@ -5,6 +5,9 @@ div
       el-input(v-model='settings.app_id' v-on:change="saveDraft" @paste="saveDraft")
     el-form-item(label='API key', prop='api_key')
       el-input(v-model='settings.api_key' v-on:change="saveDraft" @paste="saveDraft")
+    el-form-item(label='Theme', prop='current_theme')
+      el-select(v-model='settings.current_theme')
+        el-option(v-for="theme in settings.themes" :key="theme" :label="theme" :value="theme")
     el-form-item
       el-button(:loading="isValidating" type='primary' @click='submitForm') Save
       el-button(@click='resetForm') Reset
@@ -18,7 +21,8 @@ div
     //-     el-input(v-model='playerSettings.height')
     //- el-form-item(label='Player color')
     //-   el-color-picker(v-model="playerSettings.color")
-    el-form-item(label='Brand logo', prop='brand_logo')
+    
+    el-form-item(label='Brand logo', prop='current_theme')
       el-input(v-model='playerSettings.brand_logo')
     el-form-item(label='Brand url', prop='brand_url')
       el-input(v-model='playerSettings.brand_url')

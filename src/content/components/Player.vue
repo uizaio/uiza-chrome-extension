@@ -1,37 +1,43 @@
 <template lang="pug">
-.uiza-ext-player(@click.stop="preventParentClick" v-on:mousemove.stop.prevent="onZoom" @mouseleave="onRestoreZoom"  :id="id" :class="{ 'uiza-theme-flat': isFlat, 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
+.uiza-ext-player(@click.stop="preventParentClick" v-on:mousemove.stop.prevent="onZoom" @mouseleave="onRestoreZoom"  :id="id" :class="[ currentTheme, {'uiza-theme-flat': isFlat && false, 'uiza-ext-minimized': isMinimized, 'uiza-portrait': isPortrait }]" ref="playerContainer" :style="{ maxWidth: '100%', maxHeight: '100%' }")
   .uiza-ext-player-overlay(ref="playerOverlay" @click="onOverlayClicked")
   .uiza-error(v-if="isErrored") Live stream is ended
   ShopInfo(v-if="isLive")
-  EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true")
+  EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
   UizaOrderCount(v-if="isLive" :count="300")
   UizaViewCount(v-if="isLive")
-  GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true")
+  GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
   a.uiza-center-play-btn(v-if="!isPlaying && player && !isAutoplay" @click="play")
-    img(v-show="!isEnded && !isFlat" src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
-    i.fas.fa-play(v-show="!isEnded && isFlat")
-    i.fas.fa-undo(v-show="isEnded")
-  a.uiza-logo(v-if="playerSettings && isLive && !noControls" @click="openBrandUrl")
+    img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/play-button.png")
+    template(v-else)
+      img(v-show="!isEnded && !isFlat" src="https://www.upsieutoc.com/images/2019/06/12/play-button.png")
+      i.fas.fa-play(v-show="!isEnded && isFlat")
+      i.fas.fa-undo(v-show="isEnded")
+  a.uiza-logo(v-if="playerSettings && isLive && !noControls && theme !== 'Kute'" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
+  ChatKute(v-if="theme === 'Kute' && isLive && !noControls")
   Chat(v-if="!isFlat && isLive && !noControls")
-  ChatFlat(v-if="isFlat && isLive && !noControls")
+  ChatFlat(v-if="theme !== 'Kute' && isFlat && isLive && !noControls")
   transition(name="fade")
-    PlayerControls(v-show="!hideControlsBar" class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
-    PlayerControlsLive(v-show="!hideControlsBar" class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
+    //- PlayerControls(v-show="!hideControlsBar" class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
+    PlayerControlsLive(v-show="!hideControlsBar" class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive" :theme="theme")
   .uiza-controls(:class="{ 'uiza-controls-hidden': hideControlsBar }" v-if="showControls && isLive && !noControls")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
       a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
-        img(v-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/badge.png")
+        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/cart.png")
+        img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/badge.png")
         img(v-else src="https://www.upsieutoc.com/images/2019/06/12/cart.png")
     .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
       a.uiza-controls-icon(:class="{ red: !isFlat }" @click="goToCart")
-        img(v-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/cart.png")
+        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/badge.png")
+        img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/cart.png")
         img(v-else src="https://www.upsieutoc.com/images/2019/06/12/badge.png")
     .uiza-controls-shopping-share
       a.uiza-controls-icon(:class="{ blue: !isFlat }" @click="isSharing = !isSharing")
-        img(v-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/share.png")
+        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/share.png")
+        img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/share.png")
         img(v-else src="https://www.upsieutoc.com/images/2019/06/12/share.png")
       div.uiza-controls-shopping-share-popup(v-if="isSharing")
         vue-goodshare-facebook(@onClick="isSharing = false" :page_url="brandUrl" title_social="" has_icon)
@@ -50,6 +56,7 @@
 <script>
 import Chat from "./Chat";
 import ChatFlat from "./ChatFlat";
+import ChatKute from "./ChatKute";
 import UizaEgg from "./Egg";
 import EggFlat from "./EggFlat";
 import UizaOrderCount from "./OrderCount";
@@ -74,6 +81,7 @@ export default {
   components: {
     Chat,
     ChatFlat,
+    ChatKute,
     UizaEgg,
     EggFlat,
     UizaOrderCount,
@@ -91,7 +99,7 @@ export default {
     VueGoodshareFacebook,
     VueGoodshareTwitter
   },
-  props: ["params", "settings", "chromeUrl", "json", "id"],
+  props: ["params", "settings", "chromeUrl", "json", "id", "theme"],
   created() {
     EventBus.$on(
       "onTogglePIP",
@@ -317,6 +325,9 @@ export default {
     }
   },
   computed: {
+    currentTheme() {
+      return 'uiza-theme-' + this.theme.toLowerCase();
+    },
     width() {
       return this.playerSettings ? this.playerSettings.width : 0;
     },
@@ -357,6 +368,12 @@ export default {
     },
     isZoomable() {
       return this.playerParams && this.playerParams.isZoomable;
+    },
+    isFlat() {
+      return true; // this.theme === 'Flat';
+    },
+    isKute() {
+      return this.theme === 'Kute';
     }
   },
   data() {
@@ -395,8 +412,7 @@ export default {
       playedTime: 0,
       isMinimized: false,
       isErrored: false,
-      isFlat: true,
-      hideControlsBar: true,
+      hideControlsBar: false,
       hideControlsBarTimeout: null
     };
   }
@@ -404,6 +420,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../theme.scss";
 * {
   line-height: 1.1 !important;
 }

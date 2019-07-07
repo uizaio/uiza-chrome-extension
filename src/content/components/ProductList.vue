@@ -2,10 +2,11 @@
 .uiza-product-list
     .uiza-product-list-background
     .uiza-product-list-toggle(@click="close")
-      i.fas.fa-times-circle
+      i.far.fa-times-circle
     carousel.uiza-product-list-swiper(:paginationEnabled="false" :navigationEnabled="true" navigationNextLabel="<i class='fas fa-chevron-right'></i>" navigationPrevLabel="<i class='fas fa-chevron-left'></i>" :perPage="10")
       slide.uiza-product-list-item(v-for="product in products" v-bind:key="product.id")
         img(:src='product.image')
+        .uiza-product-list-item-backdrop
         .uiza-product-list-item-desc
           h4.uiza-product-list-item-desc-title {{ product.name }}
           //- .price {{ product.price }}
@@ -91,6 +92,14 @@ export default {
       height: 100%;
       width: 100%;
       object-fit: cover;
+    }
+    &-backdrop {
+      display: none;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
     }
     &-desc {
       position: absolute;

@@ -19,7 +19,7 @@
   Chat(v-if="!isFlat && isLive && !noControls")
   ChatFlat(v-if="theme !== 'Kute' && isFlat && isLive && !noControls")
   transition(name="fade")
-    //- PlayerControls(v-show="!hideControlsBar" class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
+    PlayerControls(v-show="!hideControlsBar" class="controls" v-if="player && !isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive")
     PlayerControlsLive(v-show="!hideControlsBar" class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive" :theme="theme")
   .uiza-controls(:class="{ 'uiza-controls-hidden': hideControlsBar }" v-if="showControls && isLive && !noControls")
     .uiza-controls-shopping-spacer

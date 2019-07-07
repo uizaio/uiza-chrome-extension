@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+div(:class="['uiza-page-' + settings.current_theme]")
   el-menu(mode="horizontal" class="header")
     el-menu-item
       a(:href="playerSettings.brand_url")
@@ -23,8 +23,7 @@ div
         slide(v-for="item in recommendedItems" v-bind:key="item.id")
           div(class="item-play")
             div(class="item-play-btn" @click="view(item)")
-              i.fas.fa-play-circle
-            //- img(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
+              img(src="https://www.upsieutoc.com/images/2019/07/07/play-button.png")
             GifPlayer(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
           .desc
             h4 {{ item.name }}

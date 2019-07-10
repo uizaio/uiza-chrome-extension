@@ -12,6 +12,7 @@ const state = {
       "Flat",
       "Kute"
     ],
+    responsive: false,
     current_theme: "Kute",
     page_logo: "https://www.roadsidenow.com/images/your-logo-ehre.png",
     left_banners: [

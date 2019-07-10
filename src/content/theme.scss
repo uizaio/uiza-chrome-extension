@@ -37,6 +37,9 @@
     backdrop-filter: blur(10px) !important;
 
     &-progress {
+      .vue-slider {
+        height: 4px !important;
+      }
       .vue-slider-rail {
         background: #FAFAF4 !important;
       }
@@ -243,7 +246,12 @@
     background: linear-gradient(106.32deg, #E63946 0.35%, #FFE245 167.31%) !important;
     box-shadow: 0px 4px 15px rgba(230, 57, 70, 0.5) !important;
     border-radius: 50px !important;
-
+    padding-left: 50px !important;
+    img {
+      left: -5px !important;
+      top: -15px !important;
+      width: 50px !important;
+    }
     .uiza-order-text {
       color: #FFF !important;
     }

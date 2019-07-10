@@ -2,7 +2,7 @@
 .uiza-chat
   .uiza-chat-messages(ref="chatScroller")
     .uiza-chat-messages-wrapper
-      div(class="uiza-chat-messages-item" v-for="message in chatMessages" v-bind:key="message.messageId")
+      div(class="uiza-chat-messages-item" :style="{ opacity: getMessageOpacity(message) }" @click="onMessageClicked" v-for="message in chatMessages" v-bind:key="message.messageId")
         div.uiza-chat-messages-item-photo
           img(:src="message.avatar")
         div.uiza-chat-messages-item-info
@@ -54,8 +54,24 @@ export default {
   props: [],
   mounted() {
     // this.connectSendBird();
+    for (var i = 1; i <= 10; i++) {
+      this.fakeMessage();
+    }
   },
   methods: {
+    getMessageOpacity(m) {
+      const index = this.chatMessages.length - m.messageId;
+      if (index === 0) return 1;
+      if (index === 1) return 0.8;
+      if (index === 2) return 0.5;
+      if (index === 3) return 0.2;
+      return 0;
+    },
+    onMessageClicked(event) {
+      alert('fasfas');
+      console.log(event.target);
+      console.log(event.target.offsetTop);
+    },
     randomName() {
       return faker.name.findName();
     },
@@ -204,7 +220,7 @@ export default {
       messageIndex: 0,
       sb: null,
       chatUser: "",
-      isChatting: true,
+      isChatting: false,
       currentChannel: null,
       chatMessages: [],
       chatMessage: "",
@@ -222,7 +238,7 @@ export default {
   top: 100px;
   bottom: 80px;
   left: 0;
-  width: 300px;
+  width: 240px;
   max-width: 100%;
   display: flex;
   flex-direction: column;
@@ -231,7 +247,7 @@ export default {
     flex: 0 0 26px;
     display: flex;
     margin-left: 20px;
-    padding: 10px 10px 10px 10px;
+    padding: 5px;
     background: rgba(230, 57, 70, 0.8);
     backdrop-filter: blur(10px);
     border-radius: 40px;
@@ -314,6 +330,7 @@ export default {
     display: flex;
     align-items: flex-start;
     scroll-behavior: smooth;
+    pointer-events: none;
     &::-webkit-scrollbar {
       display: none;
     }

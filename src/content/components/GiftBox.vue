@@ -78,6 +78,8 @@ export default {
           }.bind(this),
           1000
         );
+      } else {
+        this.showCoupon();
       }
     },
     showCoupon() {
@@ -124,6 +126,7 @@ export default {
   position: absolute;
   right: 10px;
   bottom: 160px;
+  z-index: 99999 !important;
   &-image {
     width: 50px;
     height: 50px;

@@ -1,7 +1,8 @@
 <template lang="pug">
-div.uiza-order(v-show="shown" :class="{ 'uiza-theme-flat': isFlat }")
+div.uiza-order(v-show="shown || theme === 'Kute'" :class="{ 'uiza-theme-flat': isFlat, 'is-toggled': theme === 'Kute' && !shown }")
   img(v-if="!isFlat" src="https://www.upsieutoc.com/images/2019/06/12/satelite.png" width="70")
-  .uiza-order-text 
+  img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/annoucement.png" width="70" @click="shown = !shown")
+  .uiza-order-text
     span(ref="numberElement") {{ orders }} &nbsp;
     | orders completed in last 15 minutes
   button.uiza-order-close(@click="close")
@@ -11,15 +12,20 @@ div.uiza-order(v-show="shown" :class="{ 'uiza-theme-flat': isFlat }")
 
 <script>
 export default {
+  props: ['theme'],
   mounted() {
+    if (this.theme === 'Kute') {
+      this.shown = false;
+    }
     this.init();
   },
   methods: {
     init() {
       const self = this;
+      const leftPadding = this.theme === 'Kute' ? '10px' : "calc(50% - 150px)";
       self.$anime.timeline().add({
         targets: self.$el,
-        left: "calc(50% - 150px)",
+        left: leftPadding,
         easing: "easeInOutSine",
         duration: 2000,
         endDelay: 1000,
@@ -48,45 +54,6 @@ export default {
           });
       }, 5000);
     },
-    init2() {
-      const self = this;
-      setInterval(function() {
-        self.count += 1;
-        if (self.count % 5 === 0) {
-          self.shown = true;
-          self.orders += Math.floor(Math.random() * 10);
-          self.$anime
-            .timeline()
-            .add({
-              targets: self.$el,
-              left: "calc(100% + 300px)",
-              easing: "easeInOutSine",
-              duration: 2000,
-              endDelay: 1000,
-              direction: "alternate"
-            })
-            .add({
-              targets: self.$el,
-              left: "calc(50% - 150px)",
-              easing: "easeInOutSine",
-              duration: 2000,
-              endDelay: 1000,
-              direction: "alternate"
-            })
-            .add({
-              targets: self.$el,
-              left: "-1000px",
-              duration: 1000,
-              easing: "easeInOutSine",
-              complete: function() {
-                setTimeout(function() {
-                  self.shown = false;
-                }, 3000);
-              }
-            });
-        }
-      }, 1000);
-    },
     close() {
       this.shown = false;
     }
@@ -103,6 +70,13 @@ export default {
 </script>
 <style lang="scss">
 .uiza-order {
+  &.is-toggled {
+    height: 0;
+    padding-left: 0 !important;
+    .uiza-order-text, .uiza-order-close {
+      display: none;
+    }
+  }
   &.uiza-theme-flat {
     background: rgba(29, 53, 87, 0.75);
     margin: 0 !important;

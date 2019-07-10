@@ -4,7 +4,7 @@
   .uiza-error(v-if="isErrored") Live stream is ended
   ShopInfo(v-if="isLive")
   EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
-  UizaOrderCount(v-if="isLive" :count="300")
+  UizaOrderCount(v-if="isLive" :count="300" :theme="theme")
   UizaViewCount(v-if="isLive")
   GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
   a.uiza-center-play-btn(v-if="!isPlaying && player && !isAutoplay" @click="play")
@@ -25,8 +25,8 @@
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
       a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
-        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/cart.png")
-        img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/badge.png")
+        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/06/14/badge.png")
+        img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/07/07/cart.png")
         img(v-else src="https://www.upsieutoc.com/images/2019/06/12/cart.png")
     .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
@@ -435,6 +435,7 @@ button {
   left: 50%;
   margin-top: -50px;
   margin-left: -50px;
+  z-index: 9999;
   cursor: pointer;
   img {
     width: 100px !important;

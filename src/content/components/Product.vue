@@ -3,14 +3,18 @@
   .uiza-player-popup-exit(@click="close")
     i.fas.fa-times
   .uiza-player-popup-content
-    .uiza-player-popup-content-title {{ product.name }}
     .product-popup-image
         img(:src="product.image")
     .product-popup-content
+      .uiza-popup-content-title {{ product.name }}
       img(src="https://www.upsieutoc.com/images/2019/06/13/Screen-Shot-2019-06-13-at-12.36.03-AM.png" height="30")
       .price
-        label Price
-        span {{ product.promotion_price | currency }}
+        div
+          label Price
+          span.old {{ product.promotion_price | currency }}
+        div
+          label Chỉ còn
+          span {{ finalPrice | currency }}
       p Tiết kiệm {{ discount }}% ({{ product.price - product.promotion_price | currency }})
       p Giá thị trường: {{ product.price | currency }}
       .desc {{ product.description }}
@@ -34,9 +38,9 @@
           strong Promotion Code
           div.promotion-code
             input(v-model="promotionCode")
-        div
-          strong Chỉ còn
-          .final-price {{ finalPrice | currency }}
+        //- div
+        //-   strong Chỉ còn
+        //-   .final-price {{ finalPrice | currency }}
     .product-popup-footer
       a.product-popup-footer-btn.btn-add(@click="addToCart") Add to cart
       a(@click="goToCart" target="_blank" class="product-popup-footer-btn") Buy now
@@ -151,9 +155,12 @@ export default {
   left: 0;
   right: 0;
   background: rgba(255, 255, 255, 1);
-  border: #999 1px solid;
   z-index: 100;
   overflow: auto;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   &-exit {
     position: absolute;
     right: 10px;
@@ -189,24 +196,38 @@ export default {
 }
 .product-popup-content {
   padding-left: 45%;
+  &-title {
+    color: #E63946;
+    font-size: 20px;
+    font-weight: 600;
+  }
   h4 {
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 20px;
   }
   .price {
-    label {
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 19px;
-      color: #313131;
-    }
-    span {
-      display: block;
-      font-weight: bold;
-      font-size: 28px;
-      line-height: 33px;
-      color: #f2994a;
+    display: flex;
+    flex-direction: row;
+    > div {
+      flex: 1;
+      label {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 19px;
+        color: #313131;
+      }
+      span {
+        display: block;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 30px;
+        color: #E63946;
+        &.old {
+          text-decoration: line-through;
+          color: #000;
+        }
+      }
     }
   }
   .options {

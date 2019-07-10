@@ -8,6 +8,8 @@ div
     el-form-item(label='Theme', prop='current_theme')
       el-select(v-model='settings.current_theme')
         el-option(v-for="theme in settings.themes" :key="theme" :label="theme" :value="theme")
+    el-form-item(label="Responsive?" prop="responsive")
+      el-switch(v-model="settings.responsive")
     el-form-item
       el-button(:loading="isValidating" type='primary' @click='submitForm') Save
       el-button(@click='resetForm') Reset

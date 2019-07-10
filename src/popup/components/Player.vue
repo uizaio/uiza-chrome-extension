@@ -1,34 +1,55 @@
 <template lang="pug">
-div(:class="['uiza-page-' + settings.current_theme]")
-  el-menu(mode="horizontal" class="header")
-    el-menu-item
-      a(:href="playerSettings.brand_url")
-        //- img(class="logo" :src="playerSettings.brand_logo")
-        img.logo(:src="settings.page_logo")
-  el-row(type="flex" style="margin-top: 20px;")
-    el-col(:span="4")
-      div.banner(v-for="(banner, i) in settings.left_banners" v-bind:key="i")
-        img(:src="banner")
-    el-col.player(:span="16")
-      div.player-wrapper(ref="mainWrapper")
-        //- div(id="player")
-        UizaPlayer(:theme="settings.current_theme" v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
-    el-col(:span="4")
-      div.banner(v-for="(banner, i) in settings.right_banners" v-bind:key="i")
-        img(:src="banner")
-  div(style="margin: 0 10px")
-    h2 RECOMMENDED FOR YOU
-    el-card.recommendation
-      carousel(:paginationEnabled="false"  :navigationEnabled="true" navigationNextLabel="<i class='fas fa-chevron-right'></i>" navigationPrevLabel="<i class='fas fa-chevron-left'></i>" :perPage="7")
-        slide(v-for="item in recommendedItems" v-bind:key="item.id")
+div
+  .block.scaler(v-if="settings.responsive")
+    span Adjust zoom
+    el-slider(v-model="scaleRatio")
+  div(:style="{ transform: 'scale(' + scaleRatio / 100 + ')' }" :class="['uiza-page-' + settings.current_theme, { 'uiza-screen-small' : settings.responsive }]")
+    el-menu(mode="horizontal" class="header")
+      el-menu-item
+        a(:href="playerSettings.brand_url")
+          //- img(class="logo" :src="playerSettings.brand_logo")
+          img.logo(:src="settings.page_logo")
+    el-row(class="main-area" type="flex")
+      el-col(:span="4")
+        div.banner(v-for="(banner, i) in settings.left_banners" v-bind:key="i")
+          img(:src="banner")
+      el-col.player(:span="16")
+        div.player-wrapper(ref="mainWrapper")
+          //- div(id="player")
+          UizaPlayer(:theme="settings.current_theme" v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
+      el-col(:span="4")
+        div.banner(v-for="(banner, i) in settings.right_banners" v-bind:key="i")
+          img(:src="banner")
+    div(class="mobile-slider")
+      h2 Related products
+      carousel(:paginationEnabled="false"  :navigationEnabled="false" :perPage="2")
+        slide.banner(v-for="(banner, i) in settings.left_banners" v-bind:key="i")
+            img(:src="banner")
+        slide.banner(v-for="(banner, i) in settings.right_banners" v-bind:key="banner")
+            img(:src="banner")
+    div(class="mobile-recommendation recommendation")
+      h2 Recommended for you
+      el-row
+        el-col(:span="12" v-for="item in recommendedItems" v-bind:key="item.id" class="recommendation-item")
           div(class="item-play")
             div(class="item-play-btn" @click="view(item)")
               img(src="https://www.upsieutoc.com/images/2019/07/07/play-button.png")
             GifPlayer(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
           .desc
             h4 {{ item.name }}
-  div.bottom-banners
-    img(v-for="(banner, i) in settings.bottom_banners" v-bind:key="i" :src="banner")
+    div(class="web-recommendation" style="margin: 0 10px")
+      h2 RECOMMENDED FOR YOU
+      el-card.recommendation
+        carousel(:paginationEnabled="false"  :navigationEnabled="true" navigationNextLabel="<i class='fas fa-chevron-right'></i>" navigationPrevLabel="<i class='fas fa-chevron-left'></i>" :perPage="7")
+          slide(v-for="item in recommendedItems" v-bind:key="item.id")
+            div(class="item-play")
+              div(class="item-play-btn" @click="view(item)")
+                img(src="https://www.upsieutoc.com/images/2019/07/07/play-button.png")
+              GifPlayer(:src='item.thumbnail || "https://2.bp.blogspot.com/-LaFuqxk9jag/Vwcx0NIk8jI/AAAAAAAAJBo/-u9AvpBVosU-lJZCoG6fKT23czNx1KKEg/s1600/hee.gif"')
+            .desc
+              h4 {{ item.name }}
+    div.bottom-banners
+      img(v-for="(banner, i) in settings.bottom_banners" v-bind:key="i" :src="banner")
 </template>
 <script>
 import _ from "lodash";
@@ -91,6 +112,9 @@ export default {
         self.isPiP = false;
       }
     };
+    if (this.settings.responsive) {
+      this.scaleRatio = 80;
+    }
   },
   watch: {
     isPiP: function(newVal, oldVal) {
@@ -184,6 +208,7 @@ export default {
   },
   data() {
     return {
+      scaleRatio: 100,
       recommendedItems: [],
       vod: null,
       live: null,
@@ -200,6 +225,10 @@ html {
   margin: 0 !important;
   padding: 0 !important;
 }
+.scaler {
+  max-width: 600px;
+  margin: 20px auto;
+}
 .el-menu {
   border: none !important;
   &-item {
@@ -214,6 +243,9 @@ html {
     height: 100%;
     max-height: 100%;
   }
+}
+.main-area {
+  margin-top: 20px;
 }
 .player {
   z-index: 9;
@@ -251,7 +283,7 @@ html {
       font-size: 30px;
     }
   }
-  .VueCarousel-slide {
+  .VueCarousel-slide, .recommendation-item {
     margin: 5px;
     width: 300px;
     position: relative;
@@ -264,11 +296,6 @@ html {
       padding: 0 10px;
     }
     .item-play {
-      // position: absolute;
-      // top: 0;
-      // bottom: 0;
-      // left: 0;
-      // right: 0;
       position: relative;
       &:hover {
         background: rgba(0, 0, 0, 0.4);
@@ -300,6 +327,163 @@ html {
   img {
     width: 100% !important;
     margin: 0 0 10px 0;
+  }
+}
+
+.uiza-screen-small {
+  width: 375px;
+  height: 667px;
+  margin: 0 auto;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+  
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+  .header {
+    display: none;
+  }
+  .main-area {
+    margin: 0 !important;
+    .el-col-4 {
+      display: none;
+    }
+    .player {
+      width: 100%;
+      padding: 0 !important;
+      &-wrapper {
+        padding: 0 !important;
+        height: 667px !important;
+      }
+    }
+  }
+  .web-recommendation {
+    display: none;
+  }
+  .recommendation {
+    &-item {
+      width: calc(50% - 10px) !important;
+      height: 120px !important;
+      overflow: hidden;
+      .item-play {
+        height: 120px !important;
+        &-btn {
+          display: block !important;
+        }
+      }
+      .desc {
+        h4 {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .uiza-theme-kute {
+    .uiza-shop-info {
+      left: 0;
+    }
+    .uiza-view-count {
+      left: 50px !important;
+    }
+    .uiza-order {
+      left: 0;
+      top: 110px !important;
+    }
+    .uiza-controls {
+      flex-direction: row !important;
+    }
+    .uiza-chat {
+      top: 200px !important;
+      .uiza-chat-messages-item-info .time {
+        display: none;
+      }
+    }
+    .uiza-giftbox {
+      z-index: 1;
+      right: 10px !important;
+      &-wrapper {
+        left: -45px !important;
+        padding-bottom: 10px !important;
+      }
+      &-image {
+        width: 50px;
+        height: 50px;
+        img {
+          width: 40px !important;
+          top: -10px;
+        }
+        &-countdown {
+          padding-top: 37px;
+          svg {
+            display: none !important;
+          }
+        }
+      }
+    }
+    .uiza-controls {
+      top: 10px !important;
+      &-icon {
+        width: 24px;
+        height: 24px;
+        img {
+          width: 16px;
+          height: 16px;
+          margin-top: 3px;
+        }
+      }
+    }
+    .uiza-controls-shopping-share-popup {
+      top: 50px !important;
+      right: 0 !important;
+      padding: 5px 10px !important;
+      a {
+        display: inline-block !important;
+        &:first-child {
+          margin-bottom: 0 !important;
+          margin-right: 10px !important;
+        }
+      }
+    }
+    .uiza-product-list {
+      left: 0;
+      right: 0;
+      border-radius: 0;
+      z-index: 99999;
+      &-swiper {
+        margin: 0 !important;
+      }
+    }
+    .uiza-player-popup {
+      z-index: 99999;
+      .product-popup {
+        &-image {
+          float: none;
+          width: 100%;
+        }
+        &-content {
+          padding: 10px 20px;
+        }
+        &-footer {
+          padding: 0 0 20px 20px;
+          &-btn {
+            padding: 0 10px;
+          }
+        }
+      }
+    }
   }
 }
 </style>

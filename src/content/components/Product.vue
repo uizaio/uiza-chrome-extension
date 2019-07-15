@@ -18,15 +18,14 @@
       p Tiết kiệm {{ discount }}% ({{ product.price - product.promotion_price | currency }})
       p Giá thị trường: {{ product.price | currency }}
       .desc {{ product.description }}
-      //- .options
-      //-   span Color:
-      //-   ul.uiza-color-picker
-      //-     li.uiza-color-picker-option(v-for="color in colors" v-bind:key="color" @click="selectColor(color)" :class="[ color, color === selectedColor ? 'active' : '' ]")
-      //- .options
-      //-   span Size:
-      //-   ul.uiza-size-picker
-      //-     li.uiza-color-picker-option(v-for="size in sizes" v-bind:key="size" @click="selectSize(size)" :class="[ size, size === selectedSize ? 'active' : '' ]")
-      //-       | {{ size }}
+      .options
+        span Color:
+        ul.uiza-color-picker
+          li.uiza-color-picker-option(v-for="color in colors" v-bind:key="color" @click="selectColor(color)" :class="[ color, color === selectedColor ? 'active' : '' ]")
+      .options
+        span Size:
+        select(v-model="selectedSize")
+          option(v-for="size in sizes" v-bind:value="size") {{ size }}
       .product-popup-content-flex
         div
           strong Số lượng
@@ -38,12 +37,10 @@
           strong Promotion Code
           div.promotion-code
             input(v-model="promotionCode")
-        //- div
-        //-   strong Chỉ còn
-        //-   .final-price {{ finalPrice | currency }}
-    .product-popup-footer
-      a.product-popup-footer-btn.btn-add(@click="addToCart") Add to cart
-      a(@click="goToCart" target="_blank" class="product-popup-footer-btn") Buy now
+      .product-popup-footer
+        a.product-popup-footer-btn.btn-add(@click="addToCart") Add to cart
+        a(@click="goToCart" target="_blank" class="product-popup-footer-btn") Buy now
+    
 
 </template>
 
@@ -137,9 +134,9 @@ export default {
   data() {
     return {
       colors: ["red", "green", "blue"],
-      sizes: ["44mm", "32mm", "28mm"],
+      sizes: ["small", "medium", "large"],
       selectedColor: "red",
-      selectedSize: "32mm",
+      selectedSize: "small",
       quantity: 1,
       promotionCode: ""
     };
@@ -155,13 +152,14 @@ export default {
   left: 0;
   right: 0;
   background: rgba(255, 255, 255, 1);
-  z-index: 100;
+  z-index: 99999;
   overflow: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar {
     display: none;
   }
   &-exit {
+    z-index: 1;
     position: absolute;
     right: 10px;
     top: 10px;
@@ -173,125 +171,132 @@ export default {
     }
   }
   &-content {
-    margin-top: 40px;
-    &-title {
-      font-size: 24px;
-      margin: 10px 20px 0 45%;
-    }
-  }
-}
-.product-popup {
-  padding: 20px;
-}
-.product-popup-image {
-  width: 40%;
-  margin-left: 10px;
-  margin-top: -40px;
-  float: left;
-  img {
-    object-fit: cover;
-    max-width: 100%;
-    width: 100%;
-  }
-}
-.product-popup-content {
-  padding-left: 45%;
-  &-title {
-    color: #E63946;
-    font-size: 20px;
-    font-weight: 600;
-  }
-  h4 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 20px;
-  }
-  .price {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-top: 40px;
     display: flex;
-    flex-direction: row;
-    > div {
+    .product-popup-image {
       flex: 1;
-      label {
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 19px;
-        color: #313131;
-      }
-      span {
-        display: block;
-        font-weight: bold;
+    }
+    .product-popup-content {
+      flex: 1;
+      background: #fafaf4;
+      padding: 20px 0 0 20px;
+      &-title {
+        color: #e63946;
         font-size: 20px;
-        line-height: 30px;
-        color: #E63946;
-        &.old {
-          text-decoration: line-through;
-          color: #000;
-        }
+        font-weight: 600;
       }
-    }
-  }
-  .options {
-    margin-top: 10px;
-  }
-  .options span {
-    display: inline-block;
-    width: 50px;
-    font-weight: 400;
-    vertical-align: middle;
-  }
-  &-flex {
-    display: flex;
-    flex-direction: row;
-    margin-top: 20px;
-    > div {
-      flex: 0 0 auto;
-      margin-right: 15px;
-      &:last-child {
-        flex: 1;
-      }
-      > strong {
-        display: block;
+      h4 {
+        margin-top: 0;
         margin-bottom: 10px;
+        font-size: 20px;
       }
-      .qty-selector {
-        border: #ccc 1px solid;
-        border-radius: 3px;
+      .price {
         display: flex;
+        flex-direction: row;
+        > div {
+          flex: 1;
+          label {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 19px;
+            color: #313131;
+          }
+          span {
+            display: block;
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 30px;
+            color: #e63946;
+            &.old {
+              text-decoration: line-through;
+              color: #000;
+            }
+          }
+        }
+      }
+      .options {
+        margin-top: 20px;
+        margin-right: 20px;
+        display: inline-block;
+        span {
+          display: block;
+          font-weight: 600;
+          font-size: 16px;
+          text-transform: uppercase;
+        }
+        select {
+          background: #e7eef4;
+          border-radius: 4px;
+          border: #e7eef4 1px solid;
+          padding: 4px;
+          margin: 12px 0;
+        }
+      }
+      &-flex {
+        display: flex;
+        flex-direction: row;
+        margin-top: 20px;
+        > div {
+          flex: 0 0 auto;
+          margin-right: 15px;
+          &:last-child {
+            flex: 1;
+          }
+          > strong {
+            display: block;
+            margin-bottom: 10px;
+          }
+          .qty-selector {
+            border: #ccc 1px solid;
+            border-radius: 3px;
+            display: flex;
 
-        button {
-          border: 0 !important;
-          outline: none !important;
-          font-size: 24px;
-          cursor: pointer;
+            button {
+              border: 0 !important;
+              outline: none !important;
+              font-size: 24px;
+              cursor: pointer;
+            }
+            input {
+              width: 30px;
+              border: #ccc 1px solid !important;
+              border-top: none !important;
+              border-bottom: none !important;
+              outline: none !important;
+              font-size: 16px;
+              line-height: 28px !important;
+              text-align: center;
+            }
+          }
+          .promotion-code {
+            input {
+              border: #ccc 1px solid !important;
+              padding: 0 10px;
+              font-size: 16px;
+              line-height: 28px !important;
+              max-width: 150px;
+              border-radius: 3px;
+              outline: none !important;
+            }
+          }
+          .final-price {
+            font-size: 28px;
+            color: #f2994a;
+          }
         }
-        input {
-          width: 30px;
-          border: #ccc 1px solid !important;
-          border-top: none !important;
-          border-bottom: none !important;
-          outline: none !important;
-          font-size: 16px;
-          line-height: 28px !important;
-          text-align: center;
-        }
-      }
-      .promotion-code {
-        input {
-          border: #ccc 1px solid !important;
-          padding: 0 10px;
-          font-size: 16px;
-          line-height: 28px !important;
-          max-width: 150px;
-          border-radius: 3px;
-          outline: none !important;
-        }
-      }
-      .final-price {
-        font-size: 28px;
-        color: #f2994a;
       }
     }
   }
+}
+.uiza-popup-content-title {
+  color: #e63946;
+  font-size: 20px;
+  font-weight: 600;
 }
 .uiza-color-picker,
 .uiza-size-picker {
@@ -303,9 +308,10 @@ export default {
 .uiza-color-picker-option {
   display: inline-block;
   margin: 0 5px;
-  width: 24px;
-  height: 24px;
-  border: transparent 3px solid;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  border: transparent 1px solid;
   // box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   &.green {
     background: green;
@@ -317,7 +323,7 @@ export default {
     background: red;
   }
   &.active {
-    border-color: #fff;
+    border-color: #000;
   }
 }
 .uiza-size-picker {
@@ -335,7 +341,6 @@ export default {
   }
 }
 .product-popup-footer {
-  padding-left: 45%;
   margin-top: 20px;
   text-align: right;
 }

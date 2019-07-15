@@ -54,9 +54,9 @@ export default {
   props: [],
   mounted() {
     // this.connectSendBird();
-    for (var i = 1; i <= 10; i++) {
-      this.fakeMessage();
-    }
+    // for (var i = 1; i <= 10; i++) {
+    //   this.fakeMessage();
+    // }
   },
   methods: {
     getMessageOpacity(m) {

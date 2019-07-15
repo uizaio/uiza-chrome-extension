@@ -9,6 +9,12 @@ div
         a(:href="playerSettings.brand_url")
           //- img(class="logo" :src="playerSettings.brand_logo")
           img.logo(:src="settings.page_logo")
+      el-menu-item.uiza-toolbar(style="float: right")
+        img(src="https://www.upsieutoc.com/images/2019/07/15/top-badge.png")
+        img(src="https://www.upsieutoc.com/images/2019/07/15/top-settings.png")
+        div.input
+          input(type="text" placeholder="Search")
+          i.fas.fa-search
     el-row(class="main-area" type="flex")
       el-col(:span="4")
         div.banner(v-for="(banner, i) in settings.left_banners" v-bind:key="i")
@@ -16,7 +22,7 @@ div
       el-col.player(:span="16")
         div.player-wrapper(ref="mainWrapper")
           //- div(id="player")
-          UizaPlayer(:theme="settings.current_theme" v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
+          UizaPlayer(:theme="settings.current_theme" :portrait="settings.responsive" v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
       el-col(:span="4")
         div.banner(v-for="(banner, i) in settings.right_banners" v-bind:key="i")
           img(:src="banner")
@@ -225,9 +231,40 @@ html {
   margin: 0 !important;
   padding: 0 !important;
 }
+
+.uiza-toolbar {
+  img {
+    margin-right: 15px;
+  }
+  .input {
+    display: inline-block;
+    padding: 10px;
+    background: #E63946;
+    border-radius: 30px;
+    input {
+      border: none;
+      background: transparent;
+      outline: none !important;
+      color: #FFF;
+      text-align: right;
+      margin-right: 10px;
+      padding-right: 10px;
+      border-right: #EEE 1px solid;
+      &::placeholder {
+        color: #FFF;
+      }
+    }
+    svg {
+      color: #FFF;
+    }
+  }
+}
 .scaler {
   max-width: 600px;
   margin: 20px auto;
+}
+.mobile-slider, .mobile-recommendation {
+  display: none;
 }
 .el-menu {
   border: none !important;
@@ -373,6 +410,9 @@ html {
   .web-recommendation {
     display: none;
   }
+  .mobile-slider, .mobile-recommendation {
+    display: block;
+  }
   .recommendation {
     &-item {
       width: calc(50% - 10px) !important;
@@ -468,6 +508,9 @@ html {
     }
     .uiza-player-popup {
       z-index: 99999;
+      .uiza-player-popup-content {
+        flex-direction: column;
+      }
       .product-popup {
         &-image {
           float: none;

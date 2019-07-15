@@ -6,7 +6,7 @@
     div(v-if="codeAvailable" class="uiza-giftbox-image-countdown")
       i.far.fa-clock 
       | {{ formattedCodeAvailableCountdown }}
-  div.uiza-giftbox-wrapper.animated.infinite-no.shake(v-else)
+  div.uiza-giftbox-wrapper.animated.infinite-no.shake(v-show="isClockShown")
     button.uiza-giftbox-wrapper-close(@click="isClockShown = false")
       i.far.fa-times-circle
     div(v-if="!codeAvailable")
@@ -78,8 +78,6 @@ export default {
           }.bind(this),
           1000
         );
-      } else {
-        this.showCoupon();
       }
     },
     showCoupon() {

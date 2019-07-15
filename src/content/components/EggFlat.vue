@@ -1,31 +1,31 @@
 <template lang="pug">
 div(class="uiza-egg" ref="main")
-    div.uiza-egg-voucher-pinned(v-if="isPinnedVoucherShown" ref="pinnedVoucher")
-      img(:src="image" @click="showPinnedVoucher")
-      .uiza-egg-voucher-pinned-click(@click="showPinnedVoucher")
-        | Click me
-      div.uiza-egg-code(v-if="isPinnedVoucherCodeShown")
-          button.uiza-egg-code-close(@click="close")
-            i.far.fa-times-circle
-          p Mã giảm giá của bạn (off 25%)
-          input(readonly="readonly" value="FASHIONISTA")
-          button.uiza-egg-code-use(@click="use") Use now
-    div(v-if="showVoucher" class="uiza-egg-voucher" ref="voucher")
-        div.uiza-egg-code(v-if="isCodeShown")
-          button.uiza-egg-code-close(@click="close")
-            i.far.fa-times-circle
-          p Mã giảm giá của bạn (off 25%)
-          input(readonly="readonly" value="FASHIONISTA")
-          button.uiza-egg-code-use(@click="use") Use now
-        div.uiza-egg-voucher-banner(v-if="showBanner")
-            button(v-if="!showAnimate" @click="clickMe") Click me
-            .uiza-egg-voucher-banner--only 
-              .uiza-egg-voucher-banner--only-content Only for you
-            .countdown 
-              i.far.fa-clock 
-              | {{ appearCountdownFormatted }}
-        img(v-if="!showAnimate" ref="image" :src="image" @load="onImageLoaded" @click="clickMe")
-        img(v-if="showAnimate" :src="image_animate" style="transform: scale(2)")
+  div.uiza-egg-voucher-pinned(v-if="isPinnedVoucherShown" ref="pinnedVoucher")
+    img(:src="image" @click="showPinnedVoucher")
+    .uiza-egg-voucher-pinned-click(@click="showPinnedVoucher")
+      | Click me
+    div.uiza-egg-code(v-if="isPinnedVoucherCodeShown")
+        button.uiza-egg-code-close(@click="close")
+          i.far.fa-times-circle
+        p Mã giảm giá của bạn (off 25%)
+        input(readonly="readonly" value="FASHIONISTA")
+        button.uiza-egg-code-use(@click="use") Use now
+  div(v-if="showVoucher" class="uiza-egg-voucher" ref="voucher")
+    div.uiza-egg-code(v-if="isCodeShown")
+      button.uiza-egg-code-close(@click="close")
+        i.far.fa-times-circle
+      p Mã giảm giá của bạn (off 25%)
+      input(readonly="readonly" value="FASHIONISTA")
+      button.uiza-egg-code-use(@click="use") Use now
+    div.uiza-egg-voucher-banner(v-if="showBanner")
+        button(v-if="!showAnimate" @click="clickMe") Click me
+        .uiza-egg-voucher-banner--only 
+          .uiza-egg-voucher-banner--only-content Only for you
+        .countdown 
+          i.far.fa-clock 
+          | {{ appearCountdownFormatted }}
+    img(v-if="!showAnimate" ref="image" :src="image" @load="onImageLoaded" @click="clickMe")
+    img(v-if="showAnimate" :src="image_animate" style="transform: scale(2)")
 </template>
 <script>
 import * as moment from "moment";
@@ -70,7 +70,7 @@ export default {
             self.appearInterval = setInterval(function() {
               self.appearCountdown -= 1;
               if (self.appearCountdown <= 0) {
-                self.showVoucher = false;
+                self.showVoucher = true;
               }
             }, 1000);
           }
@@ -187,13 +187,13 @@ export default {
     padding: 10px;
     border-radius: 6px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-
-    z-index: 10;
+    z-index: 2000;
     &-close {
       position: absolute;
       top: 5px;
       right: 5px;
       border: none !important;
+      background: transparent !important;
       cursor: pointer;
     }
     &-use {
@@ -204,6 +204,7 @@ export default {
       box-sizing: border-box;
       margin-top: 10px !important;
       outline: none !important;
+      border: none;
     }
     input {
       padding: 5px 10px;

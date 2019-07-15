@@ -58,3 +58,6 @@ https://www.upsieutoc.com/images/2019/07/07/zoom-out.png
 https://www.upsieutoc.com/images/2019/07/07/pip.png
 
 https://www.upsieutoc.com/images/2019/07/08/egg.png
+
+https://www.upsieutoc.com/images/2019/07/15/top-badge.png
+https://www.upsieutoc.com/images/2019/07/15/top-settings.png

@@ -4,7 +4,7 @@
   .uiza-error(v-if="isErrored") Live stream is ended
   ShopInfo(v-if="isLive")
   EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
-  UizaOrderCount(v-if="isLive" :count="300" :theme="theme")
+  UizaOrderCount(v-if="isLive" :count="300" :theme="theme" :portrait="portrait")
   UizaViewCount(v-if="isLive")
   GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
   a.uiza-center-play-btn(v-if="!isPlaying && player && !isAutoplay" @click="play")
@@ -99,7 +99,7 @@ export default {
     VueGoodshareFacebook,
     VueGoodshareTwitter
   },
-  props: ["params", "settings", "chromeUrl", "json", "id", "theme"],
+  props: ["params", "settings", "chromeUrl", "json", "id", "theme", "portrait"],
   created() {
     EventBus.$on(
       "onTogglePIP",
@@ -391,7 +391,7 @@ export default {
       overlayTimeouts: [],
       overlayProduct: null,
       isSharing: false,
-      hasEgg: false,
+      hasEgg: true,
       eggGiftShown: false,
       eggGiftCountdown: 5,
       stickers: [

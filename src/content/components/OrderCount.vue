@@ -12,7 +12,7 @@ div.uiza-order(v-show="shown || theme === 'Kute'" :class="{ 'uiza-theme-flat': i
 
 <script>
 export default {
-  props: ['theme'],
+  props: ['theme', 'portrait'],
   mounted() {
     if (this.theme === 'Kute') {
       this.shown = false;
@@ -22,7 +22,7 @@ export default {
   methods: {
     init() {
       const self = this;
-      const leftPadding = this.theme === 'Kute' ? '10px' : "calc(50% - 150px)";
+      const leftPadding = this.portrait ? '10px' : "calc(50% - 150px)";
       self.$anime.timeline().add({
         targets: self.$el,
         left: leftPadding,
@@ -48,9 +48,14 @@ export default {
             targets: self.$refs.numberElement,
             color: "#94e389",
             scale: 1,
-            duration: 2000,
+            duration: 100,
             direction: "alternate",
-            easing: "easeInOutSine"
+            easing: "easeInOutSine",
+            complete: function() {
+              if (!self.portrait) {
+                self.shown = true;
+              }
+            }
           });
       }, 5000);
     },

@@ -11,6 +11,8 @@
     }
     .item-play {
       max-height: 140px;
+      border-radius: 10px;
+      overflow: hidden;
       &:hover {
         .item-play-btn {
           display: block !important;
@@ -75,8 +77,8 @@
     right: 5px !important;
     flex-direction: column;
     .uiza-controls-shopping-cart-qty {
-      top: 0;
-      right: -10px;
+      top: 7px;
+      right: -5px;
     }
     .uiza-controls-shopping-share {
       margin: 0 !important;
@@ -300,6 +302,8 @@
       width: 240px !important;
       min-width: 240px !important;
       height: 160px !important;
+      border-radius: 10px;
+      overflow: hidden;
       &-backdrop {
         background: linear-gradient(0deg, rgba(30, 54, 86, 0.6), rgba(30, 54, 86, 0.6));
       }

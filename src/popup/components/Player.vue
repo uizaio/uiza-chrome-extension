@@ -16,14 +16,16 @@ div
           input(type="text" placeholder="Search")
           i.fas.fa-search
     el-row(class="main-area" type="flex")
-      el-col(:span="4")
+      el-col.side-menu(:span="4")
+        h4 Sản phẩm liên quan
         div.banner(v-for="(banner, i) in settings.left_banners" v-bind:key="i")
           img(:src="banner")
       el-col.player(:span="16")
         div.player-wrapper(ref="mainWrapper")
           //- div(id="player")
           UizaPlayer(:theme="settings.current_theme" :portrait="settings.responsive" v-if="vod || live" :params="playerParams" :settings="playerSettings" :chromeUrl="chromeUrl" :json="jsonData" id="player")
-      el-col(:span="4")
+      el-col.side-menu(:span="4")
+        h4 Sản phẩm liên quan
         div.banner(v-for="(banner, i) in settings.right_banners" v-bind:key="i")
           img(:src="banner")
     div(class="mobile-slider")
@@ -272,6 +274,14 @@ html {
     line-height: 56px !important;
   }
 }
+.side-menu {
+  background: #FAFAF4;
+  h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px;
+  }
+}
 .header {
   z-index: 10;
   background: #FAFAF4;
@@ -286,8 +296,8 @@ html {
 }
 .player {
   z-index: 9;
-  padding: 10px;
-  box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.23);
+  padding: 0 10px;
+  // box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.23);
   &-wrapper {
     position: relative;
     width: 100%;
@@ -306,7 +316,9 @@ html {
 }
 .banner {
   max-width: 100%;
-  margin: 10px 5px 0 5px;
+  margin: 10px 5px 0 10px;
+  border-radius: 10px;
+  overflow: hidden;
   img {
     max-width: 100%;
   }
@@ -352,10 +364,15 @@ html {
       }
       .uiza-gif-player {
         max-width: 100%;
-        width: 100%;
+        height: 100%;
+        canvas {
+          max-width: 100%;
+          object-fit: cover;
+          height: 100%;
+        }
       }
       img {
-        width: 100%;
+        height: 100%;
       }
     }
   }
@@ -447,6 +464,8 @@ html {
     }
     .uiza-chat {
       top: 200px !important;
+      transform: scale(0.8);
+      transform-origin: bottom left;
       .uiza-chat-messages-item-info .time {
         display: none;
       }
@@ -484,6 +503,12 @@ html {
           margin-top: 3px;
         }
       }
+    }
+
+    .uiza-egg.pinned {
+      top: auto !important;
+      right: 15px;
+      bottom: 360px !important;
     }
     .uiza-controls-shopping-share-popup {
       top: 50px !important;

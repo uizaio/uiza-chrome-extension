@@ -123,7 +123,7 @@ export default {
 .uiza-giftbox {
   position: absolute;
   right: 10px;
-  bottom: 160px;
+  bottom: 90px;
   z-index: 99999 !important;
   &-image {
     width: 50px;

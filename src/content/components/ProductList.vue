@@ -38,6 +38,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 99999;
   // background: rgba(0, 0, 0, 0.4);
   padding: 30px 0 60px 0;
   &-background {

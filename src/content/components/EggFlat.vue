@@ -1,11 +1,9 @@
 <template lang="pug">
-div(class="uiza-egg" ref="main")
+div(class="uiza-egg" :class="{ 'pinned': isPinnedVoucherShown }" ref="main" v-if="shouldDisplay")
   div.uiza-egg-voucher-pinned(v-if="isPinnedVoucherShown" ref="pinnedVoucher")
-    img(:src="image" @click="showPinnedVoucher")
-    .uiza-egg-voucher-pinned-click(@click="showPinnedVoucher")
-      | Click me
+    img(:src="image" @click="isPinnedVoucherCodeShown = true")
     div.uiza-egg-code(v-if="isPinnedVoucherCodeShown")
-        button.uiza-egg-code-close(@click="close")
+        button.uiza-egg-code-close(@click="isPinnedVoucherCodeShown = false")
           i.far.fa-times-circle
         p Mã giảm giá của bạn (off 25%)
         input(readonly="readonly" value="FASHIONISTA")
@@ -67,12 +65,15 @@ export default {
           complete: function(anim) {
             self.showBanner = true;
             // self.showAnimate = true;
-            self.appearInterval = setInterval(function() {
-              self.appearCountdown -= 1;
-              if (self.appearCountdown <= 0) {
-                self.showVoucher = true;
-              }
-            }, 1000);
+            // if (self.appearInterval !== null) {
+              self.appearInterval = setInterval(function() {
+                self.appearCountdown -= 1;
+                if (self.appearCountdown <= 0) {
+                  // self.showVoucher = true;
+                  self.shouldDisplay = false;
+                }
+              }, 1000);
+            // }
           }
         });
     },
@@ -85,18 +86,31 @@ export default {
       win.focus();
     },
     clickMe() {
-      const self = this;
-      self.showAnimate = true;
-      setTimeout(function() {
-        self.isCodeShown = true;
-      }, 4500);
+      if (this.showBanner) {
+        const self = this;
+        clearInterval(this.appearInterval);
+        self.showAnimate = true;
+        // self.isCodeShown = true;
+        setTimeout(function() {
+          self.isCodeShown = true;
+          self.showAnimate = false;
+        }, 1700);
+      }
     },
     close() {
-      this.showVoucher = false;
-      this.isPinnedVoucherCodeShown = false;
+      setTimeout(function() {
+        this.showVoucher = false;
+        this.showPinnedVoucher();
+      }.bind(this), 100); 
     },
     use() {
       this.showVoucher = false;
+      this.showPinnedVoucher();
+
+      localStorage.setItem("UIZA_GIFT_CODE", "FASHIONISTA");
+      this.$emit("used");
+    },
+    showPinnedVoucher() {
       this.isPinnedVoucherShown = true;
       setTimeout(
         function() {
@@ -104,12 +118,6 @@ export default {
         }.bind(this),
         100
       );
-
-      localStorage.setItem("UIZA_GIFT_CODE", "FASHIONISTA");
-      this.$emit("used");
-    },
-    showPinnedVoucher() {
-      this.isPinnedVoucherCodeShown = true;
     }
   },
   computed: {
@@ -117,7 +125,7 @@ export default {
       return this.theme === 'Kute' ? 'https://www.upsieutoc.com/images/2019/07/08/egg.png' : "https://www.upsieutoc.com/images/2019/06/14/egg-static.png";
     },
     image_animate() {
-      return this.theme === 'Kute' ? 'https://www.upsieutoc.com/images/2019/07/08/egg.png' : "https://www.upsieutoc.com/images/2019/06/14/egg-animate.gif";
+      return this.theme === 'Kute' ? 'https://www.upsieutoc.com/images/2019/07/15/egg-opening.gif' : "https://www.upsieutoc.com/images/2019/06/14/egg-animate.gif";
     },
     appearCountdownFormatted() {
       const time = moment("2015-01-01")
@@ -129,6 +137,7 @@ export default {
   },
   data() {
     return {
+      shouldDisplay: true,
       showVoucher: true,
       showAnimate: false,
       width: 0,
@@ -145,13 +154,25 @@ export default {
 </script>
 <style lang="scss">
 .uiza-egg {
-  bottom: 0;
-  right: -20px;
+  bottom: 10px;
+  right: 10px;
   position: absolute;
+  z-index: 99999;
+  &.pinned {
+    top: 200px;
+    right: 30px;
+    bottom: auto !important;
+    img {
+      width: 36px !important;
+    }
+    .uiza-egg-voucher-pinned-click {
+      display: none !important;
+    }
+  }
   &-voucher-pinned {
     position: absolute;
-    right: 20px;
-    bottom: 230px;
+    right: 0;
+    bottom: 0;
     img {
       width: 70px;
       cursor: pointer;

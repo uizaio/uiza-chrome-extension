@@ -15,7 +15,7 @@ export default {
   props: ['theme', 'portrait'],
   mounted() {
     if (this.theme === 'Kute') {
-      this.shown = false;
+      this.shown = true;
     }
     this.init();
   },
@@ -53,7 +53,7 @@ export default {
             easing: "easeInOutSine",
             complete: function() {
               if (!self.portrait) {
-                self.shown = true;
+                // self.shown = true;
               }
             }
           });

@@ -24,6 +24,7 @@
   .uiza-controls(:class="{ 'uiza-controls-hidden': hideControlsBar }" v-if="showControls && isLive && !noControls")
     .uiza-controls-shopping-spacer
     .uiza-controls-shopping-bag
+      span(class="uiza-controls-shopping-cart-qty") {{ products.length }}
       a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
         img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/06/14/badge.png")
         img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/07/07/cart.png")
@@ -224,7 +225,7 @@ export default {
           if (!self.playInterval) {
             self.playInterval = setInterval(function() {
               self.playedTime += 1;
-              if (self.playedTime === 180) {
+              if (self.playedTime === 120) {
                 self.hasEgg = true;
               }
               self.playerSettings.ads.forEach(function(ad) {
@@ -273,55 +274,6 @@ export default {
       setTimeout(() => {
         this.currentSticker = null;
       }, 3000);
-    },
-    animateEgg() {
-      const self = this;
-      const width = this.$refs.playerContainer.clientWidth;
-      const height = this.$refs.playerContainer.clientHeight;
-      const imageWidth = Math.min(200, width / 3);
-      // const imageHeight = Math.min(200, height / 3);
-      const x = (width + 50) / 2;
-      const y = height / 2; // 90 is the relative position from bottom
-
-      this.$refs.eggContainer.classList.remove("animated");
-      this.$anime
-        .timeline()
-        .add({
-          targets: this.$refs.eggImage,
-          width: imageWidth * 0.75,
-          class: "animated shake infinite",
-          easing: "easeOutExpo"
-        })
-        .add({
-          targets: this.$refs.eggDraggable,
-          left: -x,
-          top: -y,
-          width: imageWidth
-        })
-        .add({
-          targets: this.$refs.eggImage,
-          width: imageWidth,
-          easing: "easeOutExpo",
-          complete: function() {
-            self.$refs.eggImage.src = "https://i.imgur.com/IbWEzMI.gif";
-            // self.$refs.eggImage.classList = "";
-            self.$refs.eggImage.onload = function() {
-              self.$refs.eggImage.width = imageWidth;
-              setTimeout(function() {
-                self.eggGiftShown = true;
-                var interval = setInterval(function() {
-                  self.eggGiftCountdown -= 1;
-                  if (self.eggGiftCountdown <= 0) {
-                    self.eggGiftShown = false;
-                    self.eggGiftCountdown = 5;
-                    self.hasEgg = false;
-                    clearInterval(interval);
-                  }
-                }, 1000);
-              }, 4500);
-            };
-          }
-        });
     }
   },
   computed: {
@@ -391,7 +343,7 @@ export default {
       overlayTimeouts: [],
       overlayProduct: null,
       isSharing: false,
-      hasEgg: true,
+      hasEgg: false,
       eggGiftShown: false,
       eggGiftCountdown: 5,
       stickers: [
@@ -546,19 +498,19 @@ button {
   &-shopping-cart {
     &-qty {
       position: absolute;
-      width: 22px;
-      height: 22px;
+      width: 16px;
+      height: 16px;
       border-radius: 100%;
-      color: #333;
-      background: rgb(253, 216, 53);
+      color: #FFF;
+      background: #1E3656;
       text-align: center;
-      padding-top: 5px;
+      padding-top: 0;
       box-sizing: border-box;
       font-size: 11px;
       top: -10px;
       right: -15px;
       font-weight: 600;
-      border: #ddd 1px solid;
+      border: #111 1px solid;
     }
   }
   &-shopping-emotion,

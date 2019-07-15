@@ -14,10 +14,17 @@
     img(class="uiza-chat-input-avatar" src="https://www.upsieutoc.com/images/2019/07/07/avatar.png")
     input(v-model="chatMessage" type='text' placeholder='Enter your message' v-on:keyup.enter="sendMessage")
     .uiza-chat-input-buttons
-      button(@click="isLiked = !isLiked")
+      button(@click="onLikeClicked")
         //- i.uiza-chat-input-buttons-love(:class="{ animate: isLiked }" )
+        .count(v-if="likeCount > 0") {{ likeCount }}
         img(src="https://www.upsieutoc.com/images/2019/07/07/heart.png")
         ul(class="uiza-hearts flying2" :class="{ flying: isLiked }")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
+          li(class="heart")
           li(class="heart")
           li(class="heart")
           li(class="heart")
@@ -54,7 +61,7 @@ export default {
   props: [],
   mounted() {
     // this.connectSendBird();
-    // for (var i = 1; i <= 10; i++) {
+    // for (var i = 1; i <= 3; i++) {
     //   this.fakeMessage();
     // }
   },
@@ -62,13 +69,19 @@ export default {
     getMessageOpacity(m) {
       const index = this.chatMessages.length - m.messageId;
       if (index === 0) return 1;
-      if (index === 1) return 0.8;
+      if (index === 1) return 1;
       if (index === 2) return 0.5;
       if (index === 3) return 0.2;
       return 0;
     },
+    onLikeClicked() {
+      this.isLiked = false;
+      setTimeout(function() {
+        this.isLiked = true;
+        this.likeCount++;
+      }.bind(this), 100);
+    },
     onMessageClicked(event) {
-      alert('fasfas');
       console.log(event.target);
       console.log(event.target.offsetTop);
     },
@@ -225,8 +238,9 @@ export default {
       chatMessages: [],
       chatMessage: "",
       chatInterval: null,
-      chatIntervalMs: 1000,
-      isLiked: false
+      chatIntervalMs: 1800,
+      isLiked: false,
+      likeCount: 0
     };
   }
 };
@@ -244,20 +258,37 @@ export default {
   flex-direction: column;
 
   &-input {
-    flex: 0 0 26px;
+    flex: 0 0 50px;
     display: flex;
     margin-left: 20px;
     padding: 5px;
+    padding-right: 40px;
     background: rgba(230, 57, 70, 0.8);
     backdrop-filter: blur(10px);
     border-radius: 40px;
     width: 100%;
     transition: all 1s;
+    position: relative;
+    .count {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 10;
+      font-size: 11px;
+      font-weight: 800;
+      color: #E63946;
+    }
     &:not(.chatting) {
       width: 130px !important;
       height: 50px !important;
       padding-left: 10px !important;
+      margin-left: 0;
       background: url(https://www.upsieutoc.com/images/2019/07/07/chat-button.png) no-repeat center;
+      img {
+        display: none !important;
+      }
       input {
         display: none !important;
       }
@@ -268,6 +299,7 @@ export default {
     &-avatar {
       width: 40px;
       height: 40px;
+      margin: 5px 0;
     }
     input {
       flex: 1;
@@ -328,7 +360,7 @@ export default {
     padding: 0 0 20px 10px !important;
     overflow: auto;
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     scroll-behavior: smooth;
     pointer-events: none;
     &::-webkit-scrollbar {
@@ -371,9 +403,10 @@ export default {
           font-size: 11px;
           margin-left: 10px;
           color: #ccc;
+          display: none !important;
         }
         .message {
-          color: #ccc;
+          color: #FAFAF4;
           font-size: 12px !important;
           margin: 5px 0 !important;
         }
@@ -395,7 +428,7 @@ export default {
 }
 .uiza-hearts {
   position: absolute;
-  bottom: 18px;
+  bottom: 22px;
   left: 0px;
   z-index: 1;
   display: none;
@@ -434,6 +467,9 @@ export default {
     > .heart:nth-child(odd) {
       animation: 2.8s flyingOdd linear; // infinite
     }
+    > .heart:nth-child(3n) {
+      animation: 2.8s flyingThird linear; // infinite
+    }
     > .heart:nth-child(1) {
       animation-delay: 0.2s;
     }
@@ -441,34 +477,43 @@ export default {
       animation-delay: 0.3s;
     }
     > .heart:nth-child(3) {
-      animation-delay: 0.6s;
+      animation-delay: 0.4s;
     }
     > .heart:nth-child(4) {
-      animation-delay: 1.5s;
+      animation-delay: 0.5s;
     }
     > .heart:nth-child(5) {
-      animation-delay: 2.2s;
+      animation-delay: 0.7s;
     }
     > .heart:nth-child(6) {
-      animation-delay: 2.9s;
+      animation-delay: 0.9s;
     }
     > .heart:nth-child(7) {
-      animation-delay: 3.2s;
+      animation-delay: 1.4s;
     }
     > .heart:nth-child(8) {
-      animation-delay: 3.5s;
+      animation-delay: 1.9s;
     }
     > .heart:nth-child(9) {
-      animation-delay: 3.8s;
+      animation-delay: 2.2s;
     }
     > .heart:nth-child(10) {
-      animation-delay: 4.1s;
+      animation-delay: 2.7s;
     }
     > .heart:nth-child(11) {
-      animation-delay: 4.5s;
+      animation-delay: 3.1s;
     }
     > .heart:nth-child(12) {
-      animation-delay: 5s;
+      animation-delay: 3.6s;
+    }
+    > .heart:nth-child(13) {
+      animation-delay: 3.9s;
+    }
+    > .heart:nth-child(14) {
+      animation-delay: 4.2s;
+    }
+    > .heart:nth-child(15) {
+      animation-delay: 4.3s;
     }
   }
 }
@@ -493,6 +538,18 @@ export default {
   }
   100% {
     transform: translate(-100px, -480px) scale(3);
+    opacity: 0;
+    filter: blur(10px);
+  }
+}
+@keyframes flyingThird {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    transform: translate(300px, -480px) scale(3);
     opacity: 0;
     filter: blur(10px);
   }

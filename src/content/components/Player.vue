@@ -3,10 +3,10 @@
   .uiza-ext-player-overlay(ref="playerOverlay" @click="onOverlayClicked")
   .uiza-error(v-if="isErrored") Live stream is ended
   ShopInfo(v-if="isLive")
-  EggFlat(v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
+  EggFlat(v-show="!showProducts" v-if="hasEgg && isLive && !noControls" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
   UizaOrderCount(v-if="isLive" :count="300" :theme="theme" :portrait="portrait")
   UizaViewCount(v-if="isLive")
-  GiftBox(v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
+  GiftBox(v-show="!showProducts" v-if="isLive" :url="playerSettings.buy_now_url" @used="showProducts = true" :theme="theme")
   a.uiza-center-play-btn(v-if="!isPlaying && player && !isAutoplay" @click="play")
     img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/play-button.png")
     template(v-else)
@@ -15,7 +15,7 @@
       i.fas.fa-undo(v-show="isEnded")
   a.uiza-logo(v-if="playerSettings && isLive && !noControls && theme !== 'Kute'" @click="openBrandUrl")
     img(:src="playerSettings.brand_logo")
-  ChatKute(v-if="theme === 'Kute' && isLive && !noControls")
+  ChatKute(v-show="!showProducts" v-if="theme === 'Kute' && isLive && !noControls")
   Chat(v-if="!isFlat && isLive && !noControls")
   ChatFlat(v-if="theme !== 'Kute' && isFlat && isLive && !noControls")
   transition(name="fade")
@@ -23,18 +23,18 @@
     PlayerControlsLive(v-show="!hideControlsBar" class="controls" v-if="player && isLive && !noControls" :player="player" :settings="playerSettings" :isLive="isLive" :theme="theme")
   .uiza-controls(:class="{ 'uiza-controls-hidden': hideControlsBar }" v-if="showControls && isLive && !noControls")
     .uiza-controls-shopping-spacer
-    .uiza-controls-shopping-bag
-      span(class="uiza-controls-shopping-cart-qty") {{ products.length }}
-      a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
-        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/06/14/badge.png")
-        img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/07/07/cart.png")
-        img(v-else src="https://www.upsieutoc.com/images/2019/06/12/cart.png")
     .uiza-controls-shopping-cart(v-if="playerSettings")
       span(class="uiza-controls-shopping-cart-qty") {{ itemsInCart }}
       a.uiza-controls-icon(:class="{ red: !isFlat }" @click="goToCart")
-        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/badge.png")
+        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/cart.png")
         img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/06/14/cart.png")
         img(v-else src="https://www.upsieutoc.com/images/2019/06/12/badge.png")
+    .uiza-controls-shopping-bag
+      span(class="uiza-controls-shopping-cart-qty") {{ products.length }}
+      a.uiza-controls-icon(:class="{ green: !isFlat }" @click="showProducts = !showProducts")
+        img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/badge.png")
+        img(v-else-if="isFlat" src="https://www.upsieutoc.com/images/2019/07/07/cart.png")
+        img(v-else src="https://www.upsieutoc.com/images/2019/06/12/cart.png")
     .uiza-controls-shopping-share
       a.uiza-controls-icon(:class="{ blue: !isFlat }" @click="isSharing = !isSharing")
         img(v-if="isKute" src="https://www.upsieutoc.com/images/2019/07/07/share.png")

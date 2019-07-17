@@ -1,6 +1,6 @@
 <template lang="pug">
 .uiza-chat
-  .uiza-chat-messages(ref="chatScroller")
+  .uiza-chat-messages(ref="chatScroller" :style="{ opacity: shown ? 1 : 0 }")
     .uiza-chat-messages-wrapper
       div(class="uiza-chat-messages-item" :style="{ opacity: getMessageOpacity(message) }" @click="onMessageClicked" v-for="message in chatMessages" v-bind:key="message.messageId")
         div.uiza-chat-messages-item-photo
@@ -10,7 +10,7 @@
           strong {{ message.username }}
           span.time {{ message.createdAt | moment("from", "now") }}
           div.message {{ message.message }}
-  .uiza-chat-input(:class="{ chatting: isChatting }" @click="isChatting = true")
+  .uiza-chat-input(:class="{ chatting: isChatting }" @click="showChat")
     img(class="uiza-chat-input-avatar" src="https://www.upsieutoc.com/images/2019/07/07/avatar.png")
     input(v-model="chatMessage" type='text' placeholder='Enter your message' v-on:keyup.enter="sendMessage")
     .uiza-chat-input-buttons
@@ -34,6 +34,7 @@
           li(class="heart")
           li(class="heart")
           li(class="heart")
+      button(@click="closeChat") CLOSE
 </template>
 <script>
 import SendBird from "sendbird";
@@ -66,6 +67,15 @@ export default {
     // }
   },
   methods: {
+    closeChat(event) {
+      event.stopPropagation();
+      this.isChatting = false;
+      this.shown = false;
+    },
+    showChat() {
+      this.isChatting = true;
+      this.shown = true;
+    },
     getMessageOpacity(m) {
       const index = this.chatMessages.length - m.messageId;
       if (index === 0) return 1;
@@ -230,6 +240,7 @@ export default {
   },
   data() {
     return {
+      shown: true,
       messageIndex: 0,
       sb: null,
       chatUser: "",
@@ -262,7 +273,7 @@ export default {
     display: flex;
     margin-left: 20px;
     padding: 5px;
-    padding-right: 40px;
+    padding-right: 80px;
     background: rgba(230, 57, 70, 0.8);
     backdrop-filter: blur(10px);
     border-radius: 40px;
@@ -326,7 +337,7 @@ export default {
         border: 0 !important;
         outline: none !important;
         background: transparent !important;
-        margin-left: 10px !important;
+        margin-right: 10px !important;
         color: #ddd !important;
         font-size: 13px;
         cursor: pointer;

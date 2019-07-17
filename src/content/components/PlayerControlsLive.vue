@@ -308,6 +308,7 @@ export default {
   color: #fff;
   height: 50px !important;
   box-sizing: border-box !important;
+  z-index: 99999;
   background: linear-gradient(
     0deg,
     rgba(0, 0, 0, 0.749) 0%,

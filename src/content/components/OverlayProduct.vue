@@ -44,7 +44,7 @@ export default {
   transform: scale(1);
   position: absolute;
   top: 80px;
-  right: 30px;
+  right: 80px;
   width: 240px;
   padding: 10px;
   //Instead of the line below you could use @include border-radius($radius, $vertical-radius)

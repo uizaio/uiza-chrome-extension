@@ -48,7 +48,7 @@ div
     div(class="web-recommendation" style="margin: 0 10px")
       h2 RECOMMENDED FOR YOU
       el-card.recommendation
-        carousel(:paginationEnabled="false"  :navigationEnabled="true" navigationNextLabel="<i class='fas fa-chevron-right'></i>" navigationPrevLabel="<i class='fas fa-chevron-left'></i>" :perPage="7")
+        carousel(:paginationEnabled="false" :navigationEnabled="true" navigationNextLabel="<i class='slideNext'></i>" navigationPrevLabel="<i class='slidePrev'></i>" :perPage="7")
           slide(v-for="item in recommendedItems" v-bind:key="item.id")
             div(class="item-play")
               div(class="item-play-btn" @click="view(item)")
@@ -327,20 +327,27 @@ html {
   .el-card__body {
     padding: 0 60px !important;
   }
+  .VueCarousel {
+    margin: 0 50px;
+  }
   .VueCarousel-navigation {
-    svg {
-      font-size: 30px;
+    .slidePrev {
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: url('https://www.upsieutoc.com/images/2019/07/17/next-left.png') no-repeat center;
+    }
+    .slideNext {
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: url('https://www.upsieutoc.com/images/2019/07/17/next-right.png') no-repeat center;
     }
   }
   .VueCarousel-slide, .recommendation-item {
     margin: 5px;
     width: 300px;
     position: relative;
-    img {
-      object-fit: cover;
-      max-width: 100%;
-      max-height: 100%;
-    }
     .desc {
       padding: 0 10px;
     }
@@ -365,14 +372,13 @@ html {
       .uiza-gif-player {
         max-width: 100%;
         height: 100%;
-        canvas {
+        canvas, img {
           max-width: 100%;
           object-fit: cover;
           height: 100%;
+          width: 100%;
+          max-height: 100%;
         }
-      }
-      img {
-        height: 100%;
       }
     }
   }
@@ -508,7 +514,7 @@ html {
     .uiza-egg.pinned {
       top: auto !important;
       right: 15px;
-      bottom: 360px !important;
+      bottom: 200px !important;
     }
     .uiza-controls-shopping-share-popup {
       top: 50px !important;
@@ -530,6 +536,10 @@ html {
       &-swiper {
         margin: 0 !important;
       }
+    }
+    .uiza-product-overlay {
+      top: 150px;
+      left: 10px;
     }
     .uiza-player-popup {
       z-index: 99999;

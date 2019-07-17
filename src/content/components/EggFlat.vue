@@ -15,7 +15,7 @@ div(class="uiza-egg" :class="{ 'pinned': isPinnedVoucherShown }" ref="main" v-if
       p Mã giảm giá của bạn (off 25%)
       input(readonly="readonly" value="FASHIONISTA")
       button.uiza-egg-code-use(@click="use") Use now
-    div.uiza-egg-voucher-banner(v-if="showBanner")
+    div.uiza-egg-voucher-banner(style="pointer-events: none" v-if="showBanner")
         button(v-if="!showAnimate" @click="clickMe") Click me
         .uiza-egg-voucher-banner--only 
           .uiza-egg-voucher-banner--only-content Only for you
@@ -45,7 +45,7 @@ export default {
         .timeline()
         .add({
           targets,
-          translateX: -(self.width / 2),
+          translateX: -(self.width / 2) + 40,
           translateY: -(self.height / 2),
           easing: "easeInOutSine",
           duration: 2000,
@@ -105,8 +105,8 @@ export default {
     },
     use() {
       this.showVoucher = false;
+      this.isPinnedVoucherCodeShown = false;
       this.showPinnedVoucher();
-
       localStorage.setItem("UIZA_GIFT_CODE", "FASHIONISTA");
       this.$emit("used");
     },
@@ -145,7 +145,7 @@ export default {
       showBanner: false,
       isCodeShown: false,
       appearInterval: null,
-      appearCountdown: 10,
+      appearCountdown: 1500,
       isPinnedVoucherShown: false,
       isPinnedVoucherCodeShown: false
     };
@@ -158,6 +158,9 @@ export default {
   right: 10px;
   position: absolute;
   z-index: 99999;
+  img {
+    cursor: pointer;
+  }
   &.pinned {
     top: 200px;
     right: 30px;

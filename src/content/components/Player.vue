@@ -225,7 +225,7 @@ export default {
           if (!self.playInterval) {
             self.playInterval = setInterval(function() {
               self.playedTime += 1;
-              if (self.playedTime === 120) {
+              if (self.playedTime === 300) {
                 self.hasEgg = true;
               }
               self.playerSettings.ads.forEach(function(ad) {
@@ -449,9 +449,6 @@ button {
   transition: all 1s;
   &-hidden {
     bottom: 20px !important;
-  }
-  &-shopping-bag {
-    margin: 0 !important;
   }
   > div {
     flex: 0 0 auto;

@@ -500,6 +500,10 @@ html {
     }
     .uiza-controls {
       top: 10px !important;
+      > div {
+        margin: 0 !important;
+        margin-left: 10px !important;
+      }
       &-icon {
         width: 24px;
         height: 24px;
@@ -535,6 +539,11 @@ html {
       z-index: 99999;
       &-swiper {
         margin: 0 !important;
+        .uiza-product-list-item {
+          width: 180px !important;
+          min-width: 180px !important;
+          height: 110px !important;
+        }
       }
     }
     .uiza-product-overlay {

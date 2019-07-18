@@ -145,7 +145,7 @@ export default {
       showBanner: false,
       isCodeShown: false,
       appearInterval: null,
-      appearCountdown: 1500,
+      appearCountdown: 15,
       isPinnedVoucherShown: false,
       isPinnedVoucherCodeShown: false
     };

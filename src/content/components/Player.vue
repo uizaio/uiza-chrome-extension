@@ -110,6 +110,7 @@ export default {
     );
   },
   mounted() {
+    localStorage.removeItem('UIZA_EXT_CART');
     this.playerSettings = !this.settings
       ? this.$parent.data.playerSettings
       : this.settings;

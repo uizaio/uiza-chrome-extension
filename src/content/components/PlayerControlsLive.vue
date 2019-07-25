@@ -4,7 +4,7 @@
   .uiza-player-controls-progress(@mousemove="progressHovering" @mouseleave="isSeekerShown = false" ref="progressBar")
     .uiza-player-controls-progress-seeker(v-if="isSeekerShown" :style="{ left: seekerCoord }") {{ seekerText }}
     //- :processStyle="{ background: settings.color }"
-    VueSlider(v-model="currentPos" :dot-size="8" :height="2" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
+    VueSlider(v-model="currentPos" :dot-size="8" :height="2" tooltip="none" :max="duration" @change="onProgressChanged" :processStyle="{ background: settings.color }")
       template(v-slot:process="{ start, end, style }")
         div(class="vue-slider-process" :style="[style]")
   //-  Play button

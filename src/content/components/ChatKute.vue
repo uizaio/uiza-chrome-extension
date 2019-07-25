@@ -192,9 +192,9 @@ export default {
     sendMessage() {
       this.chatMessages.push({
         messageId: ++this.messageIndex,
-        username: "Uiza Seller",
+        username: "ABC Shop",
         avatar:
-          "https://d3co7cvuqq9u2k.cloudfront.net/public/image/logo/uiza_logo_color.png",
+          "https://www.upsieutoc.com/images/2019/07/07/avatar.png",
         message: this.chatMessage,
         createdAt: new Date()
       });

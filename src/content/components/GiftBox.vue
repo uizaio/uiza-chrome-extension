@@ -1,7 +1,7 @@
 <template lang="pug">
 .uiza-giftbox(v-if="notTaken")
   .uiza-giftbox-image(v-if="!isClockShown")
-    img(v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/gift.png" @click="showClock")
+    img(class=" animated infinite heartBeat" v-if="theme === 'Kute'" src="https://www.upsieutoc.com/images/2019/07/07/gift.png" @click="showClock")
     img(v-else src="https://media.giphy.com/media/QWcxHrF7LCb7yBf4kO/giphy.gif" @click="showClock")
     div(v-if="codeAvailable" class="uiza-giftbox-image-countdown")
       i.far.fa-clock 

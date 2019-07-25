@@ -1,8 +1,12 @@
 <template lang="pug">
 div
   .block.scaler(v-if="settings.responsive")
-    span Adjust zoom
-    el-slider(v-model="scaleRatio")
+    div
+      span Adjust player zoom
+      el-slider(v-model="scaleRatio")
+    div
+      span Adjust video zoom
+      el-slider(v-model="scaleVideoRatio" :min="100" :max="500" @change="onVideoRatioChanged")
   div(:style="{ transform: 'scale(' + scaleRatio / 100 + ')' }" :class="['uiza-page-' + settings.current_theme, { 'uiza-screen-small' : settings.responsive }]")
     el-menu(mode="horizontal" class="header")
       el-menu-item
@@ -169,6 +173,12 @@ export default {
     }
   },
   methods: {
+    onVideoRatioChanged() {
+      var iframe = document.querySelector('iframe');
+      if (iframe) {
+        iframe.style = `transform: scale(${this.scaleVideoRatio / 100})`
+      }
+    },
     loadRelated() {
       if (this.$route.params.type === "vod") {
         uiza.getVODs().then(resp => {
@@ -217,6 +227,7 @@ export default {
   data() {
     return {
       scaleRatio: 100,
+      scaleVideoRatio: 100,
       recommendedItems: [],
       vod: null,
       live: null,
@@ -562,9 +573,16 @@ html {
         }
         &-content {
           padding: 10px 20px;
+          .desc {
+            display: none;
+          }
+          .options {
+            margin-top: 0 !important;
+          }
         }
         &-footer {
-          padding: 0 0 20px 20px;
+          padding: 0 0 0 0;
+          margin-top: 0 !important;
           &-btn {
             padding: 0 10px;
           }

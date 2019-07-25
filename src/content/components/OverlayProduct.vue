@@ -49,7 +49,7 @@ export default {
   padding: 10px;
   //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
   color: #fff;
   overflow: hidden;
   &-image {
